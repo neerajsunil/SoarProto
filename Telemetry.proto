@@ -1,0 +1,25 @@
+/**
+ * FILE: Telemetry.proto
+ * BRIEF: Telemetry data from various boards (Data Management Board, Sensor Observation Board, Plumbing Bay Board, etc.)
+ * AUTHOR: Christopher Chan (cjchanx)
+ */
+syntax = "proto3";
+package proto;
+import "Core.proto";
+
+/* This acts as the telemetry wrapper message for all SOAR Telemetry Messages.
+ * Telemetry messages are considered best-effort NON-CRITICAL messages, and are (currently) not guaranteed to be received (no ACK or Sequence Number)
+ */
+ message TelemetryMessage {
+    // Message Path
+    Node source = 1; // This is the source of the message (the node that sent the message)
+    Node target = 2; // This is the destination of the message, if this is a broadcast message, this should be set to NODE_ANY
+
+    // Message Identifiers
+    uint32 message_id = 3; // This is the message ID of the message, this is used to identify the message type
+
+    // Message Data
+    oneof message {
+        int32 placeholder = 4;
+    }
+}
