@@ -96,6 +96,9 @@ void ProtocolTask::Run(void * pvParams)
             // Allocate a command for storing the decoded message
             Command protoRx(DATA_COMMAND, PROTOCOL_RX_DECODED_DATA);
             uint8_t* decodedDataPtr = protoRx.AllocateData(protocolMsgIdx);
+            
+            // Assert allocation was successful
+            SOAR_ASSERT(decodedDataPtr);
 
             // When we get an Rx complete, we need to run the COBS decoder on the message
             cobs_decode_result cobsRes = cobs_decode(decodedDataPtr, protocolMsgIdx, protocolRxBuffer, protocolMsgIdx);
@@ -110,7 +113,7 @@ void ProtocolTask::Run(void * pvParams)
             }
             else
             {
-                // Verify the initial byte is consistent, we keep the size with the message as that and the checksum will be parsed by HandleProtocolMessage
+                // Verify the initial byte is consistent otherwise we NACK (could be in case above), we keep the size with the message as that and the checksum will be parsed by HandleProtocolMessage
                 //TODO: Implement this check
 
                 // Handle the protocol message using the inherited function
