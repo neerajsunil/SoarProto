@@ -5,8 +5,6 @@
   ******************************************************************************
 */
 
-//TODO: Change the reception here directly to an array to receive to a large queue instead, that way we don't ever have to pause reception to process messages (if this runs into issues)
-
 /* Includes ------------------------------------------------------------------*/
 #include "ProtocolTask.hpp"
 #include "Command.hpp"
@@ -14,7 +12,6 @@
 #include <cstring>
 
 #include "FlightTask.hpp"
-#include "GPIO.hpp"
 #include "stm32f4xx_hal.h"
 #include "cobs.h"
 
@@ -91,38 +88,49 @@ void ProtocolTask::Run(void * pvParams)
         //Wait forever for a command
         qEvtQueue->ReceiveWait(cm);
 
-        //Process the command -- RX Complete
-        if(cm.GetCommand() == DATA_COMMAND && cm.GetTaskCommand() == EVENT_PROTOCOL_RX_COMPLETE) {
-            // Allocate a command for storing the decoded message
-            Command protoRx(DATA_COMMAND, PROTOCOL_RX_DECODED_DATA);
-            uint8_t* decodedDataPtr = protoRx.AllocateData(protocolMsgIdx);
-            
-            // Assert allocation was successful
-            SOAR_ASSERT(decodedDataPtr);
+        //If this is a PROTOCOL_COMMAND, process it
+        if (cm.GetCommand() == PROTOCOL_COMMAND) {
+            switch (cm.GetTaskCommand()) {
+            case EVENT_PROTOCOL_RX_COMPLETE: {                                              //Process the command -- RX Complete
+                // Allocate a command for storing the decoded message
+                Command protoRx(PROTOCOL_COMMAND, PROTOCOL_RX_DECODED_DATA);
+                uint8_t* decodedDataPtr = protoRx.AllocateData(protocolMsgIdx);
 
-            // When we get an Rx complete, we need to run the COBS decoder on the message
-            cobs_decode_result cobsRes = cobs_decode(decodedDataPtr, protocolMsgIdx, protocolRxBuffer, protocolMsgIdx);
+                // Assert allocation was successful
+                SOAR_ASSERT(decodedDataPtr);
 
-            // We can mark the rx buffer as safe to write to now
-            protocolMsgIdx = 0;
-            isProtocolMsgReady = false;
-            
-            // If the COBS decode result is not OK, then we need to send a NACK
-            if(cobsRes.status != COBS_DECODE_OK) {
-                //TODO: Need to create and send a NACK
+                // When we get an Rx complete, we need to run the COBS decoder on the message
+                cobs_decode_result cobsRes = cobs_decode(decodedDataPtr, protocolMsgIdx, protocolRxBuffer, protocolMsgIdx);
+
+                // We can mark the rx buffer as safe to write to now
+                protocolMsgIdx = 0;
+                isProtocolMsgReady = false;
+
+                // If the COBS decode result is not OK, then we need to send a NACK
+                if (cobsRes.status != COBS_DECODE_OK) {
+                    //TODO: Need to create and send a NACK
+                }
+                else
+                {
+                    // Verify the initial byte is consistent otherwise we NACK (could be in case above), we keep the size with the message as that and the checksum will be parsed by HandleProtocolMessage
+                    //TODO: Implement this check
+
+                    // Handle the protocol message using the inherited function
+                    HandleProtocolMessage(protoRx);
+                }
+
+                protoRx.Reset();
             }
-            else
-            {
-                // Verify the initial byte is consistent otherwise we NACK (could be in case above), we keep the size with the message as that and the checksum will be parsed by HandleProtocolMessage
-                //TODO: Implement this check
+            case PROTOCOL_TX_REQUEST_DATA: {                                               //Process the command -- TX Request
+                // Allocate a command for storing the encoded message
+                //TODO: Allocate a new command for storing the COBS encoded message
 
-                // Handle the protocol message using the inherited function
-                HandleProtocolMessage(protoRx);
+                //TODO: Send this off to the UART Task
             }
-            
-            protoRx.Reset();
+            default:
+                break;
+            }
         }
-        // Process the command -- TX Request
 
         cm.Reset();
     }

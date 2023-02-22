@@ -29,8 +29,8 @@
  */
 
 // This file is generated. Please do not edit!
-#ifndef CORE_H
-#define CORE_H
+#ifndef COREPROTO_H
+#define COREPROTO_H
 
 #include <cstdint>
 // Include external proto definitions
@@ -71,4 +71,4 @@ enum class RocketState : uint32_t
 };
 
 } // End of namespace proto
-#endif // CORE_H
+#endif // COREPROTO_H

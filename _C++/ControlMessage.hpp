@@ -45,7 +45,7 @@
 #include <limits>
 
 // Include external proto definitions
-#include <Core.h>
+#include <CoreProto.h>
 
 namespace proto {
 

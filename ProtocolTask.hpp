@@ -14,7 +14,8 @@
 enum PROTOCOL_TASK_COMMANDS {
     PROTOCOL_TASK_COMMAND_NONE = 0,
     EVENT_PROTOCOL_RX_COMPLETE,
-    PROTOCOL_RX_DECODED_DATA
+    PROTOCOL_RX_DECODED_DATA,
+    PROTOCOL_TX_REQUEST_DATA
 };
 
 /* Macros ------------------------------------------------------------------*/
@@ -47,7 +48,7 @@ protected:
     void Run(void* pvParams);    // Main run code
 
     void ConfigureUART();
-    // This will receive a (DATA_COMMAND, PROTOCOL_RX_DECODED_DATA) with the data pointer allocated, COBS decoded (but in the SOAR Message Format)
+    // This will receive a (PROTOCOL_COMMAND, PROTOCOL_RX_DECODED_DATA) with the data pointer allocated, COBS decoded (but in the SOAR Message Format)
     virtual void HandleProtocolMessage(Command& cmd) = 0;   // This MUST be implemented in the derived board-specific ProtocolTask object
     //void HandleCommand(Command& cm);
 

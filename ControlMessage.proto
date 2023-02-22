@@ -5,7 +5,7 @@
  */
 syntax = "proto3";
 package proto;
-import "Core.proto";
+import "CoreProto.proto";
 
 /* Control Message ------------------------------------------------------------------*/
 

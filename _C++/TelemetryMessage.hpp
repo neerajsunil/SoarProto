@@ -29,8 +29,8 @@
  */
 
 // This file is generated. Please do not edit!
-#ifndef TELEMETRY_H
-#define TELEMETRY_H
+#ifndef TELEMETRYMESSAGE_H
+#define TELEMETRYMESSAGE_H
 
 #include <cstdint>
 #include <MessageInterface.h>
@@ -45,7 +45,7 @@
 #include <limits>
 
 // Include external proto definitions
-#include <Core.h>
+#include <CoreProto.h>
 
 namespace proto {
 
@@ -516,4 +516,4 @@ class TelemetryMessage final: public ::EmbeddedProto::MessageInterface
 };
 
 } // End of namespace proto
-#endif // TELEMETRY_H
+#endif // TELEMETRYMESSAGE_H
