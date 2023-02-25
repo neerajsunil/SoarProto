@@ -124,10 +124,23 @@ void ProtocolTask::Run(void * pvParams)
                     EmbeddedProto::WriteBufferFixedSize<DEFAULT_PROTOCOL_WRITE_BUFFER_SIZE> writeBuffer;
                     msg.serialize(writeBuffer);
 
-                    // Send the NACK to ourselves, which will queue to be wrapped in a COBS frame and sent
-                    Command cmd(PROTOCOL_COMMAND, PROTOCOL_TX_REQUEST_DATA);
-                    cmd.CopyDataToCommand(writeBuffer.get_data(), writeBuffer.get_size());
-                    UARTTask::Inst().SendCommandReference(cmd);
+                    uint16_t msgSize = GET_COBS_MAX_LEN(writeBuffer.get_size());
+
+                    // Send the NACK by wrapping in a COBS frame and sending direct to UART Task
+                    Command protoTx(DATA_COMMAND, DEFAULT_PROTOCOL_UART_TX_TGT);
+                    protoTx.AllocateData(msgSize);
+
+                    // Encode in COBS
+                    cobs_encode_result cobsEncRes = cobs_encode(protoTx.GetDataPointer(), msgSize, writeBuffer.get_data(), writeBuffer.get_size());
+
+                    if (cobsEncRes.status !=  COBS_ENCODE_OK) {
+                        protoTx.Reset();
+                        SOAR_PRINT("WARNING: COBS encode failed in ProtocolTask NACK case\n");
+                    }
+
+                    protoTx.CopyDataToCommand(writeBuffer.get_data(), writeBuffer.get_size());
+                    UARTTask::Inst().SendCommandReference(protoTx);
+
                 }
                 else
                 {
@@ -142,15 +155,22 @@ void ProtocolTask::Run(void * pvParams)
             }
             case PROTOCOL_TX_REQUEST_DATA: {                                               //Process the command -- TX Request
                 // Allocate a command for storing the encoded message
-                Command protoTx(DATA_COMMAND, UART_TASK_COMMAND_SEND_RADIO);
+                Command protoTx(DATA_COMMAND, DEFAULT_PROTOCOL_UART_TX_TGT);
 
                 // Allocate enough data for a COBS encoded message
                 uint16_t msgSize = GET_COBS_MAX_LEN(cm.GetDataSize());
+                protoTx.AllocateData(msgSize);
 
                 // Encode in COBS
+                cobs_encode_result cobsRes = cobs_encode(protoTx.GetDataPointer(), msgSize, cm.GetDataPointer(), cm.GetDataSize());
+
+                if (cobsRes.status != COBS_ENCODE_OK) {
+                    protoTx.Reset();
+                    SOAR_PRINT("WARNING: COBS encode failed in ProtocolTask TX case\n");
+                }
 
                 // Send this off to the UART Task
-
+                UARTTask::Inst().SendCommandReference(protoTx);
             }
             default:
                 break;
