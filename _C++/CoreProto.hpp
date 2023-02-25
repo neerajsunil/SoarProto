@@ -35,7 +35,7 @@
 #include <cstdint>
 // Include external proto definitions
 
-namespace proto {
+namespace Proto {
 
 enum class Node : uint32_t
 {
@@ -70,5 +70,5 @@ enum class RocketState : uint32_t
   RS_NONE = 11
 };
 
-} // End of namespace proto
+} // End of namespace Proto
 #endif // COREPROTO_H

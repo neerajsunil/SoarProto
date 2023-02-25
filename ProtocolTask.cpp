@@ -15,6 +15,8 @@
 #include "stm32f4xx_hal.h"
 #include "cobs.h"
 
+#include "ControlMessage.hpp"
+
 /* Macros --------------------------------------------------------------------*/
 
 /* Structs -------------------------------------------------------------------*/
@@ -108,7 +110,7 @@ void ProtocolTask::Run(void * pvParams)
 
                 // If the COBS decode result is not OK, then we need to send a NACK
                 if (cobsRes.status != COBS_DECODE_OK) {
-                    //TODO: Need to create and send a NACK
+                    proto::ControlMessage nackMsg;
                 }
                 else
                 {

@@ -47,7 +47,7 @@
 // Include external proto definitions
 #include <CoreProto.h>
 
-namespace proto {
+namespace Proto {
 
 class TelemetryMessage final: public ::EmbeddedProto::MessageInterface
 {
@@ -515,5 +515,5 @@ class TelemetryMessage final: public ::EmbeddedProto::MessageInterface
 #endif // End of MSG_TO_STRING
 };
 
-} // End of namespace proto
+} // End of namespace Proto
 #endif // TELEMETRYMESSAGE_H

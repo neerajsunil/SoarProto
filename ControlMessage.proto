@@ -4,7 +4,7 @@
  * AUTHOR: Christopher Chan (cjchanx)
  */
 syntax = "proto3";
-package proto;
+package Proto;
 import "CoreProto.proto";
 
 /* Control Message ------------------------------------------------------------------*/

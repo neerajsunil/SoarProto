@@ -47,7 +47,7 @@
 // Include external proto definitions
 #include <CoreProto.h>
 
-namespace proto {
+namespace Proto {
 
 class DMBCommand final: public ::EmbeddedProto::MessageInterface
 {
@@ -1068,5 +1068,5 @@ class CommandMessage final: public ::EmbeddedProto::MessageInterface
 #endif // End of MSG_TO_STRING
 };
 
-} // End of namespace proto
+} // End of namespace Proto
 #endif // COMMANDMESSAGE_H

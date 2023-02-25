@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 import CoreProto_pb2 as CoreProto__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x16TelemetryMessage.proto\x12\x05proto\x1a\x0f\x43oreProto.proto\"\x82\x01\n\x10TelemetryMessage\x12\x1b\n\x06source\x18\x01 \x01(\x0e\x32\x0b.proto.Node\x12\x1b\n\x06target\x18\x02 \x01(\x0e\x32\x0b.proto.Node\x12\x12\n\nmessage_id\x18\x03 \x01(\r\x12\x15\n\x0bplaceholder\x18\x04 \x01(\x05H\x00\x42\t\n\x07messageb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x16TelemetryMessage.proto\x12\x05Proto\x1a\x0f\x43oreProto.proto\"\x82\x01\n\x10TelemetryMessage\x12\x1b\n\x06source\x18\x01 \x01(\x0e\x32\x0b.Proto.Node\x12\x1b\n\x06target\x18\x02 \x01(\x0e\x32\x0b.Proto.Node\x12\x12\n\nmessage_id\x18\x03 \x01(\r\x12\x15\n\x0bplaceholder\x18\x04 \x01(\x05H\x00\x42\t\n\x07messageb\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'TelemetryMessage_pb2', globals())
