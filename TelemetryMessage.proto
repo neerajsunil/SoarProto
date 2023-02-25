@@ -16,7 +16,7 @@ import "CoreProto.proto";
     Node target = 2; // This is the destination of the message, if this is a broadcast message, this should be set to NODE_ANY
 
     // Message Identifiers
-    uint32 message_id = 3; // This is the message ID of the message, this is used to identify the message type
+    MessageID message_id = 3; // This is the message ID of the message, this is used to identify the message type
 
     // Message Data
     oneof message {

@@ -15,12 +15,12 @@ class CommandMessage(_message.Message):
     SOURCE_SEQUENCE_NUM_FIELD_NUMBER: _ClassVar[int]
     TARGET_FIELD_NUMBER: _ClassVar[int]
     dmb_command: DMBCommand
-    message_id: int
+    message_id: _CoreProto_pb2.MessageID
     pmb_command: PMBCommand
     source: _CoreProto_pb2.Node
     source_sequence_num: int
     target: _CoreProto_pb2.Node
-    def __init__(self, source: _Optional[_Union[_CoreProto_pb2.Node, str]] = ..., target: _Optional[_Union[_CoreProto_pb2.Node, str]] = ..., message_id: _Optional[int] = ..., source_sequence_num: _Optional[int] = ..., dmb_command: _Optional[_Union[DMBCommand, _Mapping]] = ..., pmb_command: _Optional[_Union[PMBCommand, _Mapping]] = ...) -> None: ...
+    def __init__(self, source: _Optional[_Union[_CoreProto_pb2.Node, str]] = ..., target: _Optional[_Union[_CoreProto_pb2.Node, str]] = ..., message_id: _Optional[_Union[_CoreProto_pb2.MessageID, str]] = ..., source_sequence_num: _Optional[int] = ..., dmb_command: _Optional[_Union[DMBCommand, _Mapping]] = ..., pmb_command: _Optional[_Union[PMBCommand, _Mapping]] = ...) -> None: ...
 
 class DMBCommand(_message.Message):
     __slots__ = ["command_enum"]

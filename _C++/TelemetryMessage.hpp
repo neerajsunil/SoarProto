@@ -174,11 +174,10 @@ class TelemetryMessage final: public ::EmbeddedProto::MessageInterface
 
     static constexpr char const* MESSAGE_ID_NAME = "message_id";
     inline void clear_message_id() { message_id_.clear(); }
-    inline void set_message_id(const uint32_t& value) { message_id_ = value; }
-    inline void set_message_id(const uint32_t&& value) { message_id_ = value; }
-    inline uint32_t& mutable_message_id() { return message_id_.get(); }
-    inline const uint32_t& get_message_id() const { return message_id_.get(); }
-    inline uint32_t message_id() const { return message_id_.get(); }
+    inline void set_message_id(const MessageID& value) { message_id_ = value; }
+    inline void set_message_id(const MessageID&& value) { message_id_ = value; }
+    inline const MessageID& get_message_id() const { return message_id_.get(); }
+    inline MessageID message_id() const { return message_id_.get(); }
 
     FieldNumber get_which_message() const { return which_message_; }
 
@@ -229,7 +228,7 @@ class TelemetryMessage final: public ::EmbeddedProto::MessageInterface
         return_value = target_.serialize_with_id(static_cast<uint32_t>(FieldNumber::TARGET), buffer, false);
       }
 
-      if((0U != message_id_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      if((static_cast<MessageID>(0) != message_id_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
         return_value = message_id_.serialize_with_id(static_cast<uint32_t>(FieldNumber::MESSAGE_ID), buffer, false);
       }
@@ -422,7 +421,7 @@ class TelemetryMessage final: public ::EmbeddedProto::MessageInterface
 
       EmbeddedProto::enumeration<Node> source_ = static_cast<Node>(0);
       EmbeddedProto::enumeration<Node> target_ = static_cast<Node>(0);
-      EmbeddedProto::uint32 message_id_ = 0U;
+      EmbeddedProto::enumeration<MessageID> message_id_ = static_cast<MessageID>(0);
 
       FieldNumber which_message_ = FieldNumber::NOT_SET;
       union message

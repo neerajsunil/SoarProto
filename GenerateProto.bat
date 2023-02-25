@@ -13,6 +13,7 @@ echo ** C++ File Cleanup **
 cd _C++
 del *.hpp
 ren *.h *.hpp
+ren CoreProto.hpp CoreProto.h
 
 echo.
 echo 	  ** Done! **

@@ -3,8 +3,8 @@
  *
  *  This file is part of Embedded Proto.
  *
- *  Embedded Proto is open source software: you can redistribute it and/or
- *  modify it under the terms of the GNU General Public License as published
+ *  Embedded Proto is open source software: you can redistribute it and/or 
+ *  modify it under the terms of the GNU General Public License as published 
  *  by the Free Software Foundation, version 3 of the license.
  *
  *  Embedded Proto  is distributed in the hope that it will be useful,
@@ -28,47 +28,15 @@
  *    the Netherlands
  */
 
-// This file is generated. Please do not edit!
-#ifndef COREPROTO_H
-#define COREPROTO_H
+#include "Fields.h"
+#include "MessageSizeCalculator.h"
 
-#include <cstdint>
-// Include external proto definitions
-
-namespace Proto {
-
-enum class Node : uint32_t
+namespace EmbeddedProto 
 {
-  NODE_INVALID = 0,
-  NODE_ANY = 1,
-  NODE_RCU = 2,
-  NODE_DMB = 3,
-  NODE_PBB = 4
-};
-
-enum class MessageID : uint32_t
-{
-  MSG_INVALID = 0,
-  MSG_CONTROL = 1,
-  MSG_COMMAND = 2,
-  MSG_TELEMETRY = 3
-};
-
-enum class RocketState : uint32_t
-{
-  DMB_INVALID = 0,
-  RS_PRELAUNCH = 1,
-  RS_FILL = 2,
-  RS_ARM = 3,
-  RS_IGNITION = 4,
-  RS_LAUNCH = 5,
-  RS_BURN = 6,
-  RS_COAST = 7,
-  RS_DESCENT = 8,
-  RS_RECOVERY = 9,
-  RS_ABORT = 10,
-  RS_NONE = 11
-};
-
-} // End of namespace Proto
-#endif // COREPROTO_H
+  uint32_t Field::serialized_size() const
+  {
+    ::EmbeddedProto::MessageSizeCalculator calcBuffer;
+    this->serialize(calcBuffer);
+    return calcBuffer.get_size();
+  }
+} // End of namespace EmbeddedProto

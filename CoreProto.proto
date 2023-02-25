@@ -13,19 +13,21 @@ package Proto;
 */
 enum Node {
     NODE_INVALID = 0;
-
-    NODE_ANY = 1;
-    NODE_RCU = 2;
-    NODE_DMB = 3;
-    NODE_PBB = 4;
+    
+    NODE_UNKNOWN = 1;   // This can happen if the node is not yet known at this stage, eg. COBS decode failed
+    NODE_ANY = 2;
+    NODE_RCU = 3;
+    NODE_DMB = 4;
+    NODE_PBB = 5;
 }
 
 enum MessageID {
     MSG_INVALID = 0;
 
-    MSG_CONTROL = 1;
-    MSG_COMMAND = 2;
-    MSG_TELEMETRY = 3;
+    MSG_UNKNOWN = 1;    // This can happen if the message ID is not yet known at this stage, eg. COBS decode failed
+    MSG_CONTROL = 2;
+    MSG_COMMAND = 3;
+    MSG_TELEMETRY = 4;
 }
 
 /* Board Specific Enums ------------------------------------------------------------------*/

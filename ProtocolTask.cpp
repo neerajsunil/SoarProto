@@ -12,10 +12,12 @@
 #include <cstring>
 
 #include "FlightTask.hpp"
+#include "UARTTask.hpp"
 #include "stm32f4xx_hal.h"
 #include "cobs.h"
 
 #include "ControlMessage.hpp"
+#include "WriteBufferFixedSize.h"
 
 /* Macros --------------------------------------------------------------------*/
 
@@ -110,7 +112,22 @@ void ProtocolTask::Run(void * pvParams)
 
                 // If the COBS decode result is not OK, then we need to send a NACK
                 if (cobsRes.status != COBS_DECODE_OK) {
-                    proto::ControlMessage nackMsg;
+                    Proto::ControlMessage msg;
+                    msg.set_source(Proto::Node::NODE_ANY);
+                    msg.set_target(Proto::Node::NODE_RCU);
+                    msg.set_message_id(Proto::MessageID::MSG_CONTROL);
+                    Proto::AckNack nack;
+                    nack.set_acking_msg_source(Proto::Node::NODE_ANY);
+                    nack.set_acking_msg_id(Proto::MessageID::MSG_UNKNOWN);
+                    msg.set_nack(nack);
+
+                    EmbeddedProto::WriteBufferFixedSize<DEFAULT_PROTOCOL_WRITE_BUFFER_SIZE> writeBuffer;
+                    msg.serialize(writeBuffer);
+
+                    // Send the NACK to ourselves, which will queue to be wrapped in a COBS frame and sent
+                    Command cmd(PROTOCOL_COMMAND, PROTOCOL_TX_REQUEST_DATA);
+                    cmd.CopyDataToCommand(writeBuffer.get_data(), writeBuffer.get_size());
+                    UARTTask::Inst().SendCommandReference(cmd);
                 }
                 else
                 {
@@ -125,9 +142,15 @@ void ProtocolTask::Run(void * pvParams)
             }
             case PROTOCOL_TX_REQUEST_DATA: {                                               //Process the command -- TX Request
                 // Allocate a command for storing the encoded message
-                //TODO: Allocate a new command for storing the COBS encoded message
+                Command protoTx(DATA_COMMAND, UART_TASK_COMMAND_SEND_RADIO);
 
-                //TODO: Send this off to the UART Task
+                // Allocate enough data for a COBS encoded message
+                uint16_t msgSize = GET_COBS_MAX_LEN(cm.GetDataSize());
+
+                // Encode in COBS
+
+                // Send this off to the UART Task
+
             }
             default:
                 break;

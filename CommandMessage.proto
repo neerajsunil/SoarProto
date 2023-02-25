@@ -21,7 +21,7 @@ message CommandMessage {
     Node target = 2; // This is the destination of the message, if this is a broadcast message, this should be set to NODE_ANY
 
     // Message Identifiers
-    uint32 message_id = 3; // This is the message ID of the message, this is used to identify the message type
+    MessageID message_id = 3; // This is the message ID of the message, this is used to identify the message type
 
     /* There are much more robust RDT implementations, but for simplicity, we will use a sequence number simply to verify
      * ACKs are for the correct respective message. Each SOURCE node maintains a counting UINT32_T that is incremented for EVERY

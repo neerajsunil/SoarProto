@@ -8,11 +8,13 @@ MSG_COMMAND: MessageID
 MSG_CONTROL: MessageID
 MSG_INVALID: MessageID
 MSG_TELEMETRY: MessageID
+MSG_UNKNOWN: MessageID
 NODE_ANY: Node
 NODE_DMB: Node
 NODE_INVALID: Node
 NODE_PBB: Node
 NODE_RCU: Node
+NODE_UNKNOWN: Node
 RS_ABORT: RocketState
 RS_ARM: RocketState
 RS_BURN: RocketState
