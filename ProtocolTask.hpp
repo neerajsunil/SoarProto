@@ -21,7 +21,7 @@ enum PROTOCOL_TASK_COMMANDS {
 
 /* Macros ------------------------------------------------------------------*/
 constexpr uint16_t PROTOCOL_RX_BUFFER_SZ_BYTES = 255;
-constexpr uint16_t DEFAULT_PROTOCOL_TASK_TX_TGT = UART_TASK_COMMAND_SEND_RADIO; // Must go in derived task
+constexpr uint16_t DEFAULT_PROTOCOL_UART_TX_TGT = UART_TASK_COMMAND_SEND_RADIO; // Must go in derived task
 constexpr uint16_t DEFAULT_PROTOCOL_WRITE_BUFFER_SIZE = 256;
 
 // Task Definition
