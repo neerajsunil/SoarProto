@@ -20,6 +20,20 @@ import "Core.proto";
 
     // Message Data
     oneof message {
-        int32 placeholder = 4;
+        LatLong latitude = 1;
+        LatLong longitude = 2;
+        Altitude antenna_alt = 3;
+        Altitude geoID_alt = 4;
+        Altitude total_alt =5;
     }
+}
+
+message LatLong {
+    uint32 degrees = 1;
+    uint32 minutes = 2;
+}
+
+message Altitude {
+    uint32 altitude = 1;
+    char unit = 2;
 }
