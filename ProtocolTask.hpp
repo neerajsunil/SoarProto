@@ -39,11 +39,6 @@ constexpr uint8_t PROTOCOL_OVERHEAD_BYTES = 1 + 4;        // Size of the protoco
 class ProtocolTask : public Task
 {
 public:
-// NOTE: This must be in the derived class
-//    static ProtocolTask& Inst() {
-//        static ProtocolTask inst;
-//        return inst;
-//    }
     ProtocolTask(Proto::Node node);
 
     virtual void InitTask() = 0;
@@ -55,8 +50,6 @@ public:
     static void SendProtobufMessage(EmbeddedProto::WriteBufferFixedSize<DEFAULT_PROTOCOL_WRITE_BUFFER_SIZE>& writeBuffer, Proto::MessageID msgId);
 
 protected:
-// NOTE: This must be in the derived class
-//    static void RunTask(void* pvParams) { ProtocolTask::Inst().Run(pvParams); } // Static Task Interface, passes control to the instance Run();
     void Run(void* pvParams);    // Main run code
 
     void ConfigureUART();
@@ -79,12 +72,6 @@ protected:
 
     static void SendData(uint8_t* data, uint16_t size, uint8_t msgId); // Send a protobuf encoded message over UART
     void SendNACK(); // Send a NACK message over UART
-
-private:
-// NOTE: This must be in the derived class
-//    ProtocolTask(); // Private constructor
-//    ProtocolTask(const ProtocolTask&);                    // Prevent copy-construction
-//    ProtocolTask& operator=(const ProtocolTask&);            // Prevent assignment
 };
 
 #endif    // SOAR_SYSTEM_PROTOCOL_TASK_HPP_

@@ -30,15 +30,9 @@ constexpr uint8_t PROTOCOL_TASK_PERIOD = 100;
 /* Prototypes ----------------------------------------------------------------*/
 
 /* HAL Callbacks ----------------------------------------------------------------*/
-//TODO: Add this code to wherever the global HAL_UART_RxCpltCallback is
-/**
- * @brief HAL Callback for DMA/Interrupt Complete
- */
-// void HAL_UART_RxCpltCallback(UART_HandleTypeDef* huart)
-// {
-//     if (huart->Instance == SystemHandles::UART_Protocol->Instance)
-//         ProtocolTask::Inst().InterruptRxData();
-// }
+//NOTE: This code MUST be added to wherever the HALRxCpltCallback is defined
+//     else if (huart->Instance == SystemHandles::UART_Protocol->Instance)
+//         <BOARD_ID>ProtocolTask::Inst().InterruptRxData();
 
 /* Functions -----------------------------------------------------------------*/
 /**
@@ -55,28 +49,6 @@ ProtocolTask::ProtocolTask(Proto::Node node) : Task(TASK_PROTOCOL_QUEUE_DEPTH_OB
     isProtocolMsgReady = false;
     srcNode = node;
 }
-
-/**
- * @brief Init task for RTOS
- */
-// NOTE: This must be in the derived class
-//void ProtocolTask::InitTask()
-//{
-//    // Make sure the task is not already initialized
-//    SOAR_ASSERT(rtTaskHandle == nullptr, "Cannot initialize Protocol task twice");
-//
-//    // Start the task
-//    BaseType_t rtValue =
-//        xTaskCreate((TaskFunction_t)ProtocolTask::RunTask,
-//            (const char*)"ProtocolTask",
-//            (uint16_t)TASK_PROTOCOL_STACK_DEPTH_WORDS,
-//            (void*)this,
-//            (UBaseType_t)TASK_PROTOCOL_PRIORITY,
-//            (TaskHandle_t*)&rtTaskHandle);
-//
-//    //Ensure creation succeded
-//    SOAR_ASSERT(rtValue == pdPASS, "ProtocolTask::InitTask - xTaskCreate() failed");
-//}
 
 /**
  *    @brief Runcode for the ProtocolTask
