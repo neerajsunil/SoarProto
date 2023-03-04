@@ -18,6 +18,7 @@
 
 #include "ControlMessage.hpp"
 #include "WriteBufferFixedSize.h"
+#include "_C++/ControlMessage.hpp"
 
 /* Macros --------------------------------------------------------------------*/
 
@@ -112,6 +113,8 @@ void ProtocolTask::Run(void * pvParams)
 
                 // If the COBS decode result is not OK, then we need to send a NACK
                 if (cobsRes.status != COBS_DECODE_OK) {
+					SOAR_PRINT("PROTO-INFO: COBS Decode Failed: %d %d", cobsRes.status, cobsRes.out_len);
+
                     Proto::ControlMessage msg;
                     msg.set_source(Proto::Node::NODE_ANY);
                     msg.set_target(Proto::Node::NODE_RCU);
@@ -144,16 +147,27 @@ void ProtocolTask::Run(void * pvParams)
                 }
                 else
                 {
-                    // Verify the initial byte is consistent otherwise we NACK (could be in case above), we keep the size with the message as that and the checksum will be parsed by HandleProtocolMessage
-                    //TODO: Implement this check
+					SOAR_PRINT("PROTO-INFO-V: COBS Decode Pass: %d %d", cobsRes.status, cobsRes.out_len);
 
-                    // Handle the protocol message using the inherited function
-                    HandleProtocolMessage(protoRx);
+                    // Verify the initial byte is consistent otherwise we NACK (could be in case above), we keep the size with the message as that and the checksum will be parsed by HandleProtocolMessage
+					uint8_t byte1 = decodedDataPtr[0];
+                    if (byte1 != PROTOCOL_HEADER_BYTE1)
+                    {
+                        SOAR_PRINT("PROTO-INFO: Invalid Header Byte: %d", byte1);
+                    }
+                    else
+                    {
+                        // Handle the protocol message using the inherited function
+                        HandleProtocolMessage(protoRx);
+                    }
                 }
 
                 protoRx.Reset();
             }
             case PROTOCOL_TX_REQUEST_DATA: {                                               //Process the command -- TX Request
+
+				SOAR_PRINT("PROTO-INFO-Vs: TX Request Received [%d]", cm.GetDataSize());
+
                 // Allocate a command for storing the encoded message
                 Command protoTx(DATA_COMMAND, DEFAULT_PROTOCOL_UART_TX_TGT);
 

@@ -29,6 +29,9 @@ constexpr uint8_t TASK_PROTOCOL_PRIORITY = 2;            // Priority of the prot
 constexpr uint8_t TASK_PROTOCOL_QUEUE_DEPTH_OBJS = 10;        // Size of the protocol task queue
 constexpr uint16_t TASK_PROTOCOL_STACK_DEPTH_WORDS = 256;        // Size of the protocol task stack
 
+/* Protocol Definition ------------------------------------------------------------------*/
+constexpr uint8_t PROTOCOL_HEADER_BYTE1 = 0xA5;
+
 /* Class ------------------------------------------------------------------*/
 class ProtocolTask : public Task
 {
