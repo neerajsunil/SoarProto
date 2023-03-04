@@ -17,7 +17,6 @@
 #include "cobs.h"
 
 #include "ControlMessage.hpp"
-#include "WriteBufferFixedSize.h"
 
 /* Macros --------------------------------------------------------------------*/
 
@@ -45,7 +44,7 @@ constexpr uint8_t PROTOCOL_TASK_PERIOD = 100;
 /**
  * @brief Constructor, sets all member variables
  */
-ProtocolTask::ProtocolTask() : Task(TASK_PROTOCOL_QUEUE_DEPTH_OBJS)
+ProtocolTask::ProtocolTask(Proto::Node node) : Task(TASK_PROTOCOL_QUEUE_DEPTH_OBJS)
 {
     // Setup Buffers
     protocolRxBuffer = soar_malloc(PROTOCOL_RX_BUFFER_SZ_BYTES+1);
@@ -54,6 +53,7 @@ ProtocolTask::ProtocolTask() : Task(TASK_PROTOCOL_QUEUE_DEPTH_OBJS)
     // Setup index and flags
     protocolMsgIdx = 0;
     isProtocolMsgReady = false;
+    srcNode = node;
 }
 
 /**
@@ -112,40 +112,11 @@ void ProtocolTask::Run(void * pvParams)
 
                 // If the COBS decode result is not OK, then we need to send a NACK
                 if (cobsRes.status != COBS_DECODE_OK) {
-                    Proto::ControlMessage msg;
-                    msg.set_source(Proto::Node::NODE_ANY);
-                    msg.set_target(Proto::Node::NODE_RCU);
-                    msg.set_message_id(Proto::MessageID::MSG_CONTROL);
-                    Proto::AckNack nack;
-                    nack.set_acking_msg_source(Proto::Node::NODE_ANY);
-                    nack.set_acking_msg_id(Proto::MessageID::MSG_UNKNOWN);
-                    msg.set_nack(nack);
-
-                    EmbeddedProto::WriteBufferFixedSize<DEFAULT_PROTOCOL_WRITE_BUFFER_SIZE> writeBuffer;
-                    msg.serialize(writeBuffer);
-
-                    uint16_t msgSize = GET_COBS_MAX_LEN(writeBuffer.get_size());
-
-                    // Send the NACK by wrapping in a COBS frame and sending direct to UART Task
-                    Command protoTx(DATA_COMMAND, DEFAULT_PROTOCOL_UART_TX_TGT);
-                    protoTx.AllocateData(msgSize);
-
-                    // Encode in COBS
-                    cobs_encode_result cobsEncRes = cobs_encode(protoTx.GetDataPointer(), msgSize, writeBuffer.get_data(), writeBuffer.get_size());
-
-                    if (cobsEncRes.status !=  COBS_ENCODE_OK) {
-                        protoTx.Reset();
-                        SOAR_PRINT("WARNING: COBS encode failed in ProtocolTask NACK case\n");
-                    }
-
-                    protoTx.CopyDataToCommand(writeBuffer.get_data(), writeBuffer.get_size());
-                    UARTTask::Inst().SendCommandReference(protoTx);
-
+                    SendNACK();
                 }
-                else
-                {
-                    // Verify the initial byte is consistent otherwise we NACK (could be in case above), we keep the size with the message as that and the checksum will be parsed by HandleProtocolMessage
-                    //TODO: Implement this check
+                else {
+                    // Verify the checksum is correct, send a NACK if incorrect
+                    //TODO: Implement this check, send NACK and don't handle if it fails
 
                     // Handle the protocol message using the inherited function
                     HandleProtocolMessage(protoRx);
@@ -191,6 +162,59 @@ bool ProtocolTask::ReceiveData()
 }
 
 /**
+ * @brief Sends a message to UART Task directly after wrapping it inside the message ID and checksum, and encoding with COBS
+ */
+void ProtocolTask::SendData(uint8_t* data, uint16_t size, uint8_t msgId)
+{
+    uint16_t msgSize = GET_COBS_MAX_LEN(size + PROTOCOL_OVERHEAD_BYTES);
+
+    // Temporary array to store the pre-COBS message
+    const uint16_t preCobsSize = size + PROTOCOL_OVERHEAD_BYTES;
+    uint8_t arr[preCobsSize];
+
+    // Wrap in the message header and checksum
+    uint16_t chkSum = Utils::getCRC32(data, size);
+    arr[0] = (uint8_t)Proto::MessageID::MSG_CONTROL;
+    *((uint32_t*)&arr[preCobsSize - 4]) = chkSum;
+
+    // Send the data by wrapping in a COBS frame and sending direct to UART Task
+    Command protoTx(DATA_COMMAND, DEFAULT_PROTOCOL_UART_TX_TGT);
+    protoTx.AllocateData(msgSize);
+
+    // Encode in COBS
+    cobs_encode_result cobsEncRes = cobs_encode(protoTx.GetDataPointer(), msgSize, arr, preCobsSize);
+
+    if (cobsEncRes.status != COBS_ENCODE_OK) {
+        protoTx.Reset();
+        SOAR_PRINT("WARNING: COBS encode failed in ProtocolTask NACK case\n");
+    }
+
+    protoTx.CopyDataToCommand(data, size);
+    UARTTask::Inst().SendCommandReference(protoTx);
+}
+
+/*
+ * @brief Send a NACK message to the UART Task
+ */
+void ProtocolTask::SendNACK()
+{
+    Proto::ControlMessage msg;
+    msg.set_source(srcNode);
+    msg.set_target(Proto::Node::NODE_RCU);
+    msg.set_message_id(Proto::MessageID::MSG_CONTROL);
+    Proto::AckNack nack;
+    nack.set_acking_msg_source(Proto::Node::NODE_ANY);
+    nack.set_acking_msg_id(Proto::MessageID::MSG_UNKNOWN);
+    msg.set_nack(nack);
+
+    EmbeddedProto::WriteBufferFixedSize<DEFAULT_PROTOCOL_WRITE_BUFFER_SIZE> writeBuffer;
+    msg.serialize(writeBuffer);
+
+    // Send the control message
+    SendData(writeBuffer.get_data(), writeBuffer.get_size(), (uint8_t)Proto::MessageID::MSG_CONTROL);
+}
+
+/**
  * @brief Receive data to the buffer
  * @return Whether the protocolRxBuffer is ready or not
  */
@@ -221,6 +245,17 @@ void ProtocolTask::InterruptRxData()
 
     //Re-arm the interrupt
     ReceiveData();
+}
+
+/*
+ * @brief Interface function to quickly send a protobuf message by providing the write buffer and the message ID
+ * @param writeBuffer The write buffer containing the serialized protobuf message
+ * @param msgId The message ID of the message
+ */
+void ProtocolTask::SendProtobufMessage(EmbeddedProto::WriteBufferFixedSize<DEFAULT_PROTOCOL_WRITE_BUFFER_SIZE>& writeBuffer, Proto::MessageID msgId)
+{
+    // Note: This function runs inside the calling task
+    SendData(writeBuffer.get_data(), writeBuffer.get_size(), (uint8_t)Proto::MessageID::MSG_CONTROL);
 }
 
 /* Helper Functions --------------------------------------------------------------*/

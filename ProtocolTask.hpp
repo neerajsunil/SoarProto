@@ -10,6 +10,8 @@
 #include "Task.hpp"
 #include "SystemDefines.hpp"
 #include "UARTTask.hpp"
+#include "WriteBufferFixedSize.h"
+#include "CoreProto.h"
 
 /* Enums ------------------------------------------------------------------*/
 enum PROTOCOL_TASK_COMMANDS {
@@ -29,6 +31,10 @@ constexpr uint8_t TASK_PROTOCOL_PRIORITY = 2;            // Priority of the prot
 constexpr uint8_t TASK_PROTOCOL_QUEUE_DEPTH_OBJS = 10;        // Size of the protocol task queue
 constexpr uint16_t TASK_PROTOCOL_STACK_DEPTH_WORDS = 256;        // Size of the protocol task stack
 
+// Protocol Definition
+// The protocol is applied BEFORE COBS encoding, and contains a message ID and a checksum footer
+constexpr uint8_t PROTOCOL_OVERHEAD_BYTES = 1 + 4;        // Size of the protocol overhead (message ID + 4 byte checksum)
+
 /* Class ------------------------------------------------------------------*/
 class ProtocolTask : public Task
 {
@@ -38,12 +44,15 @@ public:
 //        static ProtocolTask inst;
 //        return inst;
 //    }
-	ProtocolTask();
+    ProtocolTask(Proto::Node node);
 
-    void InitTask();
+    virtual void InitTask() = 0;
 
     //Functions exposed to HAL callbacks
     void InterruptRxData();
+
+    //Main interface function for sending protobuf messages
+    static void SendProtobufMessage(EmbeddedProto::WriteBufferFixedSize<DEFAULT_PROTOCOL_WRITE_BUFFER_SIZE>& writeBuffer, Proto::MessageID msgId);
 
 protected:
 // NOTE: This must be in the derived class
@@ -65,6 +74,11 @@ protected:
     bool isProtocolMsgReady;
 
     uint8_t protocolRxChar; // Character received from UART Interrupt
+
+    Proto::Node srcNode;
+
+    static void SendData(uint8_t* data, uint16_t size, uint8_t msgId); // Send a protobuf encoded message over UART
+    void SendNACK(); // Send a NACK message over UART
 
 private:
 // NOTE: This must be in the derived class
