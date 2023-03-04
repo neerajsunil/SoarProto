@@ -10,6 +10,8 @@
 #include "Task.hpp"
 #include "SystemDefines.hpp"
 #include "UARTTask.hpp"
+#include "WriteBufferFixedSize.h"
+#include "CoreProto.h"
 
 /* Enums ------------------------------------------------------------------*/
 enum PROTOCOL_TASK_COMMANDS {
@@ -21,7 +23,7 @@ enum PROTOCOL_TASK_COMMANDS {
 
 /* Macros ------------------------------------------------------------------*/
 constexpr uint16_t PROTOCOL_RX_BUFFER_SZ_BYTES = 255;
-constexpr uint16_t DEFAULT_PROTOCOL_UART_TX_TGT = UART_TASK_COMMAND_SEND_RADIO; // Must go in derived task
+constexpr uint16_t DEFAULT_PROTOCOL_UART_TX_TGT = UART_TASK_COMMAND_SEND_RADIO; // Should go in systemdefines
 constexpr uint16_t DEFAULT_PROTOCOL_WRITE_BUFFER_SIZE = 256;
 
 // Task Definition
@@ -29,28 +31,25 @@ constexpr uint8_t TASK_PROTOCOL_PRIORITY = 2;            // Priority of the prot
 constexpr uint8_t TASK_PROTOCOL_QUEUE_DEPTH_OBJS = 10;        // Size of the protocol task queue
 constexpr uint16_t TASK_PROTOCOL_STACK_DEPTH_WORDS = 256;        // Size of the protocol task stack
 
-/* Protocol Definition ------------------------------------------------------------------*/
-constexpr uint8_t PROTOCOL_HEADER_BYTE1 = 0xA5;
+// Protocol Definition
+// The protocol is applied BEFORE COBS encoding, and contains a message ID and a checksum footer
+constexpr uint8_t PROTOCOL_OVERHEAD_BYTES = 1 + 4;        // Size of the protocol overhead (message ID + 4 byte checksum)
 
 /* Class ------------------------------------------------------------------*/
 class ProtocolTask : public Task
 {
 public:
-// NOTE: This must be in the derived class
-//    static ProtocolTask& Inst() {
-//        static ProtocolTask inst;
-//        return inst;
-//    }
-	ProtocolTask();
+    ProtocolTask(Proto::Node node);
 
-    void InitTask();
+    virtual void InitTask() = 0;
 
     //Functions exposed to HAL callbacks
     void InterruptRxData();
 
+    //Main interface function for sending protobuf messages
+    static void SendProtobufMessage(EmbeddedProto::WriteBufferFixedSize<DEFAULT_PROTOCOL_WRITE_BUFFER_SIZE>& writeBuffer, Proto::MessageID msgId);
+
 protected:
-// NOTE: This must be in the derived class
-//    static void RunTask(void* pvParams) { ProtocolTask::Inst().Run(pvParams); } // Static Task Interface, passes control to the instance Run();
     void Run(void* pvParams);    // Main run code
 
     void ConfigureUART();
@@ -69,11 +68,10 @@ protected:
 
     uint8_t protocolRxChar; // Character received from UART Interrupt
 
-private:
-// NOTE: This must be in the derived class
-//    ProtocolTask(); // Private constructor
-//    ProtocolTask(const ProtocolTask&);                    // Prevent copy-construction
-//    ProtocolTask& operator=(const ProtocolTask&);            // Prevent assignment
+    Proto::Node srcNode;
+
+    static void SendData(uint8_t* data, uint16_t size, uint8_t msgId); // Send a protobuf encoded message over UART
+    void SendNACK(); // Send a NACK message over UART
 };
 
 #endif    // SOAR_SYSTEM_PROTOCOL_TASK_HPP_
