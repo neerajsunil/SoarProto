@@ -152,7 +152,7 @@ void ProtocolTask::SendData(uint8_t* data, uint16_t size, uint8_t msgId)
 
     // Wrap in the message header and checksum
     uint16_t chkSum = Utils::getCRC32(data, size);
-    arr[0] = (uint8_t)Proto::MessageID::MSG_CONTROL;
+    arr[0] = msgId;
     *((uint32_t*)&arr[preCobsSize - 4]) = chkSum;
 
     // Send the data by wrapping in a COBS frame and sending direct to UART Task
@@ -233,7 +233,7 @@ void ProtocolTask::InterruptRxData()
 void ProtocolTask::SendProtobufMessage(EmbeddedProto::WriteBufferFixedSize<DEFAULT_PROTOCOL_WRITE_BUFFER_SIZE>& writeBuffer, Proto::MessageID msgId)
 {
     // Note: This function runs inside the calling task
-    SendData(writeBuffer.get_data(), writeBuffer.get_size(), (uint8_t)Proto::MessageID::MSG_CONTROL);
+    SendData(writeBuffer.get_data(), writeBuffer.get_size(), (uint8_t)msgId);
 }
 
 /* Helper Functions --------------------------------------------------------------*/

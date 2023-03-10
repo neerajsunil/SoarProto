@@ -12,6 +12,9 @@
 #include "UARTTask.hpp"
 #include "WriteBufferFixedSize.h"
 #include "CoreProto.h"
+#include "ControlMessage.hpp"
+#include "CommandMessage.hpp"
+#include "TelemetryMessage.hpp"
 
 /* Enums ------------------------------------------------------------------*/
 enum PROTOCOL_TASK_COMMANDS {
