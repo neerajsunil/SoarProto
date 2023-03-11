@@ -53,7 +53,8 @@ enum class MessageID : uint32_t
   MSG_UNKNOWN = 1,
   MSG_CONTROL = 2,
   MSG_COMMAND = 3,
-  MSG_TELEMETRY = 4
+  MSG_TELEMETRY = 4,
+  MSG_MAX_INVALID = 5
 };
 
 enum class RocketState : uint32_t
