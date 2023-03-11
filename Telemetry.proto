@@ -1,7 +1,7 @@
 /**
  * FILE: Telemetry.proto
  * BRIEF: Telemetry data from various boards (Data Management Board, Sensor Observation Board, Plumbing Bay Board, etc.)
- * AUTHOR: Christopher Chan (cjchanx)
+ * AUTHOR: Christopher Chan (cjchanx) and Shanna Hollingworth (shanna1408)
  */
 syntax = "proto3";
 package proto;
@@ -20,20 +20,146 @@ import "Core.proto";
 
     // Message Data
     oneof message {
-        LatLong latitude = 1;
-        LatLong longitude = 2;
-        Altitude antenna_alt = 3;
-        Altitude geoID_alt = 4;
-        Altitude total_alt =5;
+        GPS coord = 4;
+        Baro baro = 5;
+        IMU imu = 6;
+        Battery bat = 7;
+        Flash flash = 8;
+        Rocket rocket = 9;
+        PressureDMB pressdmb = 10;
+        TempDMB tempdmb = 11;
+        GPIOStatus gpio = 12;
+        PressureRCU pressrcu = 13;
+        TempRCU temprcu = 14;
+        NOSLoadCell nos = 15;
+        RelayStatus relay = 16;
+        PadBoxStatus padbox = 17;
+        LRLoadCell lr = 18;
+        TempSOB tempsob = 19;
     }
 }
 
+/* DMB -> RCU Messages ---------------------------------------------------------------- */
+
+message GPS{
+    LatLong latitude = 1;   // latitude of rocket
+    LatLong longitude = 2;  // longitude of rocket
+    uint32 antenna_alt = 3; // altitude of antenna
+    uint32 total_alt = 5;   // total altitude of rocket
+    uint32 time = 6;        // time of message
+}
+
 message LatLong {
-    uint32 degrees = 1;
+    uint32 degrees = 1; 
     uint32 minutes = 2;
 }
 
-message Altitude {
-    uint32 altitude = 1;
-    char unit = 2;
+message Baro{
+    uint32 pressure = 1;    // barometer pressure
+    uint32 temp = 2;        // barometer temperature
+}
+
+message IMU{
+    uint32 accelx = 1;  // x direction of acceleration
+    uint32 accely = 2;  // y direction of acceleration
+    uint32 accelz = 3;  // z direction of acceleration
+    uint32 gyrox = 4;   // x direction of gyroscope
+    uint32 gyroy = 5;   // y direction of gyroscope
+    uint32 gyroz = 6;   // z direction of gyroscope
+    uint32 magx = 7;
+    uint32 magy = 8;
+    uint32 magz = 9;
+}
+
+message Battery{
+    uint32 power_source = 1; // power source of battery
+    uint32 volt = 2; // voltage of battery
+}
+
+message Flash{
+    enum FlashState {
+        loghz = 0;
+        logsec = 1;
+    }
+}
+
+message Rocket{
+    enum RocketState {
+        state = 0;
+        hbperiod = 1;
+        vent = 2;
+        drain = 3;
+    }
+}
+
+/* PBB -> DMB Messages ---------------------------------------------------------------- */
+
+message PressureDMB {
+    uint32 pressure1 = 1;
+    uint32 pressure2 = 2;
+}
+
+message TempDMB {
+    uint32 temp1 = 1;
+    uint32 temp2 = 2;
+}
+
+message GPIOStatus {
+    bool main_engine_valve = 1;
+}
+
+/* RCU Messages ---------------------------------------------------------------- */
+
+message PressureRCU {
+    uint32 pressure1 = 1;
+    uint32 pressure2 = 2;
+    uint32 pressure3 = 3;
+    uint32 pressure4 = 4;
+}
+
+message TempRCU {
+    uint32 temp1 = 1;
+    uint32 temp2 = 2;
+}
+
+message NOSLoadCell {
+    uint32 nos1mass = 1;
+    uint32 nos2mass = 2;
+}
+
+message RelayStatus {
+    enum RelayStates {
+        ac1 = 0;
+        ac2 = 1;
+        pbv1 = 2;
+        pbv2 = 3;
+        pbv3 = 4;
+        sol1 = 5;
+        sol2 = 6;
+        sol3 = 7;
+        sol4 = 8;
+        sol5 = 9;
+        sol6 = 10;
+        sol7 = 11;
+        sol8a = 12;
+        sol8b = 13;
+    }
+}
+
+message PadBoxStatus {
+    enum PadBoxStates {
+        cont1 = 0;  // continuity state 1
+        cont2 = 1;  // continuity state 2
+    }
+}
+
+/* SOB Messages ---------------------------------------------------------------- */
+
+message LRLoadCell {
+    uint32 rocketlc = 1;
+}
+
+message TempSOB {
+    uint32 temp1 = 1;
+    uint32 temp2 = 2;
 }
