@@ -72,13 +72,13 @@ void ProtocolTask::Run(void * pvParams)
             case EVENT_PROTOCOL_RX_COMPLETE: {                                              //Process the command -- RX Complete
                 // Allocate a command for storing the decoded message
                 Command protoRx(PROTOCOL_COMMAND, PROTOCOL_RX_DECODED_DATA);
-                uint8_t* decodedDataPtr = protoRx.AllocateData(protocolMsgIdx);
+                uint8_t* decodedDataPtr = protoRx.AllocateData(protocolMsgIdx-1); // We ignore the delimiter byte, so this is the worse case size
 
                 // Assert allocation was successful
                 SOAR_ASSERT(decodedDataPtr);
 
                 // When we get an Rx complete, we need to run the COBS decoder on the message
-                cobs_decode_result cobsRes = cobs_decode(decodedDataPtr, protocolMsgIdx, protocolRxBuffer, protocolMsgIdx);
+                cobs_decode_result cobsRes = cobs_decode(decodedDataPtr, protocolMsgIdx, protocolRxBuffer, protocolMsgIdx-1);
 
                 // We can mark the rx buffer as safe to write to now
                 protocolMsgIdx = 0;
@@ -92,6 +92,9 @@ void ProtocolTask::Run(void * pvParams)
                 else {
                     // Verify the checksum is correct, send a NACK if incorrect
                     //TODO: Implement this check, send NACK and don't handle if it fails
+
+                    // Set the message size to the decoded buffer size, minus the checksum, since that should be validated
+                    protoRx.SetDataSize(cobsRes.out_len - PROTOCOL_CHECKSUM_BYTES);
 
                     // Handle the protocol message using the inherited function
                     HandleProtocolMessage(protoRx);
@@ -224,6 +227,39 @@ void ProtocolTask::InterruptRxData()
 
     //Re-arm the interrupt
     ReceiveData();
+}
+
+/**
+ * @brief Handle protocol message
+ * @param Protocol message to handle, passed by reference
+ */
+void ProtocolTask::HandleProtocolMessage(Command& cmd)
+{
+    // Extract the message ID
+    uint8_t* buffer = cmd.GetDataPointer();
+    uint16_t bufSize = cmd.GetDataSize();
+    Proto::MessageID msgId = (Proto::MessageID)buffer[0];
+
+    // Remove the message ID from the buffer
+    buffer = &buffer[1];
+    bufSize -= 1;
+
+    // Switch for each message ID we can handle
+    switch (msgId) {
+    case Proto::MessageID::MSG_COMMAND:
+        HandleProtobufCommandMessage(buffer, bufSize);
+        break;
+    case Proto::MessageID::MSG_CONTROL:
+        HandleProtobufControlMesssage(buffer, bufSize);
+        break;
+    case Proto::MessageID::MSG_TELEMETRY:
+        HandleProtobufTelemetryMessage(buffer, bufSize);
+        break;
+    default:
+        SOAR_PRINT("PROTO-INFO: Unsupported Message ID [%d] received\n");
+    }
+
+    cmd.Reset();
 }
 
 /*

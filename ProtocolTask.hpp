@@ -36,7 +36,8 @@ constexpr uint16_t TASK_PROTOCOL_STACK_DEPTH_WORDS = 256;        // Size of the 
 
 // Protocol Definition
 // The protocol is applied BEFORE COBS encoding, and contains a message ID and a checksum footer
-constexpr uint8_t PROTOCOL_OVERHEAD_BYTES = 1 + 4;        // Size of the protocol overhead *PRE-COBS* (message ID + 4 byte checksum)
+constexpr uint8_t PROTOCOL_CHECKSUM_BYTES = 4;
+constexpr uint8_t PROTOCOL_OVERHEAD_BYTES = 1 + PROTOCOL_CHECKSUM_BYTES;        // Size of the protocol overhead *PRE-COBS* (message ID + 4 byte checksum)
 
 /* Class ------------------------------------------------------------------*/
 class ProtocolTask : public Task
@@ -57,8 +58,12 @@ protected:
 
     void ConfigureUART();
     // This will receive a (PROTOCOL_COMMAND, PROTOCOL_RX_DECODED_DATA) with the data pointer allocated, COBS decoded (but in the SOAR Message Format)
-    virtual void HandleProtocolMessage(Command& cmd) = 0;   // This MUST be implemented in the derived board-specific ProtocolTask object
-    //void HandleCommand(Command& cm);
+    void HandleProtocolMessage(Command& cmd);
+
+    // These MUST be implemented in the derived board-specific ProtocolTask object
+    virtual void HandleProtobufCommandMessage(uint8_t* data, uint16_t size) = 0;
+    virtual void HandleProtobufControlMesssage(uint8_t* data, uint16_t size) = 0;
+    virtual void HandleProtobufTelemetryMessage(uint8_t* data, uint16_t size) = 0;
 
     bool ReceiveData();
 
