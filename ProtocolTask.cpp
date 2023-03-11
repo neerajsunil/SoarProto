@@ -19,6 +19,7 @@
 #include "ControlMessage.hpp"
 #include "WriteBufferFixedSize.h"
 #include "_C++/ControlMessage.hpp"
+#include <ReadBufferFixedSize.h>
 
 /* Macros --------------------------------------------------------------------*/
 
@@ -244,16 +245,21 @@ void ProtocolTask::HandleProtocolMessage(Command& cmd)
     buffer = &buffer[1];
     bufSize -= 1;
 
+    // Copy bytes to the read buffer
+    EmbeddedProto::ReadBufferFixedSize<PROTOCOL_RX_BUFFER_SZ_BYTES> readBuffer;
+    for (uint16_t i = 0; i < bufSize; i++)
+        readBuffer.push(buffer[i]);
+
     // Switch for each message ID we can handle
     switch (msgId) {
     case Proto::MessageID::MSG_COMMAND:
-        HandleProtobufCommandMessage(buffer, bufSize);
+        HandleProtobufCommandMessage(readBuffer);
         break;
     case Proto::MessageID::MSG_CONTROL:
-        HandleProtobufControlMesssage(buffer, bufSize);
+        HandleProtobufControlMesssage(readBuffer);
         break;
     case Proto::MessageID::MSG_TELEMETRY:
-        HandleProtobufTelemetryMessage(buffer, bufSize);
+        HandleProtobufTelemetryMessage(readBuffer);
         break;
     default:
         SOAR_PRINT("PROTO-INFO: Unsupported Message ID [%d] received\n");

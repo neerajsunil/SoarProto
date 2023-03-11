@@ -14,6 +14,7 @@
 #include "CoreProto.h"
 #include "ControlMessage.hpp"
 #include "CommandMessage.hpp"
+#include "ReadBufferFixedSize.h"
 #include "TelemetryMessage.hpp"
 
 /* Enums ------------------------------------------------------------------*/
@@ -25,14 +26,16 @@ enum PROTOCOL_TASK_COMMANDS {
 };
 
 /* Macros ------------------------------------------------------------------*/
-constexpr uint16_t PROTOCOL_RX_BUFFER_SZ_BYTES = 255;
+constexpr uint16_t PROTOCOL_RX_BUFFER_SZ_BYTES = 192;
 constexpr uint16_t DEFAULT_PROTOCOL_UART_TX_TGT = UART_TASK_COMMAND_SEND_RADIO; // Should go in systemdefines
 constexpr uint16_t DEFAULT_PROTOCOL_WRITE_BUFFER_SIZE = 256;
+
+constexpr uint16_t PROTOCOL_READ_BUFFER_SIZE_CONTROL_COMMAND = 128;
 
 // Task Definition
 constexpr uint8_t TASK_PROTOCOL_PRIORITY = 2;            // Priority of the protocol task
 constexpr uint8_t TASK_PROTOCOL_QUEUE_DEPTH_OBJS = 10;        // Size of the protocol task queue
-constexpr uint16_t TASK_PROTOCOL_STACK_DEPTH_WORDS = 256;        // Size of the protocol task stack
+constexpr uint16_t TASK_PROTOCOL_STACK_DEPTH_WORDS = 512;        // Size of the protocol task stack (512x4 = 2KB)
 
 // Protocol Definition
 // The protocol is applied BEFORE COBS encoding, and contains a message ID and a checksum footer
@@ -61,9 +64,9 @@ protected:
     void HandleProtocolMessage(Command& cmd);
 
     // These MUST be implemented in the derived board-specific ProtocolTask object
-    virtual void HandleProtobufCommandMessage(uint8_t* data, uint16_t size) = 0;
-    virtual void HandleProtobufControlMesssage(uint8_t* data, uint16_t size) = 0;
-    virtual void HandleProtobufTelemetryMessage(uint8_t* data, uint16_t size) = 0;
+    virtual void HandleProtobufCommandMessage(EmbeddedProto::ReadBufferFixedSize<PROTOCOL_RX_BUFFER_SZ_BYTES> readBuffer) = 0;
+    virtual void HandleProtobufControlMesssage(EmbeddedProto::ReadBufferFixedSize<PROTOCOL_RX_BUFFER_SZ_BYTES> readBuffer) = 0;
+    virtual void HandleProtobufTelemetryMessage(EmbeddedProto::ReadBufferFixedSize<PROTOCOL_RX_BUFFER_SZ_BYTES> readBuffer) = 0;
 
     bool ReceiveData();
 
