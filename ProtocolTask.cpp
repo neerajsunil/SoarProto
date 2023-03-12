@@ -171,7 +171,7 @@ void ProtocolTask::SendData(uint8_t* data, uint16_t size, uint8_t msgId)
         SOAR_PRINT("WARNING: COBS encode failed in ProtocolTask NACK case\n");
     }
 
-    SOAR_ASSERT(cobsEncRes.out_len == msgSize);
+    SOAR_ASSERT(cobsEncRes.out_len+1 == msgSize, "COBS Size Mismatch %d %d\n", cobsEncRes.out_len+1, msgSize);
     protoTx.GetDataPointer()[msgSize] = 0x00;
     UARTTask::Inst().SendCommandReference(protoTx);
 }
