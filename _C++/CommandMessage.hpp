@@ -275,21 +275,21 @@ class DMBCommand final: public ::EmbeddedProto::MessageInterface
 
 };
 
-class PMBCommand final: public ::EmbeddedProto::MessageInterface
+class PBBCommand final: public ::EmbeddedProto::MessageInterface
 {
   public:
-    PMBCommand() = default;
-    PMBCommand(const PMBCommand& rhs )
+    PBBCommand() = default;
+    PBBCommand(const PBBCommand& rhs )
     {
       set_command_enum(rhs.get_command_enum());
     }
 
-    PMBCommand(const PMBCommand&& rhs ) noexcept
+    PBBCommand(const PBBCommand&& rhs ) noexcept
     {
       set_command_enum(rhs.get_command_enum());
     }
 
-    ~PMBCommand() override = default;
+    ~PBBCommand() override = default;
 
     enum class Command : uint32_t
     {
@@ -305,13 +305,13 @@ class PMBCommand final: public ::EmbeddedProto::MessageInterface
       COMMAND_ENUM = 1
     };
 
-    PMBCommand& operator=(const PMBCommand& rhs)
+    PBBCommand& operator=(const PBBCommand& rhs)
     {
       set_command_enum(rhs.get_command_enum());
       return *this;
     }
 
-    PMBCommand& operator=(const PMBCommand&& rhs) noexcept
+    PBBCommand& operator=(const PBBCommand&& rhs) noexcept
     {
       set_command_enum(rhs.get_command_enum());
       return *this;
@@ -506,8 +506,8 @@ class CommandMessage final: public ::EmbeddedProto::MessageInterface
           set_dmb_command(rhs.get_dmb_command());
           break;
 
-        case FieldNumber::PMB_COMMAND:
-          set_pmb_command(rhs.get_pmb_command());
+        case FieldNumber::PBB_COMMAND:
+          set_pbb_command(rhs.get_pbb_command());
           break;
 
         default:
@@ -534,8 +534,8 @@ class CommandMessage final: public ::EmbeddedProto::MessageInterface
           set_dmb_command(rhs.get_dmb_command());
           break;
 
-        case FieldNumber::PMB_COMMAND:
-          set_pmb_command(rhs.get_pmb_command());
+        case FieldNumber::PBB_COMMAND:
+          set_pbb_command(rhs.get_pbb_command());
           break;
 
         default:
@@ -554,7 +554,7 @@ class CommandMessage final: public ::EmbeddedProto::MessageInterface
       MESSAGE_ID = 3,
       SOURCE_SEQUENCE_NUM = 4,
       DMB_COMMAND = 5,
-      PMB_COMMAND = 6
+      PBB_COMMAND = 6
     };
 
     CommandMessage& operator=(const CommandMessage& rhs)
@@ -575,8 +575,8 @@ class CommandMessage final: public ::EmbeddedProto::MessageInterface
           set_dmb_command(rhs.get_dmb_command());
           break;
 
-        case FieldNumber::PMB_COMMAND:
-          set_pmb_command(rhs.get_pmb_command());
+        case FieldNumber::PBB_COMMAND:
+          set_pbb_command(rhs.get_pbb_command());
           break;
 
         default:
@@ -604,8 +604,8 @@ class CommandMessage final: public ::EmbeddedProto::MessageInterface
           set_dmb_command(rhs.get_dmb_command());
           break;
 
-        case FieldNumber::PMB_COMMAND:
-          set_pmb_command(rhs.get_pmb_command());
+        case FieldNumber::PBB_COMMAND:
+          set_pbb_command(rhs.get_pbb_command());
           break;
 
         default:
@@ -686,45 +686,45 @@ class CommandMessage final: public ::EmbeddedProto::MessageInterface
     inline const DMBCommand& get_dmb_command() const { return message_.dmb_command_; }
     inline const DMBCommand& dmb_command() const { return message_.dmb_command_; }
 
-    static constexpr char const* PMB_COMMAND_NAME = "pmb_command";
-    inline bool has_pmb_command() const
+    static constexpr char const* PBB_COMMAND_NAME = "pbb_command";
+    inline bool has_pbb_command() const
     {
-      return FieldNumber::PMB_COMMAND == which_message_;
+      return FieldNumber::PBB_COMMAND == which_message_;
     }
-    inline void clear_pmb_command()
+    inline void clear_pbb_command()
     {
-      if(FieldNumber::PMB_COMMAND == which_message_)
+      if(FieldNumber::PBB_COMMAND == which_message_)
       {
         which_message_ = FieldNumber::NOT_SET;
-        message_.pmb_command_.~PMBCommand();
+        message_.pbb_command_.~PBBCommand();
       }
     }
-    inline void set_pmb_command(const PMBCommand& value)
+    inline void set_pbb_command(const PBBCommand& value)
     {
-      if(FieldNumber::PMB_COMMAND != which_message_)
+      if(FieldNumber::PBB_COMMAND != which_message_)
       {
-        init_message(FieldNumber::PMB_COMMAND);
+        init_message(FieldNumber::PBB_COMMAND);
       }
-      message_.pmb_command_ = value;
+      message_.pbb_command_ = value;
     }
-    inline void set_pmb_command(const PMBCommand&& value)
+    inline void set_pbb_command(const PBBCommand&& value)
     {
-      if(FieldNumber::PMB_COMMAND != which_message_)
+      if(FieldNumber::PBB_COMMAND != which_message_)
       {
-        init_message(FieldNumber::PMB_COMMAND);
+        init_message(FieldNumber::PBB_COMMAND);
       }
-      message_.pmb_command_ = value;
+      message_.pbb_command_ = value;
     }
-    inline PMBCommand& mutable_pmb_command()
+    inline PBBCommand& mutable_pbb_command()
     {
-      if(FieldNumber::PMB_COMMAND != which_message_)
+      if(FieldNumber::PBB_COMMAND != which_message_)
       {
-        init_message(FieldNumber::PMB_COMMAND);
+        init_message(FieldNumber::PBB_COMMAND);
       }
-      return message_.pmb_command_;
+      return message_.pbb_command_;
     }
-    inline const PMBCommand& get_pmb_command() const { return message_.pmb_command_; }
-    inline const PMBCommand& pmb_command() const { return message_.pmb_command_; }
+    inline const PBBCommand& get_pbb_command() const { return message_.pbb_command_; }
+    inline const PBBCommand& pbb_command() const { return message_.pbb_command_; }
 
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
@@ -760,10 +760,10 @@ class CommandMessage final: public ::EmbeddedProto::MessageInterface
           }
           break;
 
-        case FieldNumber::PMB_COMMAND:
-          if(has_pmb_command() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+        case FieldNumber::PBB_COMMAND:
+          if(has_pbb_command() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
           {
-            return_value = message_.pmb_command_.serialize_with_id(static_cast<uint32_t>(FieldNumber::PMB_COMMAND), buffer, true);
+            return_value = message_.pbb_command_.serialize_with_id(static_cast<uint32_t>(FieldNumber::PBB_COMMAND), buffer, true);
           }
           break;
 
@@ -804,7 +804,7 @@ class CommandMessage final: public ::EmbeddedProto::MessageInterface
             break;
 
           case FieldNumber::DMB_COMMAND:
-          case FieldNumber::PMB_COMMAND:
+          case FieldNumber::PBB_COMMAND:
             return_value = deserialize_message(id_tag, buffer, wire_type);
             break;
 
@@ -865,8 +865,8 @@ class CommandMessage final: public ::EmbeddedProto::MessageInterface
         case FieldNumber::DMB_COMMAND:
           name = DMB_COMMAND_NAME;
           break;
-        case FieldNumber::PMB_COMMAND:
-          name = PMB_COMMAND_NAME;
+        case FieldNumber::PBB_COMMAND:
+          name = PBB_COMMAND_NAME;
           break;
         default:
           name = "Invalid FieldNumber";
@@ -968,7 +968,7 @@ class CommandMessage final: public ::EmbeddedProto::MessageInterface
         message() {}
         ~message() {}
         DMBCommand dmb_command_;
-        PMBCommand pmb_command_;
+        PBBCommand pbb_command_;
       };
       message message_;
 
@@ -987,8 +987,8 @@ class CommandMessage final: public ::EmbeddedProto::MessageInterface
             new(&message_.dmb_command_) DMBCommand;
             break;
 
-          case FieldNumber::PMB_COMMAND:
-            new(&message_.pmb_command_) PMBCommand;
+          case FieldNumber::PBB_COMMAND:
+            new(&message_.pbb_command_) PBBCommand;
             break;
 
           default:
@@ -1005,8 +1005,8 @@ class CommandMessage final: public ::EmbeddedProto::MessageInterface
           case FieldNumber::DMB_COMMAND:
             ::EmbeddedProto::destroy_at(&message_.dmb_command_);
             break;
-          case FieldNumber::PMB_COMMAND:
-            ::EmbeddedProto::destroy_at(&message_.pmb_command_);
+          case FieldNumber::PBB_COMMAND:
+            ::EmbeddedProto::destroy_at(&message_.pbb_command_);
             break;
           default:
             break;
@@ -1030,8 +1030,8 @@ class CommandMessage final: public ::EmbeddedProto::MessageInterface
           case FieldNumber::DMB_COMMAND:
             return_value = message_.dmb_command_.deserialize_check_type(buffer, wire_type);
             break;
-          case FieldNumber::PMB_COMMAND:
-            return_value = message_.pmb_command_.deserialize_check_type(buffer, wire_type);
+          case FieldNumber::PBB_COMMAND:
+            return_value = message_.pbb_command_.deserialize_check_type(buffer, wire_type);
             break;
           default:
             break;
@@ -1054,8 +1054,8 @@ class CommandMessage final: public ::EmbeddedProto::MessageInterface
           case FieldNumber::DMB_COMMAND:
             left_chars = message_.dmb_command_.to_string(left_chars, indent_level, DMB_COMMAND_NAME, first_field);
             break;
-          case FieldNumber::PMB_COMMAND:
-            left_chars = message_.pmb_command_.to_string(left_chars, indent_level, PMB_COMMAND_NAME, first_field);
+          case FieldNumber::PBB_COMMAND:
+            left_chars = message_.pbb_command_.to_string(left_chars, indent_level, PBB_COMMAND_NAME, first_field);
             break;
           default:
             break;

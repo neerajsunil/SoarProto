@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 import CoreProto_pb2 as CoreProto__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x14\x43ommandMessage.proto\x12\x05Proto\x1a\x0f\x43oreProto.proto\"\xec\x01\n\x0e\x43ommandMessage\x12\x1b\n\x06source\x18\x01 \x01(\x0e\x32\x0b.Proto.Node\x12\x1b\n\x06target\x18\x02 \x01(\x0e\x32\x0b.Proto.Node\x12$\n\nmessage_id\x18\x03 \x01(\x0e\x32\x10.Proto.MessageID\x12\x1b\n\x13source_sequence_num\x18\x04 \x01(\r\x12(\n\x0b\x64mb_command\x18\x05 \x01(\x0b\x32\x11.Proto.DMBCommandH\x00\x12(\n\x0bpmb_command\x18\x06 \x01(\x0b\x32\x11.Proto.PMBCommandH\x00\x42\t\n\x07message\"\xb0\x04\n\nDMBCommand\x12/\n\x0c\x63ommand_enum\x18\x01 \x01(\x0e\x32\x19.Proto.DMBCommand.Command\"\xf0\x03\n\x07\x43ommand\x12\x15\n\x11RSC_FIRST_INVALID\x10\x00\x12\x14\n\x10RSC_ANY_TO_ABORT\x10\x01\x12\x11\n\rRSC_OPEN_VENT\x10\x02\x12\x12\n\x0eRSC_CLOSE_VENT\x10\x03\x12\x12\n\x0eRSC_OPEN_DRAIN\x10\x04\x12\x13\n\x0fRSC_CLOSE_DRAIN\x10\x05\x12\x11\n\rRSC_MEV_CLOSE\x10\x06\x12\x11\n\rRSC_GOTO_FILL\x10\x07\x12\x15\n\x11RSC_ARM_CONFIRM_1\x10\x08\x12\x15\n\x11RSC_ARM_CONFIRM_2\x10\t\x12\x10\n\x0cRSC_GOTO_ARM\x10\n\x12\x16\n\x12RSC_GOTO_PRELAUNCH\x10\x0b\x12 \n\x1cRSC_POWER_TRANSITION_ONBOARD\x10\x0c\x12!\n\x1dRSC_POWER_TRANSITION_EXTERNAL\x10\r\x12\x15\n\x11RSC_GOTO_IGNITION\x10\x0e\x12\x1a\n\x16RSC_IGNITION_TO_LAUNCH\x10\x0f\x12\x16\n\x12RSC_LAUNCH_TO_BURN\x10\x10\x12\x15\n\x11RSC_BURN_TO_COAST\x10\x11\x12\x18\n\x14RSC_COAST_TO_DESCENT\x10\x12\x12\x1b\n\x17RSC_DESCENT_TO_RECOVERY\x10\x13\x12\x0c\n\x08RSC_NONE\x10\x14\"\x89\x01\n\nPMBCommand\x12/\n\x0c\x63ommand_enum\x18\x01 \x01(\x0e\x32\x19.Proto.PMBCommand.Command\"J\n\x07\x43ommand\x12\x0c\n\x08PMB_NONE\x10\x00\x12\x10\n\x0cPMB_OPEN_MEV\x10\x01\x12\x11\n\rPMB_CLOSE_MEV\x10\x02\x12\x0c\n\x08PMB_LAST\x10\x03\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x14\x43ommandMessage.proto\x12\x05Proto\x1a\x0f\x43oreProto.proto\"\xec\x01\n\x0e\x43ommandMessage\x12\x1b\n\x06source\x18\x01 \x01(\x0e\x32\x0b.Proto.Node\x12\x1b\n\x06target\x18\x02 \x01(\x0e\x32\x0b.Proto.Node\x12$\n\nmessage_id\x18\x03 \x01(\x0e\x32\x10.Proto.MessageID\x12\x1b\n\x13source_sequence_num\x18\x04 \x01(\r\x12(\n\x0b\x64mb_command\x18\x05 \x01(\x0b\x32\x11.Proto.DMBCommandH\x00\x12(\n\x0bpbb_command\x18\x06 \x01(\x0b\x32\x11.Proto.PBBCommandH\x00\x42\t\n\x07message\"\xb0\x04\n\nDMBCommand\x12/\n\x0c\x63ommand_enum\x18\x01 \x01(\x0e\x32\x19.Proto.DMBCommand.Command\"\xf0\x03\n\x07\x43ommand\x12\x15\n\x11RSC_FIRST_INVALID\x10\x00\x12\x14\n\x10RSC_ANY_TO_ABORT\x10\x01\x12\x11\n\rRSC_OPEN_VENT\x10\x02\x12\x12\n\x0eRSC_CLOSE_VENT\x10\x03\x12\x12\n\x0eRSC_OPEN_DRAIN\x10\x04\x12\x13\n\x0fRSC_CLOSE_DRAIN\x10\x05\x12\x11\n\rRSC_MEV_CLOSE\x10\x06\x12\x11\n\rRSC_GOTO_FILL\x10\x07\x12\x15\n\x11RSC_ARM_CONFIRM_1\x10\x08\x12\x15\n\x11RSC_ARM_CONFIRM_2\x10\t\x12\x10\n\x0cRSC_GOTO_ARM\x10\n\x12\x16\n\x12RSC_GOTO_PRELAUNCH\x10\x0b\x12 \n\x1cRSC_POWER_TRANSITION_ONBOARD\x10\x0c\x12!\n\x1dRSC_POWER_TRANSITION_EXTERNAL\x10\r\x12\x15\n\x11RSC_GOTO_IGNITION\x10\x0e\x12\x1a\n\x16RSC_IGNITION_TO_LAUNCH\x10\x0f\x12\x16\n\x12RSC_LAUNCH_TO_BURN\x10\x10\x12\x15\n\x11RSC_BURN_TO_COAST\x10\x11\x12\x18\n\x14RSC_COAST_TO_DESCENT\x10\x12\x12\x1b\n\x17RSC_DESCENT_TO_RECOVERY\x10\x13\x12\x0c\n\x08RSC_NONE\x10\x14\"\x89\x01\n\nPBBCommand\x12/\n\x0c\x63ommand_enum\x18\x01 \x01(\x0e\x32\x19.Proto.PBBCommand.Command\"J\n\x07\x43ommand\x12\x0c\n\x08PMB_NONE\x10\x00\x12\x10\n\x0cPMB_OPEN_MEV\x10\x01\x12\x11\n\rPMB_CLOSE_MEV\x10\x02\x12\x0c\n\x08PMB_LAST\x10\x03\x62\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'CommandMessage_pb2', globals())
@@ -27,8 +27,8 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _DMBCOMMAND._serialized_end=848
   _DMBCOMMAND_COMMAND._serialized_start=352
   _DMBCOMMAND_COMMAND._serialized_end=848
-  _PMBCOMMAND._serialized_start=851
-  _PMBCOMMAND._serialized_end=988
-  _PMBCOMMAND_COMMAND._serialized_start=914
-  _PMBCOMMAND_COMMAND._serialized_end=988
+  _PBBCOMMAND._serialized_start=851
+  _PBBCOMMAND._serialized_end=988
+  _PBBCOMMAND_COMMAND._serialized_start=914
+  _PBBCOMMAND_COMMAND._serialized_end=988
 # @@protoc_insertion_point(module_scope)

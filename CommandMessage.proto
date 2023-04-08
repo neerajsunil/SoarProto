@@ -34,8 +34,8 @@ message CommandMessage {
     oneof message {
         // Command Messages
         DMBCommand dmb_command = 5;
-        PMBCommand pmb_command = 6;
-    }
+        PBBCommand pbb_command = 6;
+    } 
 
 }
 
@@ -93,7 +93,7 @@ message DMBCommand {
     Command command_enum = 1;
 }
 
-message PMBCommand {
+message PBBCommand {
     enum Command {
         PMB_NONE = 0;
 
