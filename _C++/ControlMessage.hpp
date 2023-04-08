@@ -772,29 +772,13 @@ class SystemState final: public ::EmbeddedProto::MessageInterface
     SystemState(const SystemState& rhs )
     {
       set_sys_state(rhs.get_sys_state());
-      if(rhs.has_rocket_state())
-      {
-        set_rocket_state(rhs.get_rocket_state());
-      }
-      else
-      {
-        clear_rocket_state();
-      }
-
+      set_rocket_state(rhs.get_rocket_state());
     }
 
     SystemState(const SystemState&& rhs ) noexcept
     {
       set_sys_state(rhs.get_sys_state());
-      if(rhs.has_rocket_state())
-      {
-        set_rocket_state(rhs.get_rocket_state());
-      }
-      else
-      {
-        clear_rocket_state();
-      }
-
+      set_rocket_state(rhs.get_rocket_state());
     }
 
     ~SystemState() override = default;
@@ -818,30 +802,14 @@ class SystemState final: public ::EmbeddedProto::MessageInterface
     SystemState& operator=(const SystemState& rhs)
     {
       set_sys_state(rhs.get_sys_state());
-      if(rhs.has_rocket_state())
-      {
-        set_rocket_state(rhs.get_rocket_state());
-      }
-      else
-      {
-        clear_rocket_state();
-      }
-
+      set_rocket_state(rhs.get_rocket_state());
       return *this;
     }
 
     SystemState& operator=(const SystemState&& rhs) noexcept
     {
       set_sys_state(rhs.get_sys_state());
-      if(rhs.has_rocket_state())
-      {
-        set_rocket_state(rhs.get_rocket_state());
-      }
-      else
-      {
-        clear_rocket_state();
-      }
-      
+      set_rocket_state(rhs.get_rocket_state());
       return *this;
     }
 
@@ -853,25 +821,9 @@ class SystemState final: public ::EmbeddedProto::MessageInterface
     inline State sys_state() const { return sys_state_.get(); }
 
     static constexpr char const* ROCKET_STATE_NAME = "rocket_state";
-    inline bool has_rocket_state() const
-    {
-      return 0 != (presence::mask(presence::fields::ROCKET_STATE) & presence_[presence::index(presence::fields::ROCKET_STATE)]);
-    }
-    inline void clear_rocket_state()
-    {
-      presence_[presence::index(presence::fields::ROCKET_STATE)] &= ~(presence::mask(presence::fields::ROCKET_STATE));
-      rocket_state_.clear();
-    }
-    inline void set_rocket_state(const RocketState& value)
-    {
-      presence_[presence::index(presence::fields::ROCKET_STATE)] |= presence::mask(presence::fields::ROCKET_STATE);
-      rocket_state_ = value;
-    }
-    inline void set_rocket_state(const RocketState&& value)
-    {
-      presence_[presence::index(presence::fields::ROCKET_STATE)] |= presence::mask(presence::fields::ROCKET_STATE);
-      rocket_state_ = value;
-    }
+    inline void clear_rocket_state() { rocket_state_.clear(); }
+    inline void set_rocket_state(const RocketState& value) { rocket_state_ = value; }
+    inline void set_rocket_state(const RocketState&& value) { rocket_state_ = value; }
     inline const RocketState& get_rocket_state() const { return rocket_state_.get(); }
     inline RocketState rocket_state() const { return rocket_state_.get(); }
 
@@ -885,9 +837,9 @@ class SystemState final: public ::EmbeddedProto::MessageInterface
         return_value = sys_state_.serialize_with_id(static_cast<uint32_t>(FieldNumber::SYS_STATE), buffer, false);
       }
 
-      if(has_rocket_state() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      if((static_cast<RocketState>(0) != rocket_state_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
-        return_value = rocket_state_.serialize_with_id(static_cast<uint32_t>(FieldNumber::ROCKET_STATE), buffer, true);
+        return_value = rocket_state_.serialize_with_id(static_cast<uint32_t>(FieldNumber::ROCKET_STATE), buffer, false);
       }
 
       return return_value;
@@ -911,7 +863,6 @@ class SystemState final: public ::EmbeddedProto::MessageInterface
             break;
 
           case FieldNumber::ROCKET_STATE:
-            presence_[presence::index(presence::fields::ROCKET_STATE)] |= presence::mask(presence::fields::ROCKET_STATE);
             return_value = rocket_state_.deserialize_check_type(buffer, wire_type);
             break;
 
@@ -1045,40 +996,6 @@ class SystemState final: public ::EmbeddedProto::MessageInterface
 
   private:
 
-      // Define constants for tracking the presence of fields.
-      // Use a struct to scope the variables from user fields as namespaces are not allowed within classes.
-      struct presence
-      {
-        // An enumeration with all the fields for which presence has to be tracked.
-        enum class fields : uint32_t
-        {
-          ROCKET_STATE
-        };
-
-        // The number of fields for which presence has to be tracked.
-        static constexpr uint32_t N_FIELDS = 1;
-
-        // Which type are we using to track presence.
-        using TYPE = uint32_t;
-
-        // How many bits are there in the presence type.
-        static constexpr uint32_t N_BITS = std::numeric_limits<TYPE>::digits;
-
-        // How many variables of TYPE do we need to bit mask all presence fields.
-        static constexpr uint32_t SIZE = (N_FIELDS / N_BITS) + ((N_FIELDS % N_BITS) > 0 ? 1 : 0);
-
-        // Obtain the index of a given field in the presence array.
-        static constexpr uint32_t index(const fields& field) { return static_cast<uint32_t>(field) / N_BITS; }
-
-        // Obtain the bit mask for the given field assuming we are at the correct index in the presence array.
-        static constexpr TYPE mask(const fields& field)
-        {
-          return static_cast<uint32_t>(0x01) << (static_cast<uint32_t>(field) % N_BITS);
-        }
-      };
-
-      // Create an array in which the presence flags are stored.
-      typename presence::TYPE presence_[presence::SIZE] = {0};
 
       EmbeddedProto::enumeration<State> sys_state_ = static_cast<State>(0);
       EmbeddedProto::enumeration<RocketState> rocket_state_ = static_cast<RocketState>(0);

@@ -88,7 +88,7 @@ message SystemState {
     }
 
     State sys_state = 1; // The current state of the system
-    optional RocketState rocket_state = 2; // If this is the DMB, this will respond with the current RocketSM State
+    RocketState rocket_state = 2; // If this is the DMB, this will respond with the current RocketSM State
 }
 
 
