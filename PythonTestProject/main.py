@@ -265,10 +265,25 @@ def send_ack_message(msg):
 # telemetry message is very primitive in the protobuf
 #def process_telemetry_message(msg):
 
-def process_control_message(msg):
+def process_control_message(data):
+    received_message = Proto.ControlMessage()
+    received_message.ParseFromString(data)
+
+    if received_message.target == Core.NODE_RCU:
+        message_type = received_message.WhichOneof('message')
+        if message_type == 'sys_state':
+            print(received_message.sys_state)
+            if received_message.source == Core.NODE_DMB:
+                print(pbnd.PROTO_STATE_TO_STRING[received_message.sys_state.rocket_state])
+        elif message_type == 'hb':
+            print('hb: ', received_message.source)
+        elif message_type == 'ping':
+            print('we were pinged: ', received_message.source)
+        elif message_type == 'ack':
+            print('oh hey, we ack: ', received_message.source)
+        elif message_type == 'nack':
+            print('nack received, this is bad')
     
-    
-    #how do I find out which oneof message is it, and what do I do with it? send it through a mqtt topic?
 
 # placeholder in case the pu ever receives a command message
 #def process_command_message(msg):
