@@ -6,7 +6,7 @@
 # PIP PACKAGE LIST: pip install cobs; pip install pyserial; pip install protobuf
 #
 
-#todo:  implement ack waiting routine for sent messages with RCU source node
+#todo:  dont worry about acks, but do send nacks when a message is nonsensical
 #       implement reverse receive from serial interrupt and send throgh mqtt
 
 
@@ -26,6 +26,8 @@ import json
 EXAMPLE_COM_PORT = '/dev/ttyS0'
 MQTT_BROKER = '127.0.0.1'
 PASSPHRASE = '1'
+
+CONTORL_MESSAGE_TOPIC = ''
 # Setup serial port
 SER = serial.Serial(EXAMPLE_COM_PORT, 115200)
 
@@ -264,8 +266,7 @@ def send_ack_message(msg):
 #def process_telemetry_message(msg):
 
 def process_control_message(msg):
-    if msg.source_sequence_number != 0:
-        send_ack_message(msg)
+    
     
     #how do I find out which oneof message is it, and what do I do with it? send it through a mqtt topic?
 
@@ -281,6 +282,8 @@ def on_serial_message(message):
         #parse onto protobuf object
         #msgParsed.ParseFromString(buf) #?
         x = None
+    elif msgId == Core.MessageID.MSG_CONTROL:
+        process_control_message(data)
 
 
 
