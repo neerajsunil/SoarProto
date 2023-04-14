@@ -7,7 +7,11 @@
 #
 
 #todo:  dont worry about acks, but do send nacks when a message is nonsensical
-#       implement reverse receive from serial interrupt and send throgh mqtt
+#       implement reverse receive from serial interrupt and send through mqtt
+#       add RCU node to Protobuf
+#       figure out telemetry messages
+#       figure out mqtt topic names
+#       get rid of telemetry_pb2 files?
 
 
 
@@ -196,7 +200,7 @@ def send_ack_message(msg):
     ack_msg.target = msg.source
     ack_msg.message_id = Core.MSG_CONTROL
     ack_msg.source_sequence_number = 0
-    ack_msg.ack.acking_msg_id = Core.MSG_INVALID
+    ack_msg.ack.acking_msg_id = msg.message_id
     ack_msg.ack.acking_msg_source = Core.NODE_RCU
     ack_msg.ack.acking_sequence_num = msg.source_sequence_number
 
@@ -212,14 +216,17 @@ def process_control_message(data):
         if message_type == 'sys_state':
             print(received_message.sys_state)
             if received_message.source == Core.NODE_DMB:
+                pbnd.MCB_CMD['CMD_DMB_STATE'] = pbnd.PROTO_STATE_TO_STRING[received_message.sys_state.rocket_state]
                 print(pbnd.PROTO_STATE_TO_STRING[received_message.sys_state.rocket_state])
         elif message_type == 'hb':
             print('hb: ', received_message.source)
         elif message_type == 'ping':
+            send_ack_message(received_message)
             print('we were pinged: ', received_message.source)
         elif message_type == 'ack':
             print('oh hey, we ack: ', received_message.source)
         elif message_type == 'nack':
+            #add resend of message
             print('nack received, this is bad')
     
 
