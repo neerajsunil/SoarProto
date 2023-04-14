@@ -140,85 +140,23 @@ def populate_command_msg(command):
     #create message
     msg = ProtoCmd.CommandMessage()
     msg.source = Core.NODE_RCU
-    buf = msg.SerializeToString()
     msg.source_sequence_num = sequence_number
     sequence_number = sequence_number + 1
 
-    if command == "RSC_ANY_TO_ABORT":
-        msg.dmb_command.command_enum = ProtoCmd.DMBCommand.Command.RSC_ANY_TO_ABORT
+    dmb_command = pbnd.STRING_TO_RSC_PROTO_STATE.get(command)
+
+    if dmb_command != None:
+        msg.pmb_command.command_enum = dmb_command
         msg.target = Core.NODE_DMB
-    elif command == "RSC_ARM_CONFIRM_1":
-        msg.dmb_command.command_enum = ProtoCmd.DMBCommand.Command.RSC_ARM_CONFIRM_1
-        msg.target = Core.NODE_DMB
-    elif command == "RSC_ARM_CONFIRM_2":
-        msg.dmb_command.command_enum = ProtoCmd.DMBCommand.Command.RSC_ARM_CONFIRM_2
-        msg.target = Core.NODE_DMB
-    elif command == "RSC_BURN_TO_COAST":
-        msg.dmb_command.command_enum = ProtoCmd.DMBCommand.Command.RSC_BURN_TO_COAST
-        msg.target = Core.NODE_DMB
-    elif command == "RSC_CLOSE_DRAIN":
-        msg.dmb_command.command_enum = ProtoCmd.DMBCommand.Command.RSC_CLOSE_DRAIN
-        msg.target = Core.NODE_DMB
-    elif command == "RSC_CLOSE_VENT":
-        msg.dmb_command.command_enum = ProtoCmd.DMBCommand.Command.RSC_CLOSE_VENT
-        msg.target = Core.NODE_DMB
-    elif command == "RSC_COAST_TO_DESCENT":
-        msg.dmb_command.command_enum = ProtoCmd.DMBCommand.Command.RSC_COAST_TO_DESCENT
-        msg.target = Core.NODE_DMB
-    elif command == "RSC_DESCENT_TO_RECOVERY":
-        msg.dmb_command.command_enum = ProtoCmd.DMBCommand.Command.RSC_DESCENT_TO_RECOVERY
-        msg.target = Core.NODE_DMB
-    elif command == "RSC_FIRST_INVALID":
-        msg.dmb_command.command_enum = ProtoCmd.DMBCommand.Command.RSC_FIRST_INVALID
-        msg.target = Core.NODE_DMB
-    elif command == "RSC_GOTO_ARM":
-        msg.dmb_command.command_enum = ProtoCmd.DMBCommand.Command.RSC_GOTO_ARM
-        msg.target = Core.NODE_DMB
-    elif command == "RSC_GOTO_FILL":
-        msg.dmb_command.command_enum = ProtoCmd.DMBCommand.Command.RSC_GOTO_FILL
-        msg.target = Core.NODE_DMB
-    elif command == "RSC_GOTO_IGNITION":
-        msg.dmb_command.command_enum = ProtoCmd.DMBCommand.Command.RSC_GOTO_IGNITION
-        msg.target = Core.NODE_DMB
-    elif command == "RSC_GOTO_PRELAUNCH":
-        msg.dmb_command.command_enum = ProtoCmd.DMBCommand.Command.RSC_GOTO_PRELAUNCH
-        msg.target = Core.NODE_DMB
-    elif command == "RSC_IGNITION_TO_LAUNCH":
-        msg.dmb_command.command_enum = ProtoCmd.DMBCommand.Command.RSC_IGNITION_TO_LAUNCH
-        msg.target = Core.NODE_DMB
-    elif command == "RSC_LAUNCH_TO_BURN":
-        msg.dmb_command.command_enum = ProtoCmd.DMBCommand.Command.RSC_LAUNCH_TO_BURN
-        msg.target = Core.NODE_DMB
-    elif command == "RSC_MEV_CLOSE":
-        msg.dmb_command.command_enum = ProtoCmd.DMBCommand.Command.RSC_MEV_CLOSE
-        msg.target = Core.NODE_DMB
-    elif command == "RSC_OPEN_DRAIN":
-        msg.dmb_command.command_enum = ProtoCmd.DMBCommand.Command.RSC_OPEN_DRAIN
-        msg.target = Core.NODE_DMB
-    elif command == "RSC_OPEN_VENT":
-        msg.dmb_command.command_enum = ProtoCmd.DMBCommand.Command.RSC_OPEN_VENT
-        msg.target = Core.NODE_DMB
-    elif command == "RSC_POWER_TRANSITION_EXTERNAL":
-        msg.dmb_command.command_enum = ProtoCmd.DMBCommand.Command.RSC_POWER_TRANSITION_EXTERNAL
-        msg.target = Core.NODE_DMB
-    elif command == "RSC_POWER_TRANSITION_ONBOARD":
-        msg.dmb_command.command_enum = ProtoCmd.DMBCommand.Command.RSC_POWER_TRANSITION_ONBOARD
-        msg.target = Core.NODE_DMB
-    elif command == "PMB_CLOSE_MEV":
-        msg.pmb_command.command_enum = ProtoCmd.PMBCommand.Command.PMB_CLOSE_MEV
-        msg.target = Core.NODE_PBB
-    elif command == "PMB_LAST":
-        msg.pmb_command.command_enum = ProtoCmd.PMBCommand.Command.PMB_LAST
-        msg.target = Core.NODE_PBB
-    elif command == "PMB_NONE":
-        msg.pmb_command.command_enum = ProtoCmd.PMBCommand.Command.PMB_NONE
-        msg.target = Core.NODE_PBB
-    elif command == "PMB_OPEN_MEV":
-        msg.pmb_command.command_enum = ProtoCmd.PMBCommand.Command.PMB_OPEN_MEV
-        msg.target = Core.NODE_PBB
     else:
-        msg.dmb_command.command_enum = ProtoCmd.DMBCommand.Command.RSC_NONE
-        msg.target = Core.NODE_DMB
+        pmb_comand = pbnd.STRING_TO_PMB_PROTO_STATE.get(command)
+
+        if pmb_comand != None:
+            msg.pmb_command.command_enum = pmb_comand
+            msg.target = Core.NODE_DMB
+        else:
+            msg.dmb_command.command_enum = ProtoCmd.DMBCommand.Command.RSC_NONE
+            msg.target = Core.NODE_DMB
 
     return msg
 
