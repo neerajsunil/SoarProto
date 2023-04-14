@@ -193,7 +193,7 @@ STRING_TO_RSC_PROTO_STATE = {
 	"RSC_NONE" : ProtoCmd.DMBCommand.Command.RSC_NONE
 }
 
-STRING_TO_PBB_PROTO_STATE = {
+STRING_TO_PMB_PROTO_STATE = {
 	"PMB_CLOSE_MEV": ProtoCmd.PMBCommand.Command.PMB_CLOSE_MEV,
 	"PMB_LAST": ProtoCmd.PMBCommand.Command.PMB_LAST,
 	"PMB_NONE": ProtoCmd.PMBCommand.Command.PMB_NONE,
