@@ -110,7 +110,11 @@ def process_telemetry_message(msg):
     msgId, data = Codec.Decode(message, len(message))
 
     received_message = Proto.TelemetryMessage()
-    received_message.ParseFromString(data)
+    
+    try:
+        received_message.ParseFromString(data)
+    Exception DecodeError: 
+        return
 
     if received_message.target == Core.NODE_RCU:
         message_type = received_message.WhichOneof('message')
@@ -119,7 +123,11 @@ def process_telemetry_message(msg):
 
 def process_control_message(data):
     received_message = Proto.ControlMessage()
-    received_message.ParseFromString(data)
+
+    try:
+        received_message.ParseFromString(data)
+    Exception DecodeError: 
+        return
 
     if received_message.target == Core.NODE_RCU:
         message_type = received_message.WhichOneof('message')
