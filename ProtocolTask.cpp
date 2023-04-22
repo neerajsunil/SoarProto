@@ -95,7 +95,9 @@ void ProtocolTask::Run(void * pvParams)
                     //TODO: Implement this check, send NACK and don't handle if it fails
 
                     // Set the message size to the decoded buffer size, minus the checksum, since that should be validated
-                    protoRx.SetDataSize(cobsRes.out_len - PROTOCOL_CHECKSUM_BYTES);
+//                    protoRx.SetDataSize(cobsRes.out_len - PROTOCOL_CHECKSUM_BYTES);
+                	//TODO: We don't have a checksum yet!
+                	protoRx.SetDataSize(cobsRes.out_len);
 
                     // Handle the protocol message using the inherited function
                     HandleProtocolMessage(protoRx);
@@ -212,7 +214,7 @@ void ProtocolTask::InterruptRxData()
             isProtocolMsgReady = true;
 
             // Notify the protocol task
-            Command cm(DATA_COMMAND, EVENT_PROTOCOL_RX_COMPLETE);
+            Command cm(PROTOCOL_COMMAND, EVENT_PROTOCOL_RX_COMPLETE);
             bool res = qEvtQueue->SendFromISR(cm);
 
             // If we failed to send the event, we should reset the buffer, that way ProtocolTask doesn't stall
