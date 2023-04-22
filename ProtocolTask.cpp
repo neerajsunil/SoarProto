@@ -1,7 +1,8 @@
 /**
   ******************************************************************************
   * File Name          : ProtocolTask.cpp
-  * Description        : Utilities for protocolging the flight board.
+  * Description        : The base ProtocolTask for all boards, includes a UART Rx Handling and Functions for Tx/Rx of Protocol Data
+  *                      Should be derived from for a Board Specific Protocol Task that implements the pure virtual functions.
   ******************************************************************************
 */
 
