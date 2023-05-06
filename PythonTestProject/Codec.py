@@ -5,9 +5,10 @@
 #
 
 from cobs import cobs   # pip install cobs
+from crc import Calculator, Crc16 # pip install crc
 
 # Constants and helpers
-PROTO_CHKSUM_BYTES = 4
+PROTO_CHKSUM_BYTES = 2
 PROTO_MSGID_BYTES = 2
 
 def GetCOBSOverhead(unencodedSize):
@@ -22,7 +23,7 @@ class Codec:
 
     @staticmethod
     def Encode(buf, len, msgId):
-        # Make a new buffer encoded with just the message ID
+        # Make a new buffer encoded with just the message ID and enough space for the checksum
         encodedBuf = bytearray(len+1)
 
         # We encode the message ID first
@@ -31,6 +32,16 @@ class Codec:
         # Then we copy the rest of the buffer
         for i in range(0, len):
             encodedBuf[i+1] = buf[i]
+
+        # Calculate a checksum
+        calc = Calculator(Crc16.CCITT)
+        chksum = calc.checksum(encodedBuf)
+
+        print(f'Calculated checksum: {chksum}')
+
+        # Then we append the checksum in little endian order
+        encodedBuf.append(chksum & 0xFF)
+        encodedBuf.append((chksum >> 8) & 0xFF)
 
         # Then we encode the whole thing in COBS
         cobsEncodedBuf = cobs.encode(encodedBuf)
