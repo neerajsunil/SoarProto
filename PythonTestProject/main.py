@@ -27,7 +27,7 @@ import time
 import json
 
 # Constants
-EXAMPLE_COM_PORT = '/dev/ttyS0'
+EXAMPLE_COM_PORT = 'COM3'
 MQTT_BROKER = '127.0.0.1'
 PASSPHRASE = '1'
 
@@ -128,14 +128,14 @@ def example_send_state_change_to_serial():
     msg.dmb_command.command_enum = ProtoCmd.DMBCommand.Command.RSC_GOTO_PRELAUNCH
     buf = msg.SerializeToString()
 
-    encBuf = Codec.Encode(buf, len(buf), Core.MessageID.MSG_CONTROL)
+    encBuf = Codec.Encode(buf, len(buf), Core.MessageID.MSG_COMMAND)
     print('\n\t>> Example of codec encoded state change command')
     print(f'Original Message Size: {len(buf)}')
     print(f'Encoded Message Size: {len(encBuf)}')
     print(bytes(encBuf))
 
     # Send the data to the serial port
-    ser.write(encBuf)
+    SER.write(encBuf)
 
 
 def populate_command_msg(command):
@@ -250,17 +250,17 @@ def on_serial_message(message):
 
 if __name__ == '__main__':
 
-    #print_hi('World')
-    example_protobuf_encode_decode()
+    print_hi('World')
+    # example_protobuf_encode_decode()
     #example_codec_encode_decode()
     #example_send_state_change_to_serial()
 
-    client = mqtt.Client()
-    client.connect(MQTT_BROKER)
+    # client = mqtt.Client()
+    # client.connect(MQTT_BROKER)
 
-    client.loop_start()
-    client.subscribe("RCU/Commands")
-    client.on_message=on_mqtt_message
+    # client.loop_start()
+    # client.subscribe("RCU/Commands")
+    # client.on_message=on_mqtt_message
     #client.loop_stop()
 
     while True:
@@ -270,6 +270,6 @@ if __name__ == '__main__':
         # codec encodes the end of a message through a 0x00
         #serial_message = SER.read_until(expected = b'\x00', size = None)
         #on_serial_message(serial_message)
-
+        example_send_state_change_to_serial()
         time.sleep(1)
         
