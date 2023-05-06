@@ -4,8 +4,8 @@
  * AUTHOR: Christopher Chan (cjchanx) and Shanna Hollingworth (shanna1408)
  */
 syntax = "proto3";
-package proto;
-import "Core.proto";
+package Proto;
+import "CoreProto.proto";
 
 /* This acts as the telemetry wrapper message for all SOAR Telemetry Messages.
  * Telemetry messages are considered best-effort NON-CRITICAL messages, and are (currently) not guaranteed to be received (no ACK or Sequence Number)
@@ -25,17 +25,18 @@ import "Core.proto";
         IMU imu = 6;
         Battery bat = 7;
         Flash flash = 8;
-        Rocket rocket = 9;
-        PressureDMB pressdmb = 10;
-        TempDMB tempdmb = 11;
-        GPIOStatus gpio = 12;
-        PressureRCU pressrcu = 13;
-        TempRCU temprcu = 14;
+        DMBPressure pressdmb = 9;
+        PBBPressure presspbb = 10;
+        PBBTemp temppbb = 11;
+        CombustionControlStatus gpio = 12;
+        RCUPressure pressrcu = 13;
+        RCUTemp temprcu = 14;
         NOSLoadCell nos = 15;
         RelayStatus relay = 16;
         PadBoxStatus padbox = 17;
         LRLoadCell lr = 18;
-        TempSOB tempsob = 19;
+        SOBTemp tempsob = 19;
+        IRTemperature irtemp = 20;
     }
 }
 
@@ -44,122 +45,131 @@ import "Core.proto";
 message GPS{
     LatLong latitude = 1;   // latitude of rocket
     LatLong longitude = 2;  // longitude of rocket
-    uint32 antenna_alt = 3; // altitude of antenna
-    uint32 total_alt = 5;   // total altitude of rocket
+    AltitudeType antenna_alt = 3; // altitude of antenna
+    AltitudeType geoidAltitude = 4;
+    AltitudeType total_alt = 5;   // total altitude of rocket
     uint32 time = 6;        // time of message
 }
 
 message LatLong {
-    uint32 degrees = 1; 
-    uint32 minutes = 2;
+    int32 degrees = 1; 
+    int32 minutes = 2;
+}
+
+message AltitudeType {
+    int32 altitude = 1;
+    int32 unit = 2;
 }
 
 message Baro{
-    uint32 pressure = 1;    // barometer pressure
-    uint32 temp = 2;        // barometer temperature
+    int32 baro_pressure = 1;    // barometer pressure
+    int32 baro_temp = 2;        // barometer temperature
 }
 
 message IMU{
-    uint32 accelx = 1;  // x direction of acceleration
-    uint32 accely = 2;  // y direction of acceleration
-    uint32 accelz = 3;  // z direction of acceleration
-    uint32 gyrox = 4;   // x direction of gyroscope
-    uint32 gyroy = 5;   // y direction of gyroscope
-    uint32 gyroz = 6;   // z direction of gyroscope
-    uint32 magx = 7;
-    uint32 magy = 8;
-    uint32 magz = 9;
+    int32 accelx = 1;  // x direction of acceleration
+    int32 accely = 2;  // y direction of acceleration
+    int32 accelz = 3;  // z direction of acceleration
+    int32 gyrox = 4;   // x direction of gyroscope
+    int32 gyroy = 5;   // y direction of gyroscope
+    int32 gyroz = 6;   // z direction of gyroscope
+    int32 magx = 7;    // x direction gauss
+    int32 magy = 8;    // y direction gauss
+    int32 magz = 9;    // z direction gauss
 }
 
 message Battery{
-    uint32 power_source = 1; // power source of battery
+    enum power_source {
+        INVALID = 0;
+        GROUND = 1;
+        ROCKET = 2;
+    }; 
+    power_source p_source = 1; // power source of battery
     uint32 volt = 2; // voltage of battery
 }
 
 message Flash{
-    enum FlashState {
-        loghz = 0;
-        logsec = 1;
-    }
+    uint32 sector_address = 1;
+    uint32 logging_rate = 2;
 }
 
-message Rocket{
-    enum RocketState {
-        state = 0;
-        hbperiod = 1;
-        vent = 2;
-        drain = 3;
-    }
+message DMBPressure{
+    uint32 upper_pv_pressure = 1; // pressure vessel pressure
 }
 
 /* PBB -> DMB Messages ---------------------------------------------------------------- */
 
-message PressureDMB {
-    uint32 pressure1 = 1;
-    uint32 pressure2 = 2;
+message PBBPressure {
+    uint32 ib_pressure = 1; //injector bulk pressure
+    uint32 lower_pv_pressure = 2; //pressure vessel pressure
 }
 
-message TempDMB {
-    uint32 temp1 = 1;
-    uint32 temp2 = 2;
+message PBBTemp {
+    uint32 ib_temperature = 1; //injector bulk temperature
+    uint32 pv_temperature = 2; //pressure vessel temperature
 }
 
-message GPIOStatus {
-    bool main_engine_valve = 1;
+message CombustionControlStatus {
+    bool main_engine_valve_open = 1;
+    bool vent_open = 2;
+    bool drain_open = 3;
 }
 
 /* RCU Messages ---------------------------------------------------------------- */
 
-message PressureRCU {
-    uint32 pressure1 = 1;
-    uint32 pressure2 = 2;
-    uint32 pressure3 = 3;
-    uint32 pressure4 = 4;
+message RCUPressure {
+    uint32 pt1_pressure = 1; //pressure transducer
+    uint32 pt2_pressure = 2;
+    uint32 pt3_pressure = 3;
+    uint32 pt4_pressure = 4;
 }
 
-message TempRCU {
-    uint32 temp1 = 1;
-    uint32 temp2 = 2;
+message RCUTemp {
+    uint32 tc1_temp = 1; //thermocouple
+    uint32 tc2_temp = 2;
 }
 
 message NOSLoadCell {
-    uint32 nos1mass = 1;
-    uint32 nos2mass = 2;
+    uint32 nos1_mass = 1; //nitrous mass
+    uint32 nos2_mass = 2;
 }
 
 message RelayStatus {
-    enum RelayStates {
-        ac1 = 0;
-        ac2 = 1;
-        pbv1 = 2;
-        pbv2 = 3;
-        pbv3 = 4;
-        sol1 = 5;
-        sol2 = 6;
-        sol3 = 7;
-        sol4 = 8;
-        sol5 = 9;
-        sol6 = 10;
-        sol7 = 11;
-        sol8a = 12;
-        sol8b = 13;
-    }
+
+    bool ac1_open = 1; // air conditioner state
+    bool ac2_open = 2;
+    bool pbv1_open = 3; //pneumatic ball valev state
+    bool pbv2_open = 4;
+    bool pbv3_open = 5;
+    bool sol1_open = 6; //solenoid states
+    bool sol2_open = 7;
+    bool sol3_open = 8;
+    bool sol4_open = 9;
+    bool sol5_open = 10;
+    bool sol6_open = 11;
+    bool sol7_open = 12;
+    bool sol8a_open = 13;
+    bool sol8b_open = 14;
+
 }
 
 message PadBoxStatus {
-    enum PadBoxStates {
-        cont1 = 0;  // continuity state 1
-        cont2 = 1;  // continuity state 2
-    }
+    bool cont1 = 1;  // continuity state 1
+    bool cont2 = 2;  // continuity state 2
 }
 
 /* SOB Messages ---------------------------------------------------------------- */
 
 message LRLoadCell {
-    uint32 rocketlc = 1;
+    uint32 rocket_mass = 1;
 }
 
-message TempSOB {
-    uint32 temp1 = 1;
-    uint32 temp2 = 2;
+message SOBTemp {
+    int32 tc1_temp = 1;
+    int32 tc2_temp = 2;
+}
+
+message IRTemperature {
+    int32 ambient_temp = 1;
+    int32 object_temp = 2;
 }
