@@ -35,12 +35,12 @@ constexpr uint16_t PROTOCOL_READ_BUFFER_SIZE_CONTROL_COMMAND = 128;
 // Task Definition
 constexpr uint8_t TASK_PROTOCOL_PRIORITY = 2;            // Priority of the protocol task
 constexpr uint8_t TASK_PROTOCOL_QUEUE_DEPTH_OBJS = 10;        // Size of the protocol task queue
-constexpr uint16_t TASK_PROTOCOL_STACK_DEPTH_WORDS = 512;        // Size of the protocol task stack (512x4 = 2KB)
+constexpr uint16_t TASK_PROTOCOL_STACK_DEPTH_WORDS = 768;        // Size of the protocol task stack (768x4 = 3KB)
 
 // Protocol Definition
 // The protocol is applied BEFORE COBS encoding, and contains a message ID and a checksum footer
-constexpr uint8_t PROTOCOL_CHECKSUM_BYTES = 4;
-constexpr uint8_t PROTOCOL_OVERHEAD_BYTES = 1 + PROTOCOL_CHECKSUM_BYTES;        // Size of the protocol overhead *PRE-COBS* (message ID + 4 byte checksum)
+constexpr uint8_t PROTOCOL_CHECKSUM_BYTES = 2;
+constexpr uint8_t PROTOCOL_OVERHEAD_BYTES = 1 + PROTOCOL_CHECKSUM_BYTES;        // Size of the protocol overhead *PRE-COBS* (message ID + 2 byte checksum)
 
 /* Class ------------------------------------------------------------------*/
 class ProtocolTask : public Task
@@ -82,7 +82,7 @@ protected:
     Proto::Node srcNode;
 
     static void SendData(uint8_t* data, uint16_t size, uint8_t msgId); // Send a protobuf encoded message over UART
-    void SendNACK(); // Send a NACK message over UART
+    void SendNACK(Proto::MessageID msgId = Proto::MessageID::MSG_UNKNOWN, Proto::Node msgSource = Proto::Node::NODE_UNKNOWN); // Send a NACK message over UART
 };
 
 #endif    // SOAR_SYSTEM_PROTOCOL_TASK_HPP_

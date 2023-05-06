@@ -88,27 +88,30 @@ void ProtocolTask::Run(void * pvParams)
 
                 // If the COBS decode result is not OK, then we need to send a NACK
                 if (cobsRes.status != COBS_DECODE_OK) {
-					SOAR_PRINT("PROTO-INFO: COBS Decode Failed: %d %d", cobsRes.status, cobsRes.out_len);
+					SOAR_PRINT("PROTO-INFO: COBS Decode Failed: %d %d\n", cobsRes.status, cobsRes.out_len);
                     SendNACK();
                 }
                 else {
-                    // Verify the checksum is correct, send a NACK if incorrect
-                    //TODO: Implement this check, send NACK and don't handle if it fails
+                    // Verify the checksum is correct, send a NACK and don't process if incorrect
+                    if (!Utils::IsCrc16Correct(decodedDataPtr, cobsRes.out_len - PROTOCOL_CHECKSUM_BYTES, *((uint16_t*)&decodedDataPtr[cobsRes.out_len - PROTOCOL_CHECKSUM_BYTES]))) {
+                        SOAR_PRINT("PROTO-INFO: Message Checksum Invalid!\n");
+                    	SendNACK();
+                    }
+                    else {
+                        // Set the message size to the decoded buffer size, minus the checksum, since that should be validated
+                        protoRx.SetDataSize(cobsRes.out_len - PROTOCOL_CHECKSUM_BYTES);
 
-                    // Set the message size to the decoded buffer size, minus the checksum, since that should be validated
-//                    protoRx.SetDataSize(cobsRes.out_len - PROTOCOL_CHECKSUM_BYTES);
-                	//TODO: We don't have a checksum yet!
-                	protoRx.SetDataSize(cobsRes.out_len);
-
-                    // Handle the protocol message using the inherited function
-                    HandleProtocolMessage(protoRx);
+                        // Handle the protocol message using the inherited function
+                        HandleProtocolMessage(protoRx);
+                    }
                 }
 
                 protoRx.Reset();
+                break;
             }
             case PROTOCOL_TX_REQUEST_DATA: {                                               //Process the command -- TX Request
 
-				SOAR_PRINT("PROTO-INFO-Vs: TX Request Received [%d]", cm.GetDataSize());
+				SOAR_PRINT("PROTO-INFO-Vs: TX Request Received [%d]\n", cm.GetDataSize());
 
                 // Allocate a command for storing the encoded message
                 Command protoTx(DATA_COMMAND, DEFAULT_PROTOCOL_UART_TX_TGT);
@@ -127,6 +130,7 @@ void ProtocolTask::Run(void * pvParams)
 
                 // Send this off to the UART Task
                 UARTTask::Inst().SendCommandReference(protoTx);
+                break;
             }
             default:
                 break;
@@ -158,9 +162,9 @@ void ProtocolTask::SendData(uint8_t* data, uint16_t size, uint8_t msgId)
     uint8_t arr[preCobsSize];
 
     // Wrap in the message header and checksum
-    uint16_t chkSum = Utils::getCRC32(data, size);
+    uint16_t chkSum = Utils::getCRC16(data, size);
     arr[0] = msgId;
-    *((uint32_t*)&arr[preCobsSize - 4]) = chkSum;
+    *((uint16_t*)&arr[preCobsSize - PROTOCOL_CHECKSUM_BYTES]) = chkSum;
 
     // Send the data by wrapping in a COBS frame and sending direct to UART Task
     Command protoTx(DATA_COMMAND, DEFAULT_PROTOCOL_UART_TX_TGT);
@@ -182,15 +186,15 @@ void ProtocolTask::SendData(uint8_t* data, uint16_t size, uint8_t msgId)
 /*
  * @brief Send a NACK message to the UART Task
  */
-void ProtocolTask::SendNACK()
+void ProtocolTask::SendNACK(Proto::MessageID msgId, Proto::Node msgSource)
 {
     Proto::ControlMessage msg;
     msg.set_source(srcNode);
     msg.set_target(Proto::Node::NODE_RCU);
     msg.set_message_id(Proto::MessageID::MSG_CONTROL);
     Proto::AckNack nack;
-    nack.set_acking_msg_source(Proto::Node::NODE_ANY);
-    nack.set_acking_msg_id(Proto::MessageID::MSG_UNKNOWN);
+    nack.set_acking_msg_source(msgSource);
+    nack.set_acking_msg_id(msgId);
     msg.set_nack(nack);
 
     EmbeddedProto::WriteBufferFixedSize<DEFAULT_PROTOCOL_WRITE_BUFFER_SIZE> writeBuffer;
