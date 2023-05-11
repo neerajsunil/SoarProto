@@ -41,7 +41,6 @@ import "CoreProto.proto";
 }
 
 /* DMB -> RCU Messages ---------------------------------------------------------------- */
-
 message GPS{
     LatLong latitude = 1;   // latitude of rocket
     LatLong longitude = 2;  // longitude of rocket

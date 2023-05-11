@@ -15,6 +15,7 @@ NODE_DMB: Node
 NODE_INVALID: Node
 NODE_PBB: Node
 NODE_RCU: Node
+NODE_SOB: Node
 NODE_UNKNOWN: Node
 RS_ABORT: RocketState
 RS_ARM: RocketState

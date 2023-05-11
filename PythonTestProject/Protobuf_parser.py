@@ -54,7 +54,7 @@ STRING_TO_PMB_PROTO_STATE = {
 	"PMB_OPEN_MEV": ProtoCmd.PMBCommand.Command.PMB_OPEN_MEV
 }
 
-def gps_parse_json_send(msg):
+def coord_parse_json_send(msg):
     dmb_jsonStr_gps = json.dump(pbnd.tele_dmb_obj.tele_gps(msg.coord.latitude.degrees, msg.coord.latitude.minutes, msg.coord.antenna_alt, msg.coord.total_alt, msg.coord.time))
     client.publish("TELE_DMB_GPS", dmb_jsonStr_gps)
 
@@ -77,14 +77,15 @@ def flash_parse_json_send(msg):
     dmb_jsonStr_flash = json.dumps(pbnd.tele_dmb_obj.tele_flash(msg.flash.loghz, msg.flash.logsec))
     client.publish("TELE_DMB_FLASH", dmb_jsonStr_flash)
 
-def rocket_parse_json_send(msg):
-    x = None
-
 def pressdmb_parse_json_send(msg):
-    pbb_jsonStr_pressure = json.dumps(pbnd.tele_pbb_obj.tele_pressure(msg.pressdmb.pressure1, msg.pressdmb.pressure2))
-    client.publish("TELE_PBB_PRESSURE", pbb_jsonStr_pressure)
+    dmb_jsonStr_pressure = json.dumps(pbnd.tele_pbb_obj.tele_pressure(msg.pressdmb.pressure1, msg.pressdmb.pressure2))
+    client.publish("TELE_DMB_PRESSURE", dmb_jsonStr_pressure)
 
-def tempdmb_parse_json_send(msg):
+def presspbb_parse_json_send(msg):
+    pbb_jsonStr_pressure = json.dumps(pbnd.tele_pbb_obj.tele_pressure(msg.pressdmb.pressure1, msg.pressdmb.pressure2))
+    client.publish("TELE_DMB_PRESSURE", pbb_jsonStr_pressure)
+
+def temppbb_parse_json_send(msg):
     pbb_jsonStr_temperature = json.dumps(pbnd.tele_pbb_obj.tele_pressure(msg.tempdmb.temp1, msg.tempdmb.temp2))
     client.publish("TELE_PBB_TEMP", pbb_jsonStr_temperature)
 
@@ -110,7 +111,7 @@ def relay_parse_json_send(msg):
 
 def padbox_parse_json_send(msg):
     rcu_jsonStr_padbox_status = json.dumps(pbnd.tele_rcu_obj.tele_padbox_status(msg.padbox.cont1, msg.padbox.cont1))
-    client.publish("TELE_RCU_PADBOX", rcu_jsonStr_nos_load_cell)
+    client.publish("TELE_RCU_PADBOX", rcu_jsonStr_padbox_status)
 
 def lr_parse_json_send(msg):
     sob_jsonStr_lr_load_cell = json.dumps(pbnd.tele_sob_obj.tele_lr_load_cell(msg.lr.rocketlc))
@@ -120,15 +121,19 @@ def tempsob_parse_json_send(msg):
     sob_jsonStr_temp = json.dumps(pbnd.tele_sob_obj.tele_temp(msg.tempsob.temp1, msg.tempsob.temp2))
     client.publish("TELE_SOB_TEMP", sob_jsonStr_temp)
 
+def irtemp_parse_json_send(msg):
+    sob_jsonStr_irtemp = json.dumps(pbnd.tele_sob_obj.tele_temp(msg.tempsob.temp1, msg.tempsob.temp2))
+    client.publish("TELE_SOB_IRTEMP", sob_jsonStr_irtemp)
+
 TELE_FUNCTION_DICTIONARY = {
-	"coord": gps_parse_json_send,
+	"coord": coord_parse_json_send,
 	"baro": baro_parse_json_send,
 	"imu": imu_parse_json_send,
 	"bat": bat_parse_json_send,
 	"flash": flash_parse_json_send,
-    "rocket": rocket_parse_json_send,
 	"pressdmb": pressdmb_parse_json_send,
-	"tempdmb": tempdmb_parse_json_send,
+    "presspbb": presspbb_parse_json_send,
+	"temppbb": tempdmb_parse_json_send,
 	"gpio": gpio_parse_json_send,
 	"pressrcu": pressrcu_parse_json_send,
 	"temprcu": temprcu_parse_json_send,
@@ -136,7 +141,8 @@ TELE_FUNCTION_DICTIONARY = {
 	"relay": relay_parse_json_send,
 	"padbox": padbox_parse_json_send,
 	"lr": lr_parse_json_send,
-	"tempsob": tempsob_parse_json_send
+	"tempsob": tempsob_parse_json_send,
+    "irtemp": irtemp_parse_json_send
 }
 
 '''

@@ -105,7 +105,7 @@ def send_ack_message(msg):
     ack_msg.ack.acking_msg_source = Core.NODE_RCU
     ack_msg.ack.acking_sequence_num = msg.source_sequence_number
 
-# telemetry message is very primitive in the protobuf
+# telemetry message
 def process_telemetry_message(msg):
     msgId, data = Codec.Decode(message, len(message))
 
@@ -157,9 +157,7 @@ def on_serial_message(message):
 
     #Process essage according to ID
     if msgId == Core.MessageID.MSG_TELEMETRY:
-        #parse onto protobuf object
-        #msgParsed.ParseFromString(buf) #?
-        x = None
+        process_telemetry_message(data)
     elif msgId == Core.MessageID.MSG_CONTROL:
         process_control_message(data)
 

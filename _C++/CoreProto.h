@@ -44,7 +44,8 @@ enum class Node : uint32_t
   NODE_ANY = 2,
   NODE_RCU = 3,
   NODE_DMB = 4,
-  NODE_PBB = 5
+  NODE_PBB = 5,
+  NODE_SOB = 6
 };
 
 enum class MessageID : uint32_t

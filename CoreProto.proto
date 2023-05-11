@@ -19,6 +19,7 @@ enum Node {
     NODE_RCU = 3;
     NODE_DMB = 4;
     NODE_PBB = 5;
+    NODE_SOB = 6;
 }
 
 enum MessageID {

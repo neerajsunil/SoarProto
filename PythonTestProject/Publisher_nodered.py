@@ -9,10 +9,10 @@ import TelemetryMessage_pb2 as ProtoTele
 import CoreProto_pb2 as Core
 
 class TELE_DMB:
-	def tele_baro(self, temp, pressure):
+	def tele_baro(self, baro_temp, baro_pressure):
 		return {
-		"temp": str(temp),
-		"pressure": str(pressure)
+		"baro_temp": str(baro_temp),
+		"baro_pressure": str(baro_pressure)
 		}
 	
 	def tele_imu(self, accel, gyro, mag):
@@ -28,15 +28,15 @@ class TELE_DMB:
 	        "mag_z": str(mag[2])
 	    }
 	
-	def tele_pressure(self, pressure):
+	def tele_pressure(self, upper_pv_pressure):
 	    return {
-	        "pressure": str(pressure)
+	        "upper_pv_pressure": str(upper_pv_pressure)
 	    }
 	
 	def tele_gps(self, lat_minutes, lat_seconds, long_minutes, long_seconds, antenna_alt, total_altitude, time):
 	    return {
 	        "lat_minutes": str(lat_minutes),
-	        "lat_seconds": str(lat_seconds),
+	        "lat_degrees": str(lat_seconds),
 	        "long_minutes": str(long_minutes),
 	        "long_seconds": str(long_seconds),
 			"ant_altitude": str(altitude),
