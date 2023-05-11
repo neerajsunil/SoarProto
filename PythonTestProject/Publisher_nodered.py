@@ -3,29 +3,29 @@
 import time
 import json
 import paho.mqtt.client as mqtt
-import ControlMessage_pb2 as Proto
+import ControlMessage_pb2 as ProtoCtl
 import CommandMessage_pb2 as ProtoCmd
 import TelemetryMessage_pb2 as ProtoTele
 import CoreProto_pb2 as Core
 
 class TELE_DMB:
-	def tele_baro(self, baro_temp, baro_pressure):
+	def tele_baro(self, baro_pressure, baro_temp):
 		return {
-		"baro_temp": str(baro_temp),
-		"baro_pressure": str(baro_pressure)
+			"baro_pressure": str(baro_pressure),
+			"baro_temp": str(baro_temp)
 		}
 	
 	def tele_imu(self, accel, gyro, mag):
 	    return {
-	        "accel_x": str(accel[0]),
-	        "accel_y": str(accel[1]),
-	        "accel_z": str(accel[2]),
-	        "gyro_x": str(gyro[0]),
-	        "gyro_y": str(gyro[1]),
-	        "gyro_z": str(gyro[2]),
-	        "mag_x": str(mag[0]),
-	        "mag_y": str(mag[1]),
-	        "mag_z": str(mag[2])
+			"accel_x": str(accel[0]),
+			"accel_y": str(accel[1]),
+			"accel_z": str(accel[2]),
+			"gyro_x": str(gyro[0]),
+			"gyro_y": str(gyro[1]),
+			"gyro_z": str(gyro[2]),
+			"mag_x": str(mag[0]),
+			"mag_y": str(mag[1]),
+			"mag_z": str(mag[2])
 	    }
 	
 	def tele_pressure(self, upper_pv_pressure):
@@ -33,14 +33,18 @@ class TELE_DMB:
 	        "upper_pv_pressure": str(upper_pv_pressure)
 	    }
 	
-	def tele_gps(self, lat_minutes, lat_seconds, long_minutes, long_seconds, antenna_alt, total_altitude, time):
+	def tele_gps(self, lat_minutes, lat_degrees, long_minutes, long_degrees, antenna_alt, antenna_unit, geoid_altitude, geoid_unit, total_altitude, total_unit, time):
 	    return {
 	        "lat_minutes": str(lat_minutes),
-	        "lat_degrees": str(lat_seconds),
+	        "lat_degrees": str(lat_degrees),
 	        "long_minutes": str(long_minutes),
-	        "long_seconds": str(long_seconds),
-			"ant_altitude": str(altitude),
-	        "total_altitude": str(altitude),
+	        "long_seconds": str(long_degrees),
+			"ant_altitude": str(antenna_alt),
+			"ant_unit": str(antenna_unit),
+			"geoid_altitude": str(geoid_altitude),
+			"geoid_unit": str(geoid_unit),
+	        "total_altitude": str(total_altitude),
+			"total_unit": str(total_unit),
 			"time": str(time)
 	    }
 	
@@ -50,41 +54,30 @@ class TELE_DMB:
 	        "bat_volt": str(bat_volt)
 	    }
 
-	def tele_flash(self, loghz, logsec):
+	def tele_flash(self, sector_address, logging_rate):
 		return {
-			"loghz": str(loghz),
-			"logsec": str(logsec)
+			"loghz": str(sector_address),
+			"logsec": str(logging_rate)
 		}
-	
-	def tele_state(self, state, log_hz, log_sector, data_hz, hb_period, vent_state, drain_state, mev_pwm):
-	    return {
-	        "state": str(state),
-	        "log_hz": str(log_hz),
-	        "log_sector": str(log_sector),
-	        "data_hz": str(data_hz),
-	        "hb_period": str(hb_period),
-	        "vent_state": str(vent_state),
-	        "drain_state": str(drain_state),
-	        "mev_pwm": str(mev_pwm)
-	    }
 
 class TELE_PBB:
-	def tele_pressure(self, pressure1, pressure2):
+	def tele_pressure(self, ib_pressure, lower_pv_pressure):
 		return {
-		"pressure1": str(pressure1),
-		"pressure2": str(pressure2)
+		"ib_pressure": str(ib_pressure),
+		"lower_pv_pressure": str(lower_pv_pressure)
 		}
 	
-	def tele_temp(self, temp1, temp2):
+	def tele_temp(self, ib_temperature, pv_temperature):
 	    return {
-	        "temp1": str(temp1),
-	        "temp2": str(temp2)
+	        "ib_temperature": str(ib_temperature),
+	        "pv_temperature": str(pv_temperature)
 	    }
 	
-	def tele_gpio_status(self, drain_state, mev_state):
+	def tele_gpio_status(self, main_engine_valve_open, vent_open, drain_open):
 	    return {
-	        "drain_state": str(drain_state),
-	        "mev_state": str(mev_state)
+	        "mev_open": str(mev_open),
+			"vent_open": str(vent_open),
+			"drain_open": str(drain_state)
 	    }
 	
 	#def cmd_hb(self):
@@ -92,42 +85,42 @@ class TELE_PBB:
 	#	}
 
 class TELE_RCU:
-	def tele_pressure(self, pressure1, pressure2, pressure3, pressure4):
+	def tele_pressure(self, pt1_pressure, pt2_pressure, pt3_pressure, pt4_pressure):
 		return {
-		"pressure1": str(pressure1),
-		"pressure2": str(pressure2),
-		"pressure3": str(pressure3),
-		"pressure4": str(pressure4)
+		"pt1_pressure": str(pt1_pressure),
+		"pt2_pressure": str(pt2_pressure),
+		"pt3_pressure": str(pt3_pressure),
+		"pt4_pressure": str(pt4_pressure)
 		}
 	
-	def tele_temp(self, temp1, temp2):
+	def tele_temp(self, tc1_temp, tc2_temp):
 	    return {
-	        "temp1": str(temp1),
-	        "temp2": str(temp2)
+	        "tc1_temp": str(tc1_temp),
+	        "tc2_temp": str(tc2_temp)
 	    }
 	
-	def tele_nos_load_cell(self, nos_lc1, nos_lc2):
+	def tele_nos_load_cell(self, nos1_mass, nos2_mass):
 	    return {
-	        "nos_lc1": str(nos_lc1),
-	        "nos_lc2": str(nos_lc2)
+	        "nos1_mass": str(nos1_mass),
+	        "nos2_mass": str(nos2_mass)
 	    }
 	
-	def tele_relay_status(self, ac1_state, ac2_state, pbv1_state, pbv2_state, pbv3_state, sol1_state, sol2_state, sol3_state, sol4_state, sol5_state, sol6_state, sol7_state, sol8a_state, sol8b_state):
+	def tele_relay_status(self, ac1_open, ac2_open, pbv1_open, pbv2_open, pbv3_open, sol1_open, sol2_open, sol3_open, sol4_open, sol5_open, sol6_open, sol7_open, sol8a_open, sol8b_open):
 	    return {
-	        "ac1_state": str(ac1_state),
-	        "ac2_state": str(ac2_state),
-	        "pbv1_state": str(pbv1_state),
-	        "pbv2_state": str(pbv2_state),
-	        "pbv3_state": str(pbv3_state),
-	        "sol1_state": str(sol1_state),
-	        "sol2_state": str(sol2_state),
-			"sol3_state": str(sol3_state),
-			"sol4_state": str(sol4_state),
-			"sol5_state": str(sol5_state),
-			"sol6_state": str(sol6_state),
-			"sol7_state": str(sol7_state),
-			"sol8a_state": str(sol8a_state),
-			"sol8b_state": str(sol8b_state)
+	        "ac1_open": str(ac1_open),
+	        "ac2_open": str(ac2_open),
+	        "pbv1_open": str(pbv1_open),
+	        "pbv2_open": str(pbv2_open),
+	        "pbv3_open": str(pbv3_open),
+	        "sol1_open": str(sol1_open),
+	        "sol2_open": str(sol2_open),
+			"sol3_open": str(sol3_open),
+			"sol4_open": str(sol4_open),
+			"sol5_open": str(sol5_open),
+			"sol6_open": str(sol6_open),
+			"sol7_open": str(sol7_open),
+			"sol8a_open": str(sol8a_open),
+			"sol8b_open": str(sol8b_open)
 	    }
 
 	def tele_padbox_status(self, cont1, cont2):
@@ -146,56 +139,17 @@ class TELE_SOB:
 		"rocket_lc1": str(rocket_lc1)
 		}
 	
-	def tele_temp(self, temp1, temp2):
+	def tele_temp(self, tc1_temp, tc2_temp):
 	    return {
-	        "temp1": str(temp1),
-	        "temp2": str(temp2)
+	        "tc1_temp": str(tc1_temp),
+	        "tc2_temp": str(tc2_temp)
 	    }
 
-	#def cmd_hb(self):
-	#	return {
-	#	}
-
-
-MCB_CMD = {
-'CMD_RCU_AC_1': 0,
-'CMD_RCU_AC_2': 0,
-'CMD_RCU_PBV_1': 0,
-'CMD_RCU_PBV_2': 0,
-'CMD_RCU_PBV_3': 0,
-'CMD_RCU_SOL_1': 0,
-'CMD_RCU_SOL_2A': 0,
-'CMD_RCU_SOL_2B': 0,
-'CMD_RCU_SOL_3A': 0,
-'CMD_RCU_SOL_3B': 0,
-'CMD_PAD_1_LAUNCH': 1,
-'CMD_PAD_2_LAUNCH': 1,
-'CMD_DMB_MEV': 0,
-'CMD_DMB_DRAIN': 0, #all above int
-'CMD_DMB_STATE': 'IDLE' #string
-}
-
-class MCB:
-	def cmd_RCU_AC(self, rcu_ac_1, rcu_ac_2):
-		MCB_CMD['CMD_RCU_AC_1'] = rcu_ac_1
-		MCB_CMD['CMD_RCU_AC_2'] = rcu_ac_2
-	
-	def cmd_RCU_PBV(self, rcu_pbv_1, rcu_pbv_2, rcu_pbv_3):
-		MCB_CMD['CMD_RCU_PBV_1'] = rcu_pbv_1
-		MCB_CMD['CMD_RCU_PBV_2'] = rcu_pbv_2
-		MCB_CMD['CMD_RCU_PBV_3'] = rcu_pbv_3
-	
-	def cmd_RCU_SOL(self, rcu_sol_1, rcu_sol_2a, rcu_sol_2b, rcu_sol_3a, rcu_sol_3b):
-		MCB_CMD['CMD_RCU_SOL_1'] = rcu_sol_1
-		MCB_CMD['CMD_RCU_SOL_2A'] = rcu_sol_2a
-		MCB_CMD['CMD_RCU_SOL_2B'] = rcu_sol_2b
-		MCB_CMD['CMD_RCU_SOL_3A'] = rcu_sol_3a
-		MCB_CMD['CMD_RCU_SOL_3B'] = rcu_sol_3b
-	
-	def cmd_dmb(self, dmb_mev, dmb_drain, dmb_state):
-		MCB_CMD['CMD_DMB_MEV'] = dmb_mev
-		MCB_CMD['CMD_DMB_DRAIN'] = dmb_drain
-		MCB_CMD['CMD_DMB_STATE'] = dmb_state
+	def tele_irtemp(self, ambient_temp, object_temp):
+	    return {
+	        "ambient_temp": str(ambient_temp),
+	        "object_temp": str(object_temp)
+	    }
 
 def on_message(client, userdata, message):
 	print("received message: ",str(message.payload.decode("utf-8")))
@@ -227,10 +181,6 @@ tele_rcu_obj = TELE_RCU()
 tele_sob_obj = TELE_SOB()
 #sob_jsonStr_lr_load_cell = json.dumps(tele_sob_obj.tele_lr_load_cell(25.0))
 #sob_jsonStr_temp = json.dumps(tele_sob_obj.tele_temp(25.0, 20.0))
-
-#MCB Command
-com_mcb_obj = MCB()
-#mcb_jsonStr_command = json.dumps(MCB_CMD)
 
 '''
 while True:
