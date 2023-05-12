@@ -83,7 +83,7 @@ def pressdmb_parse_json_send(msg):
 
 def presspbb_parse_json_send(msg):
     pbb_jsonStr_pressure = json.dumps(pbnd.tele_pbb_obj.tele_pressure(msg.pressdmb.pressure1, msg.pressdmb.pressure2))
-    client.publish("TELE_DMB_PRESSURE", pbb_jsonStr_pressure)
+    client.publish("TELE_PBB_PRESSURE", pbb_jsonStr_pressure)
 
 def temppbb_parse_json_send(msg):
     pbb_jsonStr_temperature = json.dumps(pbnd.tele_pbb_obj.tele_pressure(msg.tempdmb.temp1, msg.tempdmb.temp2))
@@ -133,7 +133,7 @@ TELE_FUNCTION_DICTIONARY = {
 	"flash": flash_parse_json_send,
 	"pressdmb": pressdmb_parse_json_send,
     "presspbb": presspbb_parse_json_send,
-	"temppbb": tempdmb_parse_json_send,
+	"temppbb": temppbb_parse_json_send,
 	"gpio": gpio_parse_json_send,
 	"pressrcu": pressrcu_parse_json_send,
 	"temprcu": temprcu_parse_json_send,

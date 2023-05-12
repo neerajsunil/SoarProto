@@ -9,6 +9,21 @@ import TelemetryMessage_pb2 as ProtoTele
 import CoreProto_pb2 as Core
 
 class TELE_DMB:
+	def tele_gps(self, lat_minutes, lat_degrees, long_minutes, long_degrees, antenna_alt, antenna_unit, geoid_altitude, geoid_unit, total_altitude, total_unit, time):
+	    return {
+	        "lat_minutes": str(lat_minutes),
+	        "lat_degrees": str(lat_degrees),
+	        "long_minutes": str(long_minutes),
+	        "long_seconds": str(long_degrees),
+			"ant_altitude": str(antenna_alt),
+			"ant_unit": str(antenna_unit),
+			"geoid_altitude": str(geoid_altitude),
+			"geoid_unit": str(geoid_unit),
+	        "total_altitude": str(total_altitude),
+			"total_unit": str(total_unit),
+			"time": str(time)
+	    }
+	
 	def tele_baro(self, baro_pressure, baro_temp):
 		return {
 			"baro_pressure": str(baro_pressure),
@@ -28,37 +43,22 @@ class TELE_DMB:
 			"mag_z": str(mag[2])
 	    }
 	
-	def tele_pressure(self, upper_pv_pressure):
-	    return {
-	        "upper_pv_pressure": str(upper_pv_pressure)
-	    }
-	
-	def tele_gps(self, lat_minutes, lat_degrees, long_minutes, long_degrees, antenna_alt, antenna_unit, geoid_altitude, geoid_unit, total_altitude, total_unit, time):
-	    return {
-	        "lat_minutes": str(lat_minutes),
-	        "lat_degrees": str(lat_degrees),
-	        "long_minutes": str(long_minutes),
-	        "long_seconds": str(long_degrees),
-			"ant_altitude": str(antenna_alt),
-			"ant_unit": str(antenna_unit),
-			"geoid_altitude": str(geoid_altitude),
-			"geoid_unit": str(geoid_unit),
-	        "total_altitude": str(total_altitude),
-			"total_unit": str(total_unit),
-			"time": str(time)
-	    }
-	
 	def tele_battery(self, power_src, bat_volt):
 	    return {
 	        "power_src": str(power_src),
 	        "bat_volt": str(bat_volt)
 	    }
-
+	
 	def tele_flash(self, sector_address, logging_rate):
 		return {
-			"loghz": str(sector_address),
-			"logsec": str(logging_rate)
+			"sector_address": str(sector_address),
+			"logging_rate": str(logging_rate)
 		}
+
+	def tele_pressure(self, upper_pv_pressure):
+	    return {
+	        "upper_pv_pressure": str(upper_pv_pressure)
+	    }
 
 class TELE_PBB:
 	def tele_pressure(self, ib_pressure, lower_pv_pressure):
@@ -75,14 +75,10 @@ class TELE_PBB:
 	
 	def tele_gpio_status(self, main_engine_valve_open, vent_open, drain_open):
 	    return {
-	        "mev_open": str(mev_open),
+	        "mev_open": str(main_engine_valve_open),
 			"vent_open": str(vent_open),
-			"drain_open": str(drain_state)
+			"drain_open": str(drain_open)
 	    }
-	
-	#def cmd_hb(self):
-	#	return {
-	#	}
 
 class TELE_RCU:
 	def tele_pressure(self, pt1_pressure, pt2_pressure, pt3_pressure, pt4_pressure):
@@ -125,18 +121,14 @@ class TELE_RCU:
 
 	def tele_padbox_status(self, cont1, cont2):
 		return {
-			"continuity1_state": str(continuity1_state),
-			"continuity2_state": str(continuity2_state)
+			"cont1": str(cont1),
+			"cont2": str(cont2)
 		}
-	
-	#def cmd_hb(self):
-	#	return {
-	#	}
 
 class TELE_SOB:
-	def tele_lr_load_cell(self, rocket_lc1):
+	def tele_lr_load_cell(self, rocket_mass):
 		return {
-		"rocket_lc1": str(rocket_lc1)
+		"rocket_mass": str(rocket_mass)
 		}
 	
 	def tele_temp(self, tc1_temp, tc2_temp):

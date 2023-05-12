@@ -120,7 +120,7 @@ def process_telemetry_message(msg):
         message_type = received_message.WhichOneof('message')
         ProtoParse.TELE_FUNCTION_DICTIONARY[message_type](received_message)
 
-
+# control message
 def process_control_message(data):
     received_message = Proto.ControlMessage()
 
@@ -147,7 +147,6 @@ def process_control_message(data):
             #add resend of message
             print('nack received, this is bad')
     
-
 # placeholder in case the pu ever receives a command message
 #def process_command_message(msg):
 
@@ -160,9 +159,6 @@ def on_serial_message(message):
         process_telemetry_message(data)
     elif msgId == Core.MessageID.MSG_CONTROL:
         process_control_message(data)
-
-
-
 
 if __name__ == '__main__':
     client = mqtt.Client()
