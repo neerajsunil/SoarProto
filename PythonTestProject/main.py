@@ -40,6 +40,7 @@ CONTORL_MESSAGE_TOPIC = ''
 
 # Globals
 sequence_number = 1
+current_state = None
 
 def populate_command_msg(command):
     global sequence_number
@@ -53,24 +54,22 @@ def populate_command_msg(command):
     dmb_command = pbnd.STRING_TO_RSC_PROTO_STATE.get(command)
 
     if dmb_command != None:
-        msg.pmb_command.command_enum = dmb_command
+        msg.dmb_command.command_enum = dmb_command
         msg.target = Core.NODE_DMB
     else:
-        pmb_comand = pbnd.STRING_TO_PMB_PROTO_STATE.get(command)
+        sob_comand = pbnd.STRING_TO_SOB_PROTO_STATE.get(command)
 
-        if pmb_comand != None:
-            msg.pmb_command.command_enum = pmb_comand
-            msg.target = Core.NODE_DMB
+        if sob_comand != None:
+            msg.sob_command.command_enum = sob_comand
+            msg.target = Core.NODE_SOB
         else:
-            msg.dmb_command.command_enum = ProtoCmd.DMBCommand.Command.RSC_NONE
-            msg.target = Core.NODE_DMB
+            client.publish("TELE_PI_ERROR", json.dumps({"error": "Invalid Command, Not a DMB or SOB command"}))
 
     return msg
 
 def send_command_msg(command):
     #create msg
     msg = populate_command_msg(command)
-    print("msg: ", msg)
     
     #encode
     buf = msg.SerializeToString()
@@ -86,12 +85,13 @@ def on_mqtt_message(client, userdata, message):
         data_dictionary = json.loads(message.payload.decode("utf-8"))
 
         if data_dictionary["passphrase"] != PASSPHRASE:
-            print("wrong passphrase")
+            client.publish("TELE_PI_ERROR", json.dumps({"error": "Invalid Passphrase"}))
             #return False
 
         if message.topic == "RCU/Commands":
             send_command_msg(data_dictionary["command"])
         else:
+            client.publish("TELE_PI_ERROR", json.dumps({"error": "Unknown Command Topic"}))
             print("unknown topic")
             #return False
 
@@ -135,7 +135,8 @@ def process_control_message(data):
         if message_type == 'sys_state':
             print(received_message.sys_state)
             if received_message.source == Core.NODE_DMB:
-                pbnd.MCB_CMD['CMD_DMB_STATE'] = pbnd.PROTO_STATE_TO_STRING[received_message.sys_state.rocket_state]
+                global current_state
+                current_state = pbnd.PROTO_STATE_TO_STRING[received_message.sys_state.rocket_state]
                 print(pbnd.PROTO_STATE_TO_STRING[received_message.sys_state.rocket_state])
         elif message_type == 'hb':
             print('hb: ', received_message.source)
@@ -148,7 +149,7 @@ def process_control_message(data):
             #add resend of message
             print('nack received, this is bad')
     
-# placeholder in case the pu ever receives a command message
+# placeholder in case the pi ever receives a command message
 #def process_command_message(msg):
 
 def on_serial_message(message):
@@ -173,10 +174,8 @@ if __name__ == '__main__':
     while True:
         #client.publish("TELE_TEST", "side")
 
-
         # codec encodes the end of a message through a 0x00
         #serial_message = SER.read_until(expected = b'\x00', size = None)
         #on_serial_message(serial_message)
-
-        time.sleep(1)
+        None
         
