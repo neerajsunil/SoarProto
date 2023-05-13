@@ -1014,8 +1014,8 @@ class CommandMessage final: public ::EmbeddedProto::MessageInterface
           set_dmb_command(rhs.get_dmb_command());
           break;
 
-        case FieldNumber::PMB_COMMAND:
-          set_pmb_command(rhs.get_pmb_command());
+        case FieldNumber::PBB_COMMAND:
+          set_pbb_command(rhs.get_pbb_command());
           break;
 
         case FieldNumber::RCU_COMMAND:
@@ -1050,8 +1050,8 @@ class CommandMessage final: public ::EmbeddedProto::MessageInterface
           set_dmb_command(rhs.get_dmb_command());
           break;
 
-        case FieldNumber::PMB_COMMAND:
-          set_pmb_command(rhs.get_pmb_command());
+        case FieldNumber::PBB_COMMAND:
+          set_pbb_command(rhs.get_pbb_command());
           break;
 
         case FieldNumber::RCU_COMMAND:
@@ -1078,7 +1078,7 @@ class CommandMessage final: public ::EmbeddedProto::MessageInterface
       MESSAGE_ID = 3,
       SOURCE_SEQUENCE_NUM = 4,
       DMB_COMMAND = 5,
-      PMB_COMMAND = 6,
+      PBB_COMMAND = 6,
       RCU_COMMAND = 7,
       SOB_COMMAND = 8
     };
@@ -1101,8 +1101,8 @@ class CommandMessage final: public ::EmbeddedProto::MessageInterface
           set_dmb_command(rhs.get_dmb_command());
           break;
 
-        case FieldNumber::PMB_COMMAND:
-          set_pmb_command(rhs.get_pmb_command());
+        case FieldNumber::PBB_COMMAND:
+          set_pbb_command(rhs.get_pbb_command());
           break;
 
         case FieldNumber::RCU_COMMAND:
@@ -1138,8 +1138,8 @@ class CommandMessage final: public ::EmbeddedProto::MessageInterface
           set_dmb_command(rhs.get_dmb_command());
           break;
 
-        case FieldNumber::PMB_COMMAND:
-          set_pmb_command(rhs.get_pmb_command());
+        case FieldNumber::PBB_COMMAND:
+          set_pbb_command(rhs.get_pbb_command());
           break;
 
         case FieldNumber::RCU_COMMAND:
@@ -1228,45 +1228,45 @@ class CommandMessage final: public ::EmbeddedProto::MessageInterface
     inline const DMBCommand& get_dmb_command() const { return message_.dmb_command_; }
     inline const DMBCommand& dmb_command() const { return message_.dmb_command_; }
 
-    static constexpr char const* PMB_COMMAND_NAME = "pmb_command";
-    inline bool has_pmb_command() const
+    static constexpr char const* PBB_COMMAND_NAME = "pbb_command";
+    inline bool has_pbb_command() const
     {
-      return FieldNumber::PMB_COMMAND == which_message_;
+      return FieldNumber::PBB_COMMAND == which_message_;
     }
-    inline void clear_pmb_command()
+    inline void clear_pbb_command()
     {
-      if(FieldNumber::PMB_COMMAND == which_message_)
+      if(FieldNumber::PBB_COMMAND == which_message_)
       {
         which_message_ = FieldNumber::NOT_SET;
-        message_.pmb_command_.~PBBCommand();
+        message_.pbb_command_.~PBBCommand();
       }
     }
-    inline void set_pmb_command(const PBBCommand& value)
+    inline void set_pbb_command(const PBBCommand& value)
     {
-      if(FieldNumber::PMB_COMMAND != which_message_)
+      if(FieldNumber::PBB_COMMAND != which_message_)
       {
-        init_message(FieldNumber::PMB_COMMAND);
+        init_message(FieldNumber::PBB_COMMAND);
       }
-      message_.pmb_command_ = value;
+      message_.pbb_command_ = value;
     }
-    inline void set_pmb_command(const PBBCommand&& value)
+    inline void set_pbb_command(const PBBCommand&& value)
     {
-      if(FieldNumber::PMB_COMMAND != which_message_)
+      if(FieldNumber::PBB_COMMAND != which_message_)
       {
-        init_message(FieldNumber::PMB_COMMAND);
+        init_message(FieldNumber::PBB_COMMAND);
       }
-      message_.pmb_command_ = value;
+      message_.pbb_command_ = value;
     }
-    inline PBBCommand& mutable_pmb_command()
+    inline PBBCommand& mutable_pbb_command()
     {
-      if(FieldNumber::PMB_COMMAND != which_message_)
+      if(FieldNumber::PBB_COMMAND != which_message_)
       {
-        init_message(FieldNumber::PMB_COMMAND);
+        init_message(FieldNumber::PBB_COMMAND);
       }
-      return message_.pmb_command_;
+      return message_.pbb_command_;
     }
-    inline const PBBCommand& get_pmb_command() const { return message_.pmb_command_; }
-    inline const PBBCommand& pmb_command() const { return message_.pmb_command_; }
+    inline const PBBCommand& get_pbb_command() const { return message_.pbb_command_; }
+    inline const PBBCommand& pbb_command() const { return message_.pbb_command_; }
 
     static constexpr char const* RCU_COMMAND_NAME = "rcu_command";
     inline bool has_rcu_command() const
@@ -1382,10 +1382,10 @@ class CommandMessage final: public ::EmbeddedProto::MessageInterface
           }
           break;
 
-        case FieldNumber::PMB_COMMAND:
-          if(has_pmb_command() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+        case FieldNumber::PBB_COMMAND:
+          if(has_pbb_command() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
           {
-            return_value = message_.pmb_command_.serialize_with_id(static_cast<uint32_t>(FieldNumber::PMB_COMMAND), buffer, true);
+            return_value = message_.pbb_command_.serialize_with_id(static_cast<uint32_t>(FieldNumber::PBB_COMMAND), buffer, true);
           }
           break;
 
@@ -1440,7 +1440,7 @@ class CommandMessage final: public ::EmbeddedProto::MessageInterface
             break;
 
           case FieldNumber::DMB_COMMAND:
-          case FieldNumber::PMB_COMMAND:
+          case FieldNumber::PBB_COMMAND:
           case FieldNumber::RCU_COMMAND:
           case FieldNumber::SOB_COMMAND:
             return_value = deserialize_message(id_tag, buffer, wire_type);
@@ -1503,8 +1503,8 @@ class CommandMessage final: public ::EmbeddedProto::MessageInterface
         case FieldNumber::DMB_COMMAND:
           name = DMB_COMMAND_NAME;
           break;
-        case FieldNumber::PMB_COMMAND:
-          name = PMB_COMMAND_NAME;
+        case FieldNumber::PBB_COMMAND:
+          name = PBB_COMMAND_NAME;
           break;
         case FieldNumber::RCU_COMMAND:
           name = RCU_COMMAND_NAME;
@@ -1612,7 +1612,7 @@ class CommandMessage final: public ::EmbeddedProto::MessageInterface
         message() {}
         ~message() {}
         DMBCommand dmb_command_;
-        PBBCommand pmb_command_;
+        PBBCommand pbb_command_;
         RCUCommand rcu_command_;
         SOBCommand sob_command_;
       };
@@ -1633,8 +1633,8 @@ class CommandMessage final: public ::EmbeddedProto::MessageInterface
             new(&message_.dmb_command_) DMBCommand;
             break;
 
-          case FieldNumber::PMB_COMMAND:
-            new(&message_.pmb_command_) PBBCommand;
+          case FieldNumber::PBB_COMMAND:
+            new(&message_.pbb_command_) PBBCommand;
             break;
 
           case FieldNumber::RCU_COMMAND:
@@ -1659,8 +1659,8 @@ class CommandMessage final: public ::EmbeddedProto::MessageInterface
           case FieldNumber::DMB_COMMAND:
             ::EmbeddedProto::destroy_at(&message_.dmb_command_);
             break;
-          case FieldNumber::PMB_COMMAND:
-            ::EmbeddedProto::destroy_at(&message_.pmb_command_);
+          case FieldNumber::PBB_COMMAND:
+            ::EmbeddedProto::destroy_at(&message_.pbb_command_);
             break;
           case FieldNumber::RCU_COMMAND:
             ::EmbeddedProto::destroy_at(&message_.rcu_command_);
@@ -1690,8 +1690,8 @@ class CommandMessage final: public ::EmbeddedProto::MessageInterface
           case FieldNumber::DMB_COMMAND:
             return_value = message_.dmb_command_.deserialize_check_type(buffer, wire_type);
             break;
-          case FieldNumber::PMB_COMMAND:
-            return_value = message_.pmb_command_.deserialize_check_type(buffer, wire_type);
+          case FieldNumber::PBB_COMMAND:
+            return_value = message_.pbb_command_.deserialize_check_type(buffer, wire_type);
             break;
           case FieldNumber::RCU_COMMAND:
             return_value = message_.rcu_command_.deserialize_check_type(buffer, wire_type);
@@ -1720,8 +1720,8 @@ class CommandMessage final: public ::EmbeddedProto::MessageInterface
           case FieldNumber::DMB_COMMAND:
             left_chars = message_.dmb_command_.to_string(left_chars, indent_level, DMB_COMMAND_NAME, first_field);
             break;
-          case FieldNumber::PMB_COMMAND:
-            left_chars = message_.pmb_command_.to_string(left_chars, indent_level, PMB_COMMAND_NAME, first_field);
+          case FieldNumber::PBB_COMMAND:
+            left_chars = message_.pbb_command_.to_string(left_chars, indent_level, PBB_COMMAND_NAME, first_field);
             break;
           case FieldNumber::RCU_COMMAND:
             left_chars = message_.rcu_command_.to_string(left_chars, indent_level, RCU_COMMAND_NAME, first_field);

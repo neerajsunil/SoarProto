@@ -5130,8 +5130,8 @@ class TelemetryMessage final: public ::EmbeddedProto::MessageInterface
           set_bat(rhs.get_bat());
           break;
 
-        case FieldNumber::FLASH:
-          set_flash(rhs.get_flash());
+        case FieldNumber::FLASHINFO:
+          set_flashInfo(rhs.get_flashInfo());
           break;
 
         case FieldNumber::PRESSDMB:
@@ -5217,8 +5217,8 @@ class TelemetryMessage final: public ::EmbeddedProto::MessageInterface
           set_bat(rhs.get_bat());
           break;
 
-        case FieldNumber::FLASH:
-          set_flash(rhs.get_flash());
+        case FieldNumber::FLASHINFO:
+          set_flashInfo(rhs.get_flashInfo());
           break;
 
         case FieldNumber::PRESSDMB:
@@ -5287,7 +5287,7 @@ class TelemetryMessage final: public ::EmbeddedProto::MessageInterface
       BARO = 5,
       IMU = 6,
       BAT = 7,
-      FLASH = 8,
+      FLASHINFO = 8,
       PRESSDMB = 9,
       PRESSPBB = 10,
       TEMPPBB = 11,
@@ -5331,8 +5331,8 @@ class TelemetryMessage final: public ::EmbeddedProto::MessageInterface
           set_bat(rhs.get_bat());
           break;
 
-        case FieldNumber::FLASH:
-          set_flash(rhs.get_flash());
+        case FieldNumber::FLASHINFO:
+          set_flashInfo(rhs.get_flashInfo());
           break;
 
         case FieldNumber::PRESSDMB:
@@ -5419,8 +5419,8 @@ class TelemetryMessage final: public ::EmbeddedProto::MessageInterface
           set_bat(rhs.get_bat());
           break;
 
-        case FieldNumber::FLASH:
-          set_flash(rhs.get_flash());
+        case FieldNumber::FLASHINFO:
+          set_flashInfo(rhs.get_flashInfo());
           break;
 
         case FieldNumber::PRESSDMB:
@@ -5662,45 +5662,45 @@ class TelemetryMessage final: public ::EmbeddedProto::MessageInterface
     inline const Battery& get_bat() const { return message_.bat_; }
     inline const Battery& bat() const { return message_.bat_; }
 
-    static constexpr char const* FLASH_NAME = "flash";
-    inline bool has_flash() const
+    static constexpr char const* FLASHINFO_NAME = "flashInfo";
+    inline bool has_flashInfo() const
     {
-      return FieldNumber::FLASH == which_message_;
+      return FieldNumber::FLASHINFO == which_message_;
     }
-    inline void clear_flash()
+    inline void clear_flashInfo()
     {
-      if(FieldNumber::FLASH == which_message_)
+      if(FieldNumber::FLASHINFO == which_message_)
       {
         which_message_ = FieldNumber::NOT_SET;
-        message_.flash_.~Flash();
+        message_.flashInfo_.~Flash();
       }
     }
-    inline void set_flash(const Flash& value)
+    inline void set_flashInfo(const Flash& value)
     {
-      if(FieldNumber::FLASH != which_message_)
+      if(FieldNumber::FLASHINFO != which_message_)
       {
-        init_message(FieldNumber::FLASH);
+        init_message(FieldNumber::FLASHINFO);
       }
-      message_.flash_ = value;
+      message_.flashInfo_ = value;
     }
-    inline void set_flash(const Flash&& value)
+    inline void set_flashInfo(const Flash&& value)
     {
-      if(FieldNumber::FLASH != which_message_)
+      if(FieldNumber::FLASHINFO != which_message_)
       {
-        init_message(FieldNumber::FLASH);
+        init_message(FieldNumber::FLASHINFO);
       }
-      message_.flash_ = value;
+      message_.flashInfo_ = value;
     }
-    inline Flash& mutable_flash()
+    inline Flash& mutable_flashInfo()
     {
-      if(FieldNumber::FLASH != which_message_)
+      if(FieldNumber::FLASHINFO != which_message_)
       {
-        init_message(FieldNumber::FLASH);
+        init_message(FieldNumber::FLASHINFO);
       }
-      return message_.flash_;
+      return message_.flashInfo_;
     }
-    inline const Flash& get_flash() const { return message_.flash_; }
-    inline const Flash& flash() const { return message_.flash_; }
+    inline const Flash& get_flashInfo() const { return message_.flashInfo_; }
+    inline const Flash& flashInfo() const { return message_.flashInfo_; }
 
     static constexpr char const* PRESSDMB_NAME = "pressdmb";
     inline bool has_pressdmb() const
@@ -6232,10 +6232,10 @@ class TelemetryMessage final: public ::EmbeddedProto::MessageInterface
           }
           break;
 
-        case FieldNumber::FLASH:
-          if(has_flash() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+        case FieldNumber::FLASHINFO:
+          if(has_flashInfo() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
           {
-            return_value = message_.flash_.serialize_with_id(static_cast<uint32_t>(FieldNumber::FLASH), buffer, true);
+            return_value = message_.flashInfo_.serialize_with_id(static_cast<uint32_t>(FieldNumber::FLASHINFO), buffer, true);
           }
           break;
 
@@ -6359,7 +6359,7 @@ class TelemetryMessage final: public ::EmbeddedProto::MessageInterface
           case FieldNumber::BARO:
           case FieldNumber::IMU:
           case FieldNumber::BAT:
-          case FieldNumber::FLASH:
+          case FieldNumber::FLASHINFO:
           case FieldNumber::PRESSDMB:
           case FieldNumber::PRESSPBB:
           case FieldNumber::TEMPPBB:
@@ -6437,8 +6437,8 @@ class TelemetryMessage final: public ::EmbeddedProto::MessageInterface
         case FieldNumber::BAT:
           name = BAT_NAME;
           break;
-        case FieldNumber::FLASH:
-          name = FLASH_NAME;
+        case FieldNumber::FLASHINFO:
+          name = FLASHINFO_NAME;
           break;
         case FieldNumber::PRESSDMB:
           name = PRESSDMB_NAME;
@@ -6577,7 +6577,7 @@ class TelemetryMessage final: public ::EmbeddedProto::MessageInterface
         Baro baro_;
         IMU imu_;
         Battery bat_;
-        Flash flash_;
+        Flash flashInfo_;
         DMBPressure pressdmb_;
         PBBPressure presspbb_;
         PBBTemp temppbb_;
@@ -6620,8 +6620,8 @@ class TelemetryMessage final: public ::EmbeddedProto::MessageInterface
             new(&message_.bat_) Battery;
             break;
 
-          case FieldNumber::FLASH:
-            new(&message_.flash_) Flash;
+          case FieldNumber::FLASHINFO:
+            new(&message_.flashInfo_) Flash;
             break;
 
           case FieldNumber::PRESSDMB:
@@ -6695,8 +6695,8 @@ class TelemetryMessage final: public ::EmbeddedProto::MessageInterface
           case FieldNumber::BAT:
             ::EmbeddedProto::destroy_at(&message_.bat_);
             break;
-          case FieldNumber::FLASH:
-            ::EmbeddedProto::destroy_at(&message_.flash_);
+          case FieldNumber::FLASHINFO:
+            ::EmbeddedProto::destroy_at(&message_.flashInfo_);
             break;
           case FieldNumber::PRESSDMB:
             ::EmbeddedProto::destroy_at(&message_.pressdmb_);
@@ -6765,8 +6765,8 @@ class TelemetryMessage final: public ::EmbeddedProto::MessageInterface
           case FieldNumber::BAT:
             return_value = message_.bat_.deserialize_check_type(buffer, wire_type);
             break;
-          case FieldNumber::FLASH:
-            return_value = message_.flash_.deserialize_check_type(buffer, wire_type);
+          case FieldNumber::FLASHINFO:
+            return_value = message_.flashInfo_.deserialize_check_type(buffer, wire_type);
             break;
           case FieldNumber::PRESSDMB:
             return_value = message_.pressdmb_.deserialize_check_type(buffer, wire_type);
@@ -6834,8 +6834,8 @@ class TelemetryMessage final: public ::EmbeddedProto::MessageInterface
           case FieldNumber::BAT:
             left_chars = message_.bat_.to_string(left_chars, indent_level, BAT_NAME, first_field);
             break;
-          case FieldNumber::FLASH:
-            left_chars = message_.flash_.to_string(left_chars, indent_level, FLASH_NAME, first_field);
+          case FieldNumber::FLASHINFO:
+            left_chars = message_.flashInfo_.to_string(left_chars, indent_level, FLASHINFO_NAME, first_field);
             break;
           case FieldNumber::PRESSDMB:
             left_chars = message_.pressdmb_.to_string(left_chars, indent_level, PRESSDMB_NAME, first_field);

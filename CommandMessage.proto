@@ -34,7 +34,7 @@ message CommandMessage {
     oneof message {
         // Command Messages
         DMBCommand dmb_command = 5;
-        PBBCommand pmb_command = 6;
+        PBBCommand pbb_command = 6;
         RCUCommand rcu_command = 7;
         SOBCommand sob_command = 8;
     }
