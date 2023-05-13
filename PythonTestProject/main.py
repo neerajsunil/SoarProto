@@ -36,7 +36,7 @@ PASSPHRASE = '1'
 
 CONTORL_MESSAGE_TOPIC = ''
 # Setup serial port
-#SER = serial.Serial(EXAMPLE_COM_PORT, 115200)
+SER = serial.Serial(EXAMPLE_COM_PORT, 115200)
 
 # Globals
 sequence_number = 1
@@ -54,9 +54,14 @@ def populate_command_msg(command):
     dmb_command = pbnd.STRING_TO_RSC_PROTO_STATE.get(command)
 
     if dmb_command != None:
+        if command not in ProtoParse.ALLOWED_COMMANDS_FROM_STATE[current_state]:
+            client.publish("TELE_PI_ERROR", json.dumps({"error": "Invalid Command, Not a DMB or SOB command"}))
+            return False
+ 
         msg.dmb_command.command_enum = dmb_command
         msg.target = Core.NODE_DMB
     else:
+
         sob_comand = pbnd.STRING_TO_SOB_PROTO_STATE.get(command)
 
         if sob_comand != None:
@@ -80,22 +85,22 @@ def send_command_msg(command):
     SER.write(encBuf)
 
 def on_mqtt_message(client, userdata, message):
-    while True:
-        print("received message: ",str(message.payload.decode("utf-8")))
-        data_dictionary = json.loads(message.payload.decode("utf-8"))
 
-        if data_dictionary["passphrase"] != PASSPHRASE:
-            client.publish("TELE_PI_ERROR", json.dumps({"error": "Invalid Passphrase"}))
-            #return False
+    print("received message: ",str(message.payload.decode("utf-8")))
+    data_dictionary = json.loads(message.payload.decode("utf-8"))
 
-        if message.topic == "RCU/Commands":
-            send_command_msg(data_dictionary["command"])
-        else:
-            client.publish("TELE_PI_ERROR", json.dumps({"error": "Unknown Command Topic"}))
-            print("unknown topic")
-            #return False
+    if data_dictionary["passphrase"] != PASSPHRASE:
+        client.publish("TELE_PI_ERROR", json.dumps({"error": "Invalid Passphrase"}))
+        #return False
 
-        #return True
+    if message.topic == "RCU/Commands":
+        send_command_msg(data_dictionary["command"])
+    else:
+        client.publish("TELE_PI_ERROR", json.dumps({"error": "Unknown Command Topic"}))
+        print("unknown topic")
+        #return False
+
+    #return True
 
 def send_ack_message(msg):
     ack_msg = ProtoCmd.ControlMessage()
@@ -109,7 +114,7 @@ def send_ack_message(msg):
 
 # telemetry message
 def process_telemetry_message(msg):
-    msgId, data = Codec.Decode(message, len(message))
+    msgId, data = Codec.Decode(msg, len(msg))
 
     received_message = ProtoTele.TelemetryMessage()
     try:
