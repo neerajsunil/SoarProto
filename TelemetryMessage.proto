@@ -24,7 +24,7 @@ import "CoreProto.proto";
         Baro baro = 5;
         IMU imu = 6;
         Battery bat = 7;
-        Flash flash = 8;
+        Flash flashInfo = 8;
         DMBPressure pressdmb = 9;
         PBBPressure presspbb = 10;
         PBBTemp temppbb = 11;
