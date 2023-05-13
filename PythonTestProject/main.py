@@ -40,7 +40,7 @@ SER = serial.Serial(EXAMPLE_COM_PORT, 115200)
 
 # Globals
 sequence_number = 1
-current_state = None
+current_state = "RS_ABORT"
 
 def populate_command_msg(command):
     global sequence_number
@@ -61,7 +61,6 @@ def populate_command_msg(command):
         msg.dmb_command.command_enum = dmb_command
         msg.target = Core.NODE_DMB
     else:
-
         sob_comand = pbnd.STRING_TO_SOB_PROTO_STATE.get(command)
 
         if sob_comand != None:
