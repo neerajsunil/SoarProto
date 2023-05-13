@@ -120,7 +120,7 @@ if __name__ == '__main__':
     print_hi('World')
     example_protobuf_encode_decode()
     example_codec_encode_decode()
-    #example_send_state_change_to_serial()
+    example_send_state_change_to_serial()
 
 
 
