@@ -7,10 +7,10 @@ from typing import ClassVar as _ClassVar, Mapping as _Mapping, Optional as _Opti
 DESCRIPTOR: _descriptor.FileDescriptor
 
 class CommandMessage(_message.Message):
-    __slots__ = ["dmb_command", "message_id", "pmb_command", "rcu_command", "sob_command", "source", "source_sequence_num", "target"]
+    __slots__ = ["dmb_command", "message_id", "pbb_command", "rcu_command", "sob_command", "source", "source_sequence_num", "target"]
     DMB_COMMAND_FIELD_NUMBER: _ClassVar[int]
     MESSAGE_ID_FIELD_NUMBER: _ClassVar[int]
-    PMB_COMMAND_FIELD_NUMBER: _ClassVar[int]
+    PBB_COMMAND_FIELD_NUMBER: _ClassVar[int]
     RCU_COMMAND_FIELD_NUMBER: _ClassVar[int]
     SOB_COMMAND_FIELD_NUMBER: _ClassVar[int]
     SOURCE_FIELD_NUMBER: _ClassVar[int]
@@ -18,13 +18,13 @@ class CommandMessage(_message.Message):
     TARGET_FIELD_NUMBER: _ClassVar[int]
     dmb_command: DMBCommand
     message_id: _CoreProto_pb2.MessageID
-    pmb_command: PBBCommand
+    pbb_command: PBBCommand
     rcu_command: RCUCommand
     sob_command: SOBCommand
     source: _CoreProto_pb2.Node
     source_sequence_num: int
     target: _CoreProto_pb2.Node
-    def __init__(self, source: _Optional[_Union[_CoreProto_pb2.Node, str]] = ..., target: _Optional[_Union[_CoreProto_pb2.Node, str]] = ..., message_id: _Optional[_Union[_CoreProto_pb2.MessageID, str]] = ..., source_sequence_num: _Optional[int] = ..., dmb_command: _Optional[_Union[DMBCommand, _Mapping]] = ..., pmb_command: _Optional[_Union[PBBCommand, _Mapping]] = ..., rcu_command: _Optional[_Union[RCUCommand, _Mapping]] = ..., sob_command: _Optional[_Union[SOBCommand, _Mapping]] = ...) -> None: ...
+    def __init__(self, source: _Optional[_Union[_CoreProto_pb2.Node, str]] = ..., target: _Optional[_Union[_CoreProto_pb2.Node, str]] = ..., message_id: _Optional[_Union[_CoreProto_pb2.MessageID, str]] = ..., source_sequence_num: _Optional[int] = ..., dmb_command: _Optional[_Union[DMBCommand, _Mapping]] = ..., pbb_command: _Optional[_Union[PBBCommand, _Mapping]] = ..., rcu_command: _Optional[_Union[RCUCommand, _Mapping]] = ..., sob_command: _Optional[_Union[SOBCommand, _Mapping]] = ...) -> None: ...
 
 class DMBCommand(_message.Message):
     __slots__ = ["command_enum"]
