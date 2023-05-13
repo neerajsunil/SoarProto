@@ -34,7 +34,9 @@ message CommandMessage {
     oneof message {
         // Command Messages
         DMBCommand dmb_command = 5;
-        PMBCommand pmb_command = 6;
+        PBBCommand pbb_command = 6;
+        RCUCommand rcu_command = 7;
+        SOBCommand sob_command = 8;
     }
 
 }
@@ -93,15 +95,79 @@ message DMBCommand {
     Command command_enum = 1;
 }
 
-message PMBCommand {
+message PBBCommand {
     enum Command {
-        PMB_NONE = 0;
+        PBB_NONE = 0;
 
-        PMB_OPEN_MEV = 1;
-        PMB_CLOSE_MEV = 2;
+        PBB_OPEN_MEV = 1;
+        PBB_CLOSE_MEV = 2;
+        PBB_OPEN_DRAIN = 3;
+        PBB_CLOSE_DRAIN = 4;
 
-        PMB_LAST = 3;
+        PMB_LAST = 5;
     }
     
     Command command_enum = 1;
+}
+
+message SOBCommand {
+    enum Command {
+        SOB_NONE = 0;
+
+        SOB_SLOW_SAMPLE_IR = 1;
+        SOB_FAST_SAMPLE_IR = 2;
+        SOB_TARE_LOAD_CELL = 3;
+        SOB_CALIBRATE_LOAD_CELL = 4;
+
+        SOB_LAST = 5;
+    }
+    
+    Command command_enum = 1;
+    int32 command_param = 2; //for mass calibration
+}
+
+message RCUCommand {
+    enum Command {
+        RCU_NONE = 0;
+
+        RCU_TARE_LOAD_CELL = 1;
+        RCU_CALIBRATE_LOAD_CELL = 2;
+
+        RCU_OPEN_AC1 = 3;
+        RCU_CLOSE_AC1 = 4;
+        RCU_OPEN_AC2 = 5;
+        RCU_CLOSE_AC2 = 6;
+        RCU_OPEN_PBV1 = 7;
+        RCU_CLOSE_PBV1 = 8;
+        RCU_OPEN_PBV2 = 9;
+        RCU_CLOSE_PBV2 = 10;
+        RCU_OPEN_PBV3 = 11;
+        RCU_CLOSE_PBV3 = 12;
+        RCU_OPEN_SOL1 = 13;
+        RCU_CLOSE_SOL1 = 14;
+        RCU_OPEN_SOL2 = 15;
+        RCU_CLOSE_SOL2 = 16;
+        RCU_OPEN_SOL3 = 17;
+        RCU_CLOSE_SOL3 = 18;
+        RCU_OPEN_SOL4 = 19;
+        RCU_CLOSE_SOL4 = 20;
+        RCU_OPEN_SOL5 = 21;
+        RCU_CLOSE_SOL5 = 22;
+        RCU_OPEN_SOL6 = 23;
+        RCU_CLOSE_SOL6 = 24;
+        RCU_OPEN_SOL7 = 25;
+        RCU_CLOSE_SOL7 = 26;
+        RCU_OPEN_SOL8A = 27;
+        RCU_CLOSE_SOL8A = 28;
+        RCU_OPEN_SOL8B = 29;
+        RCU_CLOSE_SOL8B = 30;
+
+        RCU_IGNITE_PAD_BOX1 = 31; //may be unused
+        RCU_IGNITE_PAD_BOX2 = 32;
+
+        RCU_LAST = 33;
+    }
+    
+    Command command_enum = 1;
+    int32 command_param = 2; //for mass calibration
 }
