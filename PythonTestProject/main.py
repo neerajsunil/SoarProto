@@ -15,13 +15,14 @@
 
 
 
-import ControlMessage_pb2 as Proto
+import ControlMessage_pb2 as ProtoCtr
 import CommandMessage_pb2 as ProtoCmd
 import TelemetryMessage_pb2 as ProtoTele
 import CoreProto_pb2 as Core
 import paho.mqtt.client as mqtt
 import Protobuf_parser as ProtoParse
 import Publisher_nodered as pbnd
+import google.protobuf.message as message
 
 import serial       # You'll need to run `pip install pyserial`
 from Codec import Codec
@@ -35,7 +36,7 @@ PASSPHRASE = '1'
 
 CONTORL_MESSAGE_TOPIC = ''
 # Setup serial port
-SER = serial.Serial(EXAMPLE_COM_PORT, 115200)
+#SER = serial.Serial(EXAMPLE_COM_PORT, 115200)
 
 # Globals
 sequence_number = 1
@@ -97,7 +98,7 @@ def on_mqtt_message(client, userdata, message):
         #return True
 
 def send_ack_message(msg):
-    ack_msg = Proto.ControlMessage()
+    ack_msg = ProtoCmd.ControlMessage()
     ack_msg.source = Core.NODE_RCU
     ack_msg.target = msg.source
     ack_msg.message_id = Core.MSG_CONTROL
@@ -110,10 +111,10 @@ def send_ack_message(msg):
 def process_telemetry_message(msg):
     msgId, data = Codec.Decode(message, len(message))
 
-    received_message = Proto.TelemetryMessage()
+    received_message = ProtoTele.TelemetryMessage()
     try:
         received_message.ParseFromString(data)
-    except DecodeError: 
+    except message.DecodeError: 
         return
 
     if received_message.target == Core.NODE_RCU:
@@ -122,11 +123,11 @@ def process_telemetry_message(msg):
 
 # control message
 def process_control_message(data):
-    received_message = Proto.ControlMessage()
+    received_message = ProtoCtr.ControlMessage()
 
     try:
         received_message.ParseFromString(data)
-    except DecodeError: 
+    except message.DecodeError: 
         return
 
     if received_message.target == Core.NODE_RCU:
