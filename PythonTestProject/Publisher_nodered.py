@@ -148,62 +148,12 @@ def on_message(client, userdata, message):
 
 #DMB Telemetry
 tele_dmb_obj = TELE_DMB()
-#jsonStr_baro = json.dumps(tele_dmb_obj.tele_baro(18.0, 15.0))
-#jsonStr_imu = json.dumps(tele_dmb_obj.tele_imu([25.0,20.0,15.0], [45.0,40.0,35.0], [65.0,60.0,55.0]))
-#jsonStr_pressure = json.dumps(tele_dmb_obj.tele_pressure(20.0))
-#jsonStr_gps = json.dumps(tele_dmb_obj.tele_gps(20.0, 19.0, 18.0, 17.0, 16.0))
-#jsonStr_battery = json.dumps(tele_dmb_obj.tele_battery(0, 15.0))
-#jsonStr_flash = json.dumps(tele_dmb_obj.tele_flash(0, 15.0))
-#jsonStr_state = json.dumps(tele_dmb_obj.tele_state(0, 0, 18.0, 0, 0, 0, 0, 0))
 
 #PBB Telemetry
 tele_pbb_obj = TELE_PBB()
-#pbb_jsonStr_pressure = json.dumps(tele_pbb_obj.tele_pressure(25.0, 20.0))
-#pbb_jsonStr_temp = json.dumps(tele_pbb_obj.tele_temp(25.0, 20.0))
-#pbb_jsonStr_gpio_status = json.dumps(tele_pbb_obj.tele_gpio_status(0, 0))
 
 #RCU Telemetry
 tele_rcu_obj = TELE_RCU()
-#rcu_jsonStr_pressure = json.dumps(tele_rcu_obj.tele_pressure(25.0, 20.0, 15.0, 10.0))
-#rcu_jsonStr_temp = json.dumps(tele_rcu_obj.tele_temp(25.0, 20.0))
-#rcu_jsonStr_nos_load_cell = json.dumps(tele_rcu_obj.tele_nos_load_cell(25.0, 20.0))
-#rcu_jsonStr_relay_status = json.dumps(tele_rcu_obj.tele_relay_status(0,0,0,0,0,0,0,0,0))
 
 #SOB Telemetry
 tele_sob_obj = TELE_SOB()
-#sob_jsonStr_lr_load_cell = json.dumps(tele_sob_obj.tele_lr_load_cell(25.0))
-#sob_jsonStr_temp = json.dumps(tele_sob_obj.tele_temp(25.0, 20.0))
-
-'''
-while True:
-	#DMB
-	client.publish("TELE_DMB", jsonStr_baro)
-	print("Just published json object" + str(jsonStr_baro) + "to TELE_DMB")
-	client.publish("TELE_IMU", jsonStr_imu)
-	print("Just published json object" + str(jsonStr_imu) + "to TELE_IMU")
-	client.publish("TELE_PRESSURE", jsonStr_pressure)
-	print("Just published json object" + str(jsonStr_pressure) + "to TELE_PRESSURE")
-	client.publish("TELE_GPS", jsonStr_gps)
-	print("Just published json object" + str(jsonStr_gps) + "to TELE_GPS")
-	client.publish("TELE_BATTERY", jsonStr_battery)
-	print("Just published json object" + str(jsonStr_battery) + "to TELE_BATTERY")
-	client.publish("TELE_FLASH", jsonStr_flash)
-	print("Just published json object" + str(jsonStr_flash) + "to TELE_FLASH")
-	client.publish("TELE_STATE", jsonStr_state)
-	print("Just published json object" + str(jsonStr_state) + "to TELE_STATE")
-	client.publish("MCB_COMMAND", mcb_jsonStr_command)
-	print("Just published json object" + str(mcb_jsonStr_command) + "to MCB_COMMAND")
-	
-	
-	time.sleep(1)
-
-	client.loop_start()
-	client.subscribe("TELE_TEST")
-	client.on_message=on_message
-	client.loop_stop()
-	
-	#client.loop_start()
-	#client.subscribe("test")
-	#client.on_message=on_message
-	#client.loop_stop()
-'''

@@ -23,7 +23,7 @@ Core.RS_PRELAUNCH : 'RS_PRELAUNCH',
 Core.RS_RECOVERY : 'RS_RECOVERY'
 }
 
-STRING_TO_RSC_PROTO_STATE = {
+STRING_TO_RSC_PROTO_COMMAND = {
 	"RSC_ANY_TO_ABORT": ProtoCmd.DMBCommand.Command.RSC_ANY_TO_ABORT,
 	"RSC_ARM_CONFIRM_1": ProtoCmd.DMBCommand.Command.RSC_ARM_CONFIRM_1,
 	"RSC_ARM_CONFIRM_2": ProtoCmd.DMBCommand.Command.RSC_ARM_CONFIRM_2,
@@ -47,11 +47,13 @@ STRING_TO_RSC_PROTO_STATE = {
 	"RSC_NONE" : ProtoCmd.DMBCommand.Command.RSC_NONE
 }
 
-STRING_TO_PMB_PROTO_STATE = {
-	"PMB_CLOSE_MEV": ProtoCmd.PMBCommand.Command.PMB_CLOSE_MEV,
-	"PMB_LAST": ProtoCmd.PMBCommand.Command.PMB_LAST,
-	"PMB_NONE": ProtoCmd.PMBCommand.Command.PMB_NONE,
-	"PMB_OPEN_MEV": ProtoCmd.PMBCommand.Command.PMB_OPEN_MEV
+STRING_TO_SOB_PROTO_COMMAND = {
+	"SOB_NONE": ProtoCmd.SOBCommand.Command.SOB_NONE,
+	"SOB_SLOW_SAMPLE_IR": ProtoCmd.SOBCommand.Command.SOB_SLOW_SAMPLE_IR,
+	"SOB_FAST_SAMPLE_IR": ProtoCmd.SOBCommand.Command.SOB_FAST_SAMPLE_IR,
+	"SOB_TARE_LOAD_CELL": ProtoCmd.SOBCommand.Command.SOB_TARE_LOAD_CELL,
+    "SOB_CALIBRATE_LOAD_CELL": ProtoCmd.SOBCommand.Command.SOB_CALIBRATE_LOAD_CELL,
+    "SOB_LAST": ProtoCmd.SOBCommand.Command.SOB_LAST,
 }
 
 def coord_parse_json_send(msg):

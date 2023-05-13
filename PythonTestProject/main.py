@@ -21,6 +21,7 @@ import TelemetryMessage_pb2 as ProtoTele
 import CoreProto_pb2 as Core
 import paho.mqtt.client as mqtt
 import Protobuf_parser as ProtoParse
+import Publisher_nodered as pbnd
 
 import serial       # You'll need to run `pip install pyserial`
 from Codec import Codec
@@ -110,10 +111,9 @@ def process_telemetry_message(msg):
     msgId, data = Codec.Decode(message, len(message))
 
     received_message = Proto.TelemetryMessage()
-    
     try:
         received_message.ParseFromString(data)
-    Exception DecodeError: 
+    except DecodeError: 
         return
 
     if received_message.target == Core.NODE_RCU:
@@ -126,7 +126,7 @@ def process_control_message(data):
 
     try:
         received_message.ParseFromString(data)
-    Exception DecodeError: 
+    except DecodeError: 
         return
 
     if received_message.target == Core.NODE_RCU:
