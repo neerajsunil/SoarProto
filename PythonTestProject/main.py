@@ -167,12 +167,12 @@ def on_serial_message(message):
         process_control_message(data)
 
 if __name__ == '__main__':
-    client = mqtt.Client()
-    client.connect(MQTT_BROKER)
+    pbnd.client = mqtt.Client()
+    pbnd.client.connect(MQTT_BROKER)
 
-    client.loop_start()
-    client.subscribe("RCU/Commands")
-    client.on_message=on_mqtt_message
+    pbnd.client.loop_start()
+    pbnd.client.subscribe("RCU/Commands")
+    pbnd.client.on_message=on_mqtt_message
     #client.loop_stop()
 
     while True:

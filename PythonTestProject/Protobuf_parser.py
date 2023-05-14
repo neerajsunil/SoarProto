@@ -9,6 +9,8 @@ import TelemetryMessage_pb2 as ProtoTele
 import CoreProto_pb2 as Core
 import Publisher_nodered as pbnd
 
+client = None
+
 PROTO_STATE_TO_STRING = {
 Core.RS_ABORT : 'RS_ABORT',
 Core.RS_ARM : 'RS_ARM',

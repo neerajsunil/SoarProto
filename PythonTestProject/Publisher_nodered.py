@@ -142,10 +142,7 @@ class TELE_SOB:
 		"ambient_temp": str(ambient_temp),
 		"object_temp": str(object_temp)
 	    }
-
-def on_message(client, userdata, message):
-	print("received message: ",str(message.payload.decode("utf-8")))
-
+	
 #DMB Telemetry
 tele_dmb_obj = TELE_DMB()
 
