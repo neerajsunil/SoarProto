@@ -82,7 +82,7 @@ def coord_parse_json_send(msg):
     client.publish("TELE_DMB_GPS", dmb_jsonStr_gps)
 
 def baro_parse_json_send(msg):
-    dmb_jsonStr_baro = json_dump(pbnd.tele_dmb_obj.tele_baro(msg.baro.baro_pressure, msg.baro.baro_temp))
+    dmb_jsonStr_baro = json.dump(pbnd.tele_dmb_obj.tele_baro(msg.baro.baro_pressure, msg.baro.baro_temp))
     client.publish("TELE_DMB_BARO", dmb_jsonStr_baro)
 
 def imu_parse_json_send(msg):

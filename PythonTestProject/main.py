@@ -51,11 +51,11 @@ def populate_command_msg(command):
     msg.source_sequence_num = sequence_number
     sequence_number = sequence_number + 1
 
-    dmb_command = pbnd.STRING_TO_RSC_PROTO_STATE.get(command)
+    dmb_command = ProtoParse.STRING_TO_RSC_PROTO_COMMAND.get(command)
 
     if dmb_command != None:
         if command not in ProtoParse.ALLOWED_COMMANDS_FROM_STATE[current_state]:
-            client.publish("TELE_PI_ERROR", json.dumps({"error": "Invalid Command, Not a DMB or SOB command"}))
+            ProtoParse.client.publish("TELE_PI_ERROR", json.dumps({"error": "Invalid Command, Not a DMB or SOB command"}))
             return False
  
         msg.dmb_command.command_enum = dmb_command
@@ -67,7 +67,7 @@ def populate_command_msg(command):
             msg.sob_command.command_enum = sob_comand
             msg.target = Core.NODE_SOB
         else:
-            client.publish("TELE_PI_ERROR", json.dumps({"error": "Invalid Command, Not a DMB or SOB command"}))
+            ProtoParse.client.publish("TELE_PI_ERROR", json.dumps({"error": "Invalid Command, Not a DMB or SOB command"}))
 
     return msg
 
@@ -179,7 +179,7 @@ if __name__ == '__main__':
         #client.publish("TELE_TEST", "side")
 
         # codec encodes the end of a message through a 0x00
-        #serial_message = SER.read_until(expected = b'\x00', size = None)
-        #on_serial_message(serial_message)
-        None
+        serial_message = SER.read_until(expected = b'\x00', size = None)
+        print(serial_message)
+        on_serial_message(serial_message)
         
