@@ -26,7 +26,7 @@ enum PROTOCOL_TASK_COMMANDS {
 };
 
 /* Macros ------------------------------------------------------------------*/
-constexpr uint16_t PROTOCOL_RX_BUFFER_SZ_BYTES = 192;
+constexpr uint16_t PROTOCOL_RX_BUFFER_SZ_BYTES = 25;
 constexpr uint16_t DEFAULT_PROTOCOL_UART_TX_TGT = UART_TASK_COMMAND_SEND_RADIO; // Should go in systemdefines
 constexpr uint16_t DEFAULT_PROTOCOL_WRITE_BUFFER_SIZE = 256;
 
@@ -35,7 +35,7 @@ constexpr uint16_t PROTOCOL_READ_BUFFER_SIZE_CONTROL_COMMAND = 128;
 // Task Definition
 constexpr uint8_t TASK_PROTOCOL_PRIORITY = 2;            // Priority of the protocol task
 constexpr uint8_t TASK_PROTOCOL_QUEUE_DEPTH_OBJS = 10;        // Size of the protocol task queue
-constexpr uint16_t TASK_PROTOCOL_STACK_DEPTH_WORDS = 768;        // Size of the protocol task stack (768x4 = 3KB)
+constexpr uint16_t TASK_PROTOCOL_STACK_DEPTH_WORDS = 450;        // Size of the protocol task stack (768x4 = 3KB)
 
 // Protocol Definition
 // The protocol is applied BEFORE COBS encoding, and contains a message ID and a checksum footer

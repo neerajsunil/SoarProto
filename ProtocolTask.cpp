@@ -162,8 +162,9 @@ void ProtocolTask::SendData(uint8_t* data, uint16_t size, uint8_t msgId)
     uint8_t arr[preCobsSize];
 
     // Wrap in the message header and checksum
-    uint16_t chkSum = Utils::getCRC16(data, size);
     arr[0] = msgId;
+    memcpy(&(arr[1]), data, size);
+    uint16_t chkSum = Utils::getCRC16(arr, size + 1);
     *((uint16_t*)&arr[preCobsSize - PROTOCOL_CHECKSUM_BYTES]) = chkSum;
 
     // Send the data by wrapping in a COBS frame and sending direct to UART Task
@@ -179,7 +180,7 @@ void ProtocolTask::SendData(uint8_t* data, uint16_t size, uint8_t msgId)
     }
 
     SOAR_ASSERT(cobsEncRes.out_len+1 == msgSize, "COBS Size Mismatch %d %d\n", cobsEncRes.out_len+1, msgSize);
-    protoTx.GetDataPointer()[msgSize] = 0x00;
+    protoTx.GetDataPointer()[msgSize - 1] = 0x00;
     UARTTask::Inst().SendCommandReference(protoTx);
 }
 
