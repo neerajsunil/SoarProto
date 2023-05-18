@@ -34,7 +34,6 @@ EXAMPLE_COM_PORT = '/dev/ttyS0'
 MQTT_BROKER = '127.0.0.1'
 PASSPHRASE = '1'
 
-CONTORL_MESSAGE_TOPIC = ''
 # Setup serial port
 SER = serial.Serial(port=EXAMPLE_COM_PORT, baudrate=38400, bytesize=8, parity=serial.PARITY_NONE, timeout=None, stopbits=serial.STOPBITS_ONE)
 
@@ -180,17 +179,10 @@ if __name__ == '__main__':
     ProtoParse.client.loop_start()
     ProtoParse.client.subscribe("RCU/Commands")
     ProtoParse.client.on_message=on_mqtt_message
-    #client.loop_stop()
-
-    #serial_message = SER.read_until(expected = b'\x00', size = None)
-    #print(serial_message)
 
     while True:
-        #client.publish("TELE_TEST", "side")
 
         # codec encodes the end of a message through a 0x00
         serial_message = SER.read_until(expected = b'\x00', size = None)
-        #print(serial_message)
-        #print(len(serial_message))
         on_serial_message(serial_message)
         
