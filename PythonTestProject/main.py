@@ -159,16 +159,16 @@ def process_control_message(data):
 #def process_command_message(msg):
 
 def on_serial_message(message):
-    #decode
+    #decode, remove 0x00 byte
     msgId, data = Codec.Decode(message[:-1], len(message) - 1)
     #print(data)
     #print(type(data))
 
     #Process essage according to ID
     if msgId == Core.MessageID.MSG_TELEMETRY:
-        process_telemetry_message(data[:-2])
+        process_telemetry_message(data[:])
     elif msgId == Core.MessageID.MSG_CONTROL:
-        process_control_message(data[:-2])
+        process_control_message(data[:])
 
 if __name__ == '__main__':
     ProtoParse.client.connect(MQTT_BROKER)
@@ -179,7 +179,7 @@ if __name__ == '__main__':
     #client.loop_stop()
 
     serial_message = SER.read_until(expected = b'\x00', size = None)
-    #print(serial_message)
+    print(serial_message)
 
     while True:
         #client.publish("TELE_TEST", "side")

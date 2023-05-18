@@ -59,7 +59,7 @@ class Codec:
 
         # Verify the checksum (untested)
         bufChksm = decodedBuf[-2:]
-        bufChksm = bufChksm[1] + (bufChksm[0] >> 8)
+        bufChksm = bufChksm[0] + (bufChksm[1] << 8)
         calc = Calculator(Crc16.CCITT)
         chksum = calc.checksum(decodedBuf[:-2])
 
