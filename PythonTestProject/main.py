@@ -166,9 +166,9 @@ def on_serial_message(message):
 
     #Process essage according to ID
     if msgId == Core.MessageID.MSG_TELEMETRY:
-        process_telemetry_message(data[:])
+        process_telemetry_message(data)
     elif msgId == Core.MessageID.MSG_CONTROL:
-        process_control_message(data[:])
+        process_control_message(data)
 
 if __name__ == '__main__':
     ProtoParse.client.connect(MQTT_BROKER)
