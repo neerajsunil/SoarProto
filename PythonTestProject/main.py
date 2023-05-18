@@ -89,13 +89,13 @@ def on_mqtt_message(client, userdata, message):
     data_dictionary = json.loads(message.payload.decode("utf-8"))
 
     if data_dictionary["passphrase"] != PASSPHRASE:
-        client.publish("TELE_PI_ERROR", json.dumps({"error": "Invalid Passphrase"}))
+        ProtoParse.client.publish("TELE_PI_ERROR", json.dumps({"error": "Invalid Passphrase"}))
         #return False
 
     if message.topic == "RCU/Commands":
         send_command_msg(data_dictionary["command"])
     else:
-        client.publish("TELE_PI_ERROR", json.dumps({"error": "Unknown Command Topic"}))
+        ProtoParse.client.publish("TELE_PI_ERROR", json.dumps({"error": "Unknown Command Topic"}))
         print("unknown topic")
         #return False
 
@@ -159,16 +159,20 @@ def process_control_message(data):
 #def process_command_message(msg):
 
 def on_serial_message(message):
+    if len(message) < 5:
+        ProtoParse.client.publish("TELE_PI_ERROR", json.dumps({"error": "Received ivalid message, length less than 5"}))
+        return
+    
     #decode, remove 0x00 byte
     msgId, data = Codec.Decode(message[:-1], len(message) - 1)
-    #print(data)
-    #print(type(data))
 
     #Process essage according to ID
     if msgId == Core.MessageID.MSG_TELEMETRY:
         process_telemetry_message(data)
     elif msgId == Core.MessageID.MSG_CONTROL:
         process_control_message(data)
+    else:
+        ProtoParse.client.publish("TELE_PI_ERROR", json.dumps({"error": "Received invalid MessageID"}))
 
 if __name__ == '__main__':
     ProtoParse.client.connect(MQTT_BROKER)
@@ -178,8 +182,8 @@ if __name__ == '__main__':
     ProtoParse.client.on_message=on_mqtt_message
     #client.loop_stop()
 
-    serial_message = SER.read_until(expected = b'\x00', size = None)
-    print(serial_message)
+    #serial_message = SER.read_until(expected = b'\x00', size = None)
+    #print(serial_message)
 
     while True:
         #client.publish("TELE_TEST", "side")
