@@ -9,7 +9,7 @@ import TelemetryMessage_pb2 as ProtoTele
 import CoreProto_pb2 as Core
 import Publisher_nodered as pbnd
 
-client = None
+client = mqtt.Client()
 
 PROTO_STATE_TO_STRING = {
 Core.RS_ABORT : 'RS_ABORT',
@@ -73,7 +73,7 @@ ALLOWED_COMMANDS_FROM_STATE = {
 }
 
 def coord_parse_json_send(msg):
-    dmb_jsonStr_gps = json.dump(pbnd.tele_dmb_obj.tele_gps(msg.coord.latitude.minutes, msg.coord.latitude.degrees,
+    dmb_jsonStr_gps = json.dumps(pbnd.tele_dmb_obj.tele_gps(msg.coord.latitude.minutes, msg.coord.latitude.degrees,
                                                             msg.coord.longitude.minutes, msg.coord.longitude.degrees,
                                                             msg.coord.antenna_alt.altitude, msg.coord.antenna_alt.unit,
                                                             msg.coord.geoidAltitude.altitude, msg.coord.geoidAltitude.unit,
@@ -82,14 +82,16 @@ def coord_parse_json_send(msg):
     client.publish("TELE_DMB_GPS", dmb_jsonStr_gps)
 
 def baro_parse_json_send(msg):
-    dmb_jsonStr_baro = json.dump(pbnd.tele_dmb_obj.tele_baro(msg.baro.baro_pressure, msg.baro.baro_temp))
+    dmb_jsonStr_baro = json.dumps(pbnd.tele_dmb_obj.tele_baro(msg.baro.baro_pressure, msg.baro.baro_temp))
+    #print(msg.baro.baro_pressure)
+    #print(msg.baro.baro_temp)
     client.publish("TELE_DMB_BARO", dmb_jsonStr_baro)
 
 def imu_parse_json_send(msg):
     accel = [msg.imu.accelx, msg.imu.accely, msg.imu.accelz]
     gyro = [msg.imu.gyrox, msg.imu.gyroy, msg.imu.gyroz]
     magn = [msg.imu.magx, msg.imu.magy, msg.imu.magz]
-    dmb_jsonStr_imu = json.dump(pbnd.tele_dmb_obj.tele_imu(accel, gyro, magn))
+    dmb_jsonStr_imu = json.dumps(pbnd.tele_dmb_obj.tele_imu(accel, gyro, magn))
     client.publish("TELE_DMB_IMU", dmb_jsonStr_imu)
 
 def bat_parse_json_send(msg):

@@ -35,9 +35,11 @@ class Codec:
         # Then we encode the whole thing in COBS
         cobsEncodedBuf = cobs.encode(encodedBuf)
         encodedBuf = bytearray(cobsEncodedBuf)
+        print(encodedBuf)
 
         # Add a 0x00 for delimiting the end of the message
         encodedBuf.append(0)
+        print(encodedBuf)
 
         return encodedBuf
 

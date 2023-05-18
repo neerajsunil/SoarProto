@@ -36,7 +36,7 @@ PASSPHRASE = '1'
 
 CONTORL_MESSAGE_TOPIC = ''
 # Setup serial port
-SER = serial.Serial(EXAMPLE_COM_PORT, 115200)
+SER = serial.Serial(port=EXAMPLE_COM_PORT, baudrate=38400, bytesize=8, parity=serial.PARITY_NONE, timeout=None, stopbits=serial.STOPBITS_ONE)
 
 # Globals
 sequence_number = 1
@@ -78,7 +78,7 @@ def send_command_msg(command):
     #encode
     buf = msg.SerializeToString()
     encBuf = Codec.Encode(buf, len(buf), Core.MessageID.MSG_COMMAND)
-    print("buffer: ", buf)
+    print(encBuf)
 
     # Send the data to the serial port
     SER.write(encBuf)
@@ -112,17 +112,18 @@ def send_ack_message(msg):
     ack_msg.ack.acking_sequence_num = msg.source_sequence_number
 
 # telemetry message
-def process_telemetry_message(msg):
-    msgId, data = Codec.Decode(msg, len(msg))
+def process_telemetry_message(data):
 
     received_message = ProtoTele.TelemetryMessage()
     try:
         received_message.ParseFromString(data)
     except message.DecodeError: 
+        #print("cannot decode telemetry message")
         return
 
     if received_message.target == Core.NODE_RCU:
         message_type = received_message.WhichOneof('message')
+        #print(message_type)
         ProtoParse.TELE_FUNCTION_DICTIONARY[message_type](received_message)
 
 # control message
@@ -132,6 +133,7 @@ def process_control_message(data):
     try:
         received_message.ParseFromString(data)
     except message.DecodeError: 
+        print("cannot decode control message")
         return
 
     if received_message.target == Core.NODE_RCU:
@@ -140,8 +142,8 @@ def process_control_message(data):
             print(received_message.sys_state)
             if received_message.source == Core.NODE_DMB:
                 global current_state
-                current_state = pbnd.PROTO_STATE_TO_STRING[received_message.sys_state.rocket_state]
-                print(pbnd.PROTO_STATE_TO_STRING[received_message.sys_state.rocket_state])
+                current_state = ProtoParse.PROTO_STATE_TO_STRING[received_message.sys_state.rocket_state]
+                print(ProtoParse.PROTO_STATE_TO_STRING[received_message.sys_state.rocket_state])
         elif message_type == 'hb':
             print('hb: ', received_message.source)
         elif message_type == 'ping':
@@ -158,28 +160,33 @@ def process_control_message(data):
 
 def on_serial_message(message):
     #decode
-    msgId, data = Codec.Decode(message, len(message))
+    msgId, data = Codec.Decode(message[:-1], len(message) - 1)
+    #print(data)
+    #print(type(data))
 
     #Process essage according to ID
     if msgId == Core.MessageID.MSG_TELEMETRY:
-        process_telemetry_message(data)
+        process_telemetry_message(data[:-2])
     elif msgId == Core.MessageID.MSG_CONTROL:
-        process_control_message(data)
+        process_control_message(data[:-2])
 
 if __name__ == '__main__':
-    pbnd.client = mqtt.Client()
-    pbnd.client.connect(MQTT_BROKER)
+    ProtoParse.client.connect(MQTT_BROKER)
 
-    pbnd.client.loop_start()
-    pbnd.client.subscribe("RCU/Commands")
-    pbnd.client.on_message=on_mqtt_message
+    ProtoParse.client.loop_start()
+    ProtoParse.client.subscribe("RCU/Commands")
+    ProtoParse.client.on_message=on_mqtt_message
     #client.loop_stop()
+
+    serial_message = SER.read_until(expected = b'\x00', size = None)
+    #print(serial_message)
 
     while True:
         #client.publish("TELE_TEST", "side")
 
         # codec encodes the end of a message through a 0x00
         serial_message = SER.read_until(expected = b'\x00', size = None)
-        print(serial_message)
+        #print(serial_message)
+        #print(len(serial_message))
         on_serial_message(serial_message)
         
