@@ -9,6 +9,8 @@ import TelemetryMessage_pb2 as ProtoTele
 import CoreProto_pb2 as Core
 import Publisher_nodered as pbnd
 
+client = mqtt.Client()
+
 PROTO_STATE_TO_STRING = {
 Core.RS_ABORT : 'RS_ABORT',
 Core.RS_ARM : 'RS_ARM',
@@ -24,40 +26,54 @@ Core.RS_RECOVERY : 'RS_RECOVERY'
 }
 
 STRING_TO_RSC_PROTO_COMMAND = {
-	"RSC_ANY_TO_ABORT": ProtoCmd.DMBCommand.Command.RSC_ANY_TO_ABORT,
-	"RSC_ARM_CONFIRM_1": ProtoCmd.DMBCommand.Command.RSC_ARM_CONFIRM_1,
-	"RSC_ARM_CONFIRM_2": ProtoCmd.DMBCommand.Command.RSC_ARM_CONFIRM_2,
-	"RSC_BURN_TO_COAST": ProtoCmd.DMBCommand.Command.RSC_BURN_TO_COAST,
-	"RSC_CLOSE_DRAIN": ProtoCmd.DMBCommand.Command.RSC_CLOSE_DRAIN,
-	"RSC_CLOSE_VENT": ProtoCmd.DMBCommand.Command.RSC_CLOSE_VENT,
-	"RSC_COAST_TO_DESCENT": ProtoCmd.DMBCommand.Command.RSC_COAST_TO_DESCENT,
-	"RSC_DESCENT_TO_RECOVERY": ProtoCmd.DMBCommand.Command.RSC_DESCENT_TO_RECOVERY,
-	"RSC_FIRST_INVALID": ProtoCmd.DMBCommand.Command.RSC_FIRST_INVALID,
-	"RSC_GOTO_ARM": ProtoCmd.DMBCommand.Command.RSC_GOTO_ARM,
-	"RSC_GOTO_FILL": ProtoCmd.DMBCommand.Command.RSC_GOTO_FILL,
-	"RSC_GOTO_IGNITION": ProtoCmd.DMBCommand.Command.RSC_GOTO_IGNITION,
-	"RSC_GOTO_PRELAUNCH": ProtoCmd.DMBCommand.Command.RSC_GOTO_PRELAUNCH,
-	"RSC_IGNITION_TO_LAUNCH": ProtoCmd.DMBCommand.Command.RSC_IGNITION_TO_LAUNCH,
-	"RSC_LAUNCH_TO_BURN": ProtoCmd.DMBCommand.Command.RSC_LAUNCH_TO_BURN,
-	"RSC_MEV_CLOSE": ProtoCmd.DMBCommand.Command.RSC_MEV_CLOSE,
-	"RSC_OPEN_DRAIN": ProtoCmd.DMBCommand.Command.RSC_OPEN_DRAIN,
-	"RSC_OPEN_VENT": ProtoCmd.DMBCommand.Command.RSC_OPEN_VENT,
-	"RSC_POWER_TRANSITION_EXTERNAL": ProtoCmd.DMBCommand.Command.RSC_POWER_TRANSITION_EXTERNAL,
-	"RSC_POWER_TRANSITION_ONBOARD": ProtoCmd.DMBCommand.Command.RSC_POWER_TRANSITION_ONBOARD,
-	"RSC_NONE" : ProtoCmd.DMBCommand.Command.RSC_NONE
+	"RSC_ANY_TO_ABORT": ProtoCmd.DMBCommand.RSC_ANY_TO_ABORT,
+	"RSC_ARM_CONFIRM_1": ProtoCmd.DMBCommand.RSC_ARM_CONFIRM_1,
+	"RSC_ARM_CONFIRM_2": ProtoCmd.DMBCommand.RSC_ARM_CONFIRM_2,
+	"RSC_BURN_TO_COAST": ProtoCmd.DMBCommand.RSC_BURN_TO_COAST,
+	"RSC_CLOSE_DRAIN": ProtoCmd.DMBCommand.RSC_CLOSE_DRAIN,
+	"RSC_CLOSE_VENT": ProtoCmd.DMBCommand.RSC_CLOSE_VENT,
+	"RSC_COAST_TO_DESCENT": ProtoCmd.DMBCommand.RSC_COAST_TO_DESCENT,
+	"RSC_DESCENT_TO_RECOVERY": ProtoCmd.DMBCommand.RSC_DESCENT_TO_RECOVERY,
+	"RSC_FIRST_INVALID": ProtoCmd.DMBCommand.RSC_FIRST_INVALID,
+	"RSC_GOTO_ARM": ProtoCmd.DMBCommand.RSC_GOTO_ARM,
+	"RSC_GOTO_FILL": ProtoCmd.DMBCommand.RSC_GOTO_FILL,
+	"RSC_GOTO_IGNITION": ProtoCmd.DMBCommand.RSC_GOTO_IGNITION,
+	"RSC_GOTO_PRELAUNCH": ProtoCmd.DMBCommand.RSC_GOTO_PRELAUNCH,
+	"RSC_IGNITION_TO_LAUNCH": ProtoCmd.DMBCommand.RSC_IGNITION_TO_LAUNCH,
+	"RSC_LAUNCH_TO_BURN": ProtoCmd.DMBCommand.RSC_LAUNCH_TO_BURN,
+	"RSC_MEV_CLOSE": ProtoCmd.DMBCommand.RSC_MEV_CLOSE,
+	"RSC_OPEN_DRAIN": ProtoCmd.DMBCommand.RSC_OPEN_DRAIN,
+	"RSC_OPEN_VENT": ProtoCmd.DMBCommand.RSC_OPEN_VENT,
+	"RSC_POWER_TRANSITION_EXTERNAL": ProtoCmd.DMBCommand.RSC_POWER_TRANSITION_EXTERNAL,
+	"RSC_POWER_TRANSITION_ONBOARD": ProtoCmd.DMBCommand.RSC_POWER_TRANSITION_ONBOARD,
+	"RSC_NONE" : ProtoCmd.DMBCommand.RSC_NONE
 }
 
 STRING_TO_SOB_PROTO_COMMAND = {
-	"SOB_NONE": ProtoCmd.SOBCommand.Command.SOB_NONE,
-	"SOB_SLOW_SAMPLE_IR": ProtoCmd.SOBCommand.Command.SOB_SLOW_SAMPLE_IR,
-	"SOB_FAST_SAMPLE_IR": ProtoCmd.SOBCommand.Command.SOB_FAST_SAMPLE_IR,
-	"SOB_TARE_LOAD_CELL": ProtoCmd.SOBCommand.Command.SOB_TARE_LOAD_CELL,
-    "SOB_CALIBRATE_LOAD_CELL": ProtoCmd.SOBCommand.Command.SOB_CALIBRATE_LOAD_CELL,
-    "SOB_LAST": ProtoCmd.SOBCommand.Command.SOB_LAST,
+	"SOB_NONE": ProtoCmd.SOBCommand.SOB_NONE,
+	"SOB_SLOW_SAMPLE_IR": ProtoCmd.SOBCommand.SOB_SLOW_SAMPLE_IR,
+	"SOB_FAST_SAMPLE_IR": ProtoCmd.SOBCommand.SOB_FAST_SAMPLE_IR,
+	"SOB_TARE_LOAD_CELL": ProtoCmd.SOBCommand.SOB_TARE_LOAD_CELL,
+    "SOB_CALIBRATE_LOAD_CELL": ProtoCmd.SOBCommand.SOB_CALIBRATE_LOAD_CELL,
+    "SOB_LAST": ProtoCmd.SOBCommand.SOB_LAST,
+}
+
+ALLOWED_COMMANDS_FROM_STATE = {
+    'RS_ABORT': ["RSC_ANY_TO_ABORT", "RSC_GOTO_PRELAUNCH"],
+    'RS_ARM': ["RSC_ANY_TO_ABORT", "RSC_POWER_TRANSITION_ONBOARD", "RSC_POWER_TRANSITION_EXTERNAL", "RSC_GOTO_FILL", "RSC_GOTO_IGNITION", "RSC_OPEN_VENT", "RSC_CLOSE_VENT", "RSC_OPEN_DRAIN", "RSC_CLOSE_DRAIN", "RSC_MEV_CLOSE"],
+    'RS_BURN': ["RSC_ANY_TO_ABORT", "RSC_BURN_TO_COAST"],
+    'RS_COAST': ["RSC_ANY_TO_ABORT", "RSC_COAST_TO_DESCENT"],
+    'RS_DESCENT': ["RSC_ANY_TO_ABORT", "RSC_DESCENT_TO_RECOVERY"],
+    'RS_FILL': ["RSC_ANY_TO_ABORT", "RSC_ARM_CONFIRM_1", "RSC_ARM_CONFIRM_2", "RSC_GOTO_ARM", "RSC_GOTO_PRELAUNCH", "RSC_OPEN_VENT", "RSC_CLOSE_VENT", "RSC_OPEN_DRAIN", "RSC_CLOSE_DRAIN", "RSC_MEV_CLOSE"],
+    'RS_IGNITION': ["RSC_ANY_TO_ABORT", "RSC_IGNITION_TO_LAUNCH", "RSC_GOTO_ARM"],
+    'RS_LAUNCH': ["RSC_ANY_TO_ABORT", "RSC_LAUNCH_TO_BURN"],
+    'RS_NONE': ["RSC_ANY_TO_ABORT"],
+    'RS_PRELAUNCH': ["RSC_ANY_TO_ABORT", "RSC_GOTO_FILL", "RSC_OPEN_VENT", "RSC_CLOSE_VENT", "RSC_OPEN_DRAIN", "RSC_CLOSE_DRAIN", "RSC_MEV_CLOSE"],
+    'RS_RECOVERY': ["RSC_ANY_TO_ABORT", "RSC_OPEN_VENT", "RSC_CLOSE_VENT", "RSC_OPEN_DRAIN", "RSC_CLOSE_DRAIN", "RSC_MEV_CLOSE"]
 }
 
 def coord_parse_json_send(msg):
-    dmb_jsonStr_gps = json.dump(pbnd.tele_dmb_obj.tele_gps(msg.coord.latitude.minutes, msg.coord.latitude.degrees,
+    dmb_jsonStr_gps = json.dumps(pbnd.tele_dmb_obj.tele_gps(msg.coord.latitude.minutes, msg.coord.latitude.degrees,
                                                             msg.coord.longitude.minutes, msg.coord.longitude.degrees,
                                                             msg.coord.antenna_alt.altitude, msg.coord.antenna_alt.unit,
                                                             msg.coord.geoidAltitude.altitude, msg.coord.geoidAltitude.unit,
@@ -66,14 +82,16 @@ def coord_parse_json_send(msg):
     client.publish("TELE_DMB_GPS", dmb_jsonStr_gps)
 
 def baro_parse_json_send(msg):
-    dmb_jsonStr_baro = json_dump(pbnd.tele_dmb_obj.tele_baro(msg.baro.baro_pressure, msg.baro.baro_temp))
+    dmb_jsonStr_baro = json.dumps(pbnd.tele_dmb_obj.tele_baro(msg.baro.baro_pressure, msg.baro.baro_temp))
+    #print(msg.baro.baro_pressure)
+    #print(msg.baro.baro_temp)
     client.publish("TELE_DMB_BARO", dmb_jsonStr_baro)
 
 def imu_parse_json_send(msg):
     accel = [msg.imu.accelx, msg.imu.accely, msg.imu.accelz]
     gyro = [msg.imu.gyrox, msg.imu.gyroy, msg.imu.gyroz]
     magn = [msg.imu.magx, msg.imu.magy, msg.imu.magz]
-    dmb_jsonStr_imu = json.dump(pbnd.tele_dmb_obj.tele_imu(accel, gyro, magn))
+    dmb_jsonStr_imu = json.dumps(pbnd.tele_dmb_obj.tele_imu(accel, gyro, magn))
     client.publish("TELE_DMB_IMU", dmb_jsonStr_imu)
 
 def bat_parse_json_send(msg):
