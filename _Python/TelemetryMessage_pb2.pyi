@@ -119,6 +119,12 @@ class LatLong(_message.Message):
     minutes: int
     def __init__(self, degrees: _Optional[int] = ..., minutes: _Optional[int] = ...) -> None: ...
 
+class MEVState(_message.Message):
+    __slots__ = ["mev_open"]
+    MEV_OPEN_FIELD_NUMBER: _ClassVar[int]
+    mev_open: bool
+    def __init__(self, mev_open: bool = ...) -> None: ...
+
 class NOSLoadCell(_message.Message):
     __slots__ = ["nos1_mass", "nos2_mass"]
     NOS1_MASS_FIELD_NUMBER: _ClassVar[int]
@@ -212,7 +218,7 @@ class SOBTemp(_message.Message):
     def __init__(self, tc1_temp: _Optional[int] = ..., tc2_temp: _Optional[int] = ...) -> None: ...
 
 class TelemetryMessage(_message.Message):
-    __slots__ = ["baro", "bat", "coord", "flashInfo", "gpio", "imu", "irtemp", "lr", "message_id", "nos", "padbox", "pressdmb", "presspbb", "pressrcu", "relay", "source", "target", "temppbb", "temprcu", "tempsob"]
+    __slots__ = ["baro", "bat", "coord", "flashInfo", "gpio", "imu", "irtemp", "lr", "message_id", "mevstate", "nos", "padbox", "pressdmb", "presspbb", "pressrcu", "relay", "source", "target", "temppbb", "temprcu", "tempsob"]
     BARO_FIELD_NUMBER: _ClassVar[int]
     BAT_FIELD_NUMBER: _ClassVar[int]
     COORD_FIELD_NUMBER: _ClassVar[int]
@@ -222,6 +228,7 @@ class TelemetryMessage(_message.Message):
     IRTEMP_FIELD_NUMBER: _ClassVar[int]
     LR_FIELD_NUMBER: _ClassVar[int]
     MESSAGE_ID_FIELD_NUMBER: _ClassVar[int]
+    MEVSTATE_FIELD_NUMBER: _ClassVar[int]
     NOS_FIELD_NUMBER: _ClassVar[int]
     PADBOX_FIELD_NUMBER: _ClassVar[int]
     PRESSDMB_FIELD_NUMBER: _ClassVar[int]
@@ -242,6 +249,7 @@ class TelemetryMessage(_message.Message):
     irtemp: IRTemperature
     lr: LRLoadCell
     message_id: int
+    mevstate: MEVState
     nos: NOSLoadCell
     padbox: PadBoxStatus
     pressdmb: DMBPressure
@@ -253,4 +261,4 @@ class TelemetryMessage(_message.Message):
     temppbb: PBBTemp
     temprcu: RCUTemp
     tempsob: SOBTemp
-    def __init__(self, source: _Optional[_Union[_CoreProto_pb2.Node, str]] = ..., target: _Optional[_Union[_CoreProto_pb2.Node, str]] = ..., message_id: _Optional[int] = ..., coord: _Optional[_Union[GPS, _Mapping]] = ..., baro: _Optional[_Union[Baro, _Mapping]] = ..., imu: _Optional[_Union[IMU, _Mapping]] = ..., bat: _Optional[_Union[Battery, _Mapping]] = ..., flashInfo: _Optional[_Union[Flash, _Mapping]] = ..., pressdmb: _Optional[_Union[DMBPressure, _Mapping]] = ..., presspbb: _Optional[_Union[PBBPressure, _Mapping]] = ..., temppbb: _Optional[_Union[PBBTemp, _Mapping]] = ..., gpio: _Optional[_Union[CombustionControlStatus, _Mapping]] = ..., pressrcu: _Optional[_Union[RCUPressure, _Mapping]] = ..., temprcu: _Optional[_Union[RCUTemp, _Mapping]] = ..., nos: _Optional[_Union[NOSLoadCell, _Mapping]] = ..., relay: _Optional[_Union[RelayStatus, _Mapping]] = ..., padbox: _Optional[_Union[PadBoxStatus, _Mapping]] = ..., lr: _Optional[_Union[LRLoadCell, _Mapping]] = ..., tempsob: _Optional[_Union[SOBTemp, _Mapping]] = ..., irtemp: _Optional[_Union[IRTemperature, _Mapping]] = ...) -> None: ...
+    def __init__(self, source: _Optional[_Union[_CoreProto_pb2.Node, str]] = ..., target: _Optional[_Union[_CoreProto_pb2.Node, str]] = ..., message_id: _Optional[int] = ..., coord: _Optional[_Union[GPS, _Mapping]] = ..., baro: _Optional[_Union[Baro, _Mapping]] = ..., imu: _Optional[_Union[IMU, _Mapping]] = ..., bat: _Optional[_Union[Battery, _Mapping]] = ..., flashInfo: _Optional[_Union[Flash, _Mapping]] = ..., pressdmb: _Optional[_Union[DMBPressure, _Mapping]] = ..., presspbb: _Optional[_Union[PBBPressure, _Mapping]] = ..., temppbb: _Optional[_Union[PBBTemp, _Mapping]] = ..., gpio: _Optional[_Union[CombustionControlStatus, _Mapping]] = ..., pressrcu: _Optional[_Union[RCUPressure, _Mapping]] = ..., temprcu: _Optional[_Union[RCUTemp, _Mapping]] = ..., nos: _Optional[_Union[NOSLoadCell, _Mapping]] = ..., relay: _Optional[_Union[RelayStatus, _Mapping]] = ..., padbox: _Optional[_Union[PadBoxStatus, _Mapping]] = ..., lr: _Optional[_Union[LRLoadCell, _Mapping]] = ..., tempsob: _Optional[_Union[SOBTemp, _Mapping]] = ..., irtemp: _Optional[_Union[IRTemperature, _Mapping]] = ..., mevstate: _Optional[_Union[MEVState, _Mapping]] = ...) -> None: ...

@@ -2523,6 +2523,208 @@ class LatLong final: public ::EmbeddedProto::MessageInterface
 
 };
 
+class MEVState final: public ::EmbeddedProto::MessageInterface
+{
+  public:
+    MEVState() = default;
+    MEVState(const MEVState& rhs )
+    {
+      set_mev_open(rhs.get_mev_open());
+    }
+
+    MEVState(const MEVState&& rhs ) noexcept
+    {
+      set_mev_open(rhs.get_mev_open());
+    }
+
+    ~MEVState() override = default;
+
+    enum class FieldNumber : uint32_t
+    {
+      NOT_SET = 0,
+      MEV_OPEN = 1
+    };
+
+    MEVState& operator=(const MEVState& rhs)
+    {
+      set_mev_open(rhs.get_mev_open());
+      return *this;
+    }
+
+    MEVState& operator=(const MEVState&& rhs) noexcept
+    {
+      set_mev_open(rhs.get_mev_open());
+      return *this;
+    }
+
+    static constexpr char const* MEV_OPEN_NAME = "mev_open";
+    inline void clear_mev_open() { mev_open_.clear(); }
+    inline void set_mev_open(const bool& value) { mev_open_ = value; }
+    inline void set_mev_open(const bool&& value) { mev_open_ = value; }
+    inline bool& mutable_mev_open() { return mev_open_.get(); }
+    inline const bool& get_mev_open() const { return mev_open_.get(); }
+    inline bool mev_open() const { return mev_open_.get(); }
+
+
+    ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+
+      if((false != mev_open_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = mev_open_.serialize_with_id(static_cast<uint32_t>(FieldNumber::MEV_OPEN), buffer, false);
+      }
+
+      return return_value;
+    };
+
+    ::EmbeddedProto::Error deserialize(::EmbeddedProto::ReadBufferInterface& buffer) override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+      ::EmbeddedProto::WireFormatter::WireType wire_type = ::EmbeddedProto::WireFormatter::WireType::VARINT;
+      uint32_t id_number = 0;
+      FieldNumber id_tag = FieldNumber::NOT_SET;
+
+      ::EmbeddedProto::Error tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+      while((::EmbeddedProto::Error::NO_ERRORS == return_value) && (::EmbeddedProto::Error::NO_ERRORS == tag_value))
+      {
+        id_tag = static_cast<FieldNumber>(id_number);
+        switch(id_tag)
+        {
+          case FieldNumber::MEV_OPEN:
+            return_value = mev_open_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case FieldNumber::NOT_SET:
+            return_value = ::EmbeddedProto::Error::INVALID_FIELD_ID;
+            break;
+
+          default:
+            return_value = skip_unknown_field(buffer, wire_type);
+            break;
+        }
+
+        if(::EmbeddedProto::Error::NO_ERRORS == return_value)
+        {
+          // Read the next tag.
+          tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+        }
+      }
+
+      // When an error was detect while reading the tag but no other errors where found, set it in the return value.
+      if((::EmbeddedProto::Error::NO_ERRORS == return_value)
+         && (::EmbeddedProto::Error::NO_ERRORS != tag_value)
+         && (::EmbeddedProto::Error::END_OF_BUFFER != tag_value)) // The end of the buffer is not an array in this case.
+      {
+        return_value = tag_value;
+      }
+
+      return return_value;
+    };
+
+    void clear() override
+    {
+      clear_mev_open();
+
+    }
+
+    static char const* field_number_to_name(const FieldNumber fieldNumber)
+    {
+      char const* name = nullptr;
+      switch(fieldNumber)
+      {
+        case FieldNumber::MEV_OPEN:
+          name = MEV_OPEN_NAME;
+          break;
+        default:
+          name = "Invalid FieldNumber";
+          break;
+      }
+      return name;
+    }
+
+#ifdef MSG_TO_STRING
+
+    ::EmbeddedProto::string_view to_string(::EmbeddedProto::string_view& str) const
+    {
+      return this->to_string(str, 0, nullptr, true);
+    }
+
+    ::EmbeddedProto::string_view to_string(::EmbeddedProto::string_view& str, const uint32_t indent_level, char const* name, const bool first_field) const override
+    {
+      ::EmbeddedProto::string_view left_chars = str;
+      int32_t n_chars_used = 0;
+
+      if(!first_field)
+      {
+        // Add a comma behind the previous field.
+        n_chars_used = snprintf(left_chars.data, left_chars.size, ",\n");
+        if(0 < n_chars_used)
+        {
+          // Update the character pointer and characters left in the array.
+          left_chars.data += n_chars_used;
+          left_chars.size -= n_chars_used;
+        }
+      }
+
+      if(nullptr != name)
+      {
+        if( 0 == indent_level)
+        {
+          n_chars_used = snprintf(left_chars.data, left_chars.size, "\"%s\": {\n", name);
+        }
+        else
+        {
+          n_chars_used = snprintf(left_chars.data, left_chars.size, "%*s\"%s\": {\n", indent_level, " ", name);
+        }
+      }
+      else
+      {
+        if( 0 == indent_level)
+        {
+          n_chars_used = snprintf(left_chars.data, left_chars.size, "{\n");
+        }
+        else
+        {
+          n_chars_used = snprintf(left_chars.data, left_chars.size, "%*s{\n", indent_level, " ");
+        }
+      }
+      
+      if(0 < n_chars_used)
+      {
+        left_chars.data += n_chars_used;
+        left_chars.size -= n_chars_used;
+      }
+
+      left_chars = mev_open_.to_string(left_chars, indent_level + 2, MEV_OPEN_NAME, true);
+  
+      if( 0 == indent_level) 
+      {
+        n_chars_used = snprintf(left_chars.data, left_chars.size, "\n}");
+      }
+      else 
+      {
+        n_chars_used = snprintf(left_chars.data, left_chars.size, "\n%*s}", indent_level, " ");
+      }
+
+      if(0 < n_chars_used)
+      {
+        left_chars.data += n_chars_used;
+        left_chars.size -= n_chars_used;
+      }
+
+      return left_chars;
+    }
+
+#endif // End of MSG_TO_STRING
+
+  private:
+
+
+      EmbeddedProto::boolean mev_open_ = false;
+
+};
+
 class NOSLoadCell final: public ::EmbeddedProto::MessageInterface
 {
   public:
@@ -5182,6 +5384,10 @@ class TelemetryMessage final: public ::EmbeddedProto::MessageInterface
           set_irtemp(rhs.get_irtemp());
           break;
 
+        case FieldNumber::MEVSTATE:
+          set_mevstate(rhs.get_mevstate());
+          break;
+
         default:
           break;
       }
@@ -5269,6 +5475,10 @@ class TelemetryMessage final: public ::EmbeddedProto::MessageInterface
           set_irtemp(rhs.get_irtemp());
           break;
 
+        case FieldNumber::MEVSTATE:
+          set_mevstate(rhs.get_mevstate());
+          break;
+
         default:
           break;
       }
@@ -5299,7 +5509,8 @@ class TelemetryMessage final: public ::EmbeddedProto::MessageInterface
       PADBOX = 17,
       LR = 18,
       TEMPSOB = 19,
-      IRTEMP = 20
+      IRTEMP = 20,
+      MEVSTATE = 21
     };
 
     TelemetryMessage& operator=(const TelemetryMessage& rhs)
@@ -5381,6 +5592,10 @@ class TelemetryMessage final: public ::EmbeddedProto::MessageInterface
 
         case FieldNumber::IRTEMP:
           set_irtemp(rhs.get_irtemp());
+          break;
+
+        case FieldNumber::MEVSTATE:
+          set_mevstate(rhs.get_mevstate());
           break;
 
         default:
@@ -5469,6 +5684,10 @@ class TelemetryMessage final: public ::EmbeddedProto::MessageInterface
 
         case FieldNumber::IRTEMP:
           set_irtemp(rhs.get_irtemp());
+          break;
+
+        case FieldNumber::MEVSTATE:
+          set_mevstate(rhs.get_mevstate());
           break;
 
         default:
@@ -6182,6 +6401,46 @@ class TelemetryMessage final: public ::EmbeddedProto::MessageInterface
     inline const IRTemperature& get_irtemp() const { return message_.irtemp_; }
     inline const IRTemperature& irtemp() const { return message_.irtemp_; }
 
+    static constexpr char const* MEVSTATE_NAME = "mevstate";
+    inline bool has_mevstate() const
+    {
+      return FieldNumber::MEVSTATE == which_message_;
+    }
+    inline void clear_mevstate()
+    {
+      if(FieldNumber::MEVSTATE == which_message_)
+      {
+        which_message_ = FieldNumber::NOT_SET;
+        message_.mevstate_.~MEVState();
+      }
+    }
+    inline void set_mevstate(const MEVState& value)
+    {
+      if(FieldNumber::MEVSTATE != which_message_)
+      {
+        init_message(FieldNumber::MEVSTATE);
+      }
+      message_.mevstate_ = value;
+    }
+    inline void set_mevstate(const MEVState&& value)
+    {
+      if(FieldNumber::MEVSTATE != which_message_)
+      {
+        init_message(FieldNumber::MEVSTATE);
+      }
+      message_.mevstate_ = value;
+    }
+    inline MEVState& mutable_mevstate()
+    {
+      if(FieldNumber::MEVSTATE != which_message_)
+      {
+        init_message(FieldNumber::MEVSTATE);
+      }
+      return message_.mevstate_;
+    }
+    inline const MEVState& get_mevstate() const { return message_.mevstate_; }
+    inline const MEVState& mevstate() const { return message_.mevstate_; }
+
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
     {
@@ -6323,6 +6582,13 @@ class TelemetryMessage final: public ::EmbeddedProto::MessageInterface
           }
           break;
 
+        case FieldNumber::MEVSTATE:
+          if(has_mevstate() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+          {
+            return_value = message_.mevstate_.serialize_with_id(static_cast<uint32_t>(FieldNumber::MEVSTATE), buffer, true);
+          }
+          break;
+
         default:
           break;
       }
@@ -6372,6 +6638,7 @@ class TelemetryMessage final: public ::EmbeddedProto::MessageInterface
           case FieldNumber::LR:
           case FieldNumber::TEMPSOB:
           case FieldNumber::IRTEMP:
+          case FieldNumber::MEVSTATE:
             return_value = deserialize_message(id_tag, buffer, wire_type);
             break;
 
@@ -6475,6 +6742,9 @@ class TelemetryMessage final: public ::EmbeddedProto::MessageInterface
           break;
         case FieldNumber::IRTEMP:
           name = IRTEMP_NAME;
+          break;
+        case FieldNumber::MEVSTATE:
+          name = MEVSTATE_NAME;
           break;
         default:
           name = "Invalid FieldNumber";
@@ -6590,6 +6860,7 @@ class TelemetryMessage final: public ::EmbeddedProto::MessageInterface
         LRLoadCell lr_;
         SOBTemp tempsob_;
         IRTemperature irtemp_;
+        MEVState mevstate_;
       };
       message message_;
 
@@ -6672,6 +6943,10 @@ class TelemetryMessage final: public ::EmbeddedProto::MessageInterface
             new(&message_.irtemp_) IRTemperature;
             break;
 
+          case FieldNumber::MEVSTATE:
+            new(&message_.mevstate_) MEVState;
+            break;
+
           default:
             break;
          }
@@ -6733,6 +7008,9 @@ class TelemetryMessage final: public ::EmbeddedProto::MessageInterface
             break;
           case FieldNumber::IRTEMP:
             ::EmbeddedProto::destroy_at(&message_.irtemp_);
+            break;
+          case FieldNumber::MEVSTATE:
+            ::EmbeddedProto::destroy_at(&message_.mevstate_);
             break;
           default:
             break;
@@ -6804,6 +7082,9 @@ class TelemetryMessage final: public ::EmbeddedProto::MessageInterface
           case FieldNumber::IRTEMP:
             return_value = message_.irtemp_.deserialize_check_type(buffer, wire_type);
             break;
+          case FieldNumber::MEVSTATE:
+            return_value = message_.mevstate_.deserialize_check_type(buffer, wire_type);
+            break;
           default:
             break;
         }
@@ -6872,6 +7153,9 @@ class TelemetryMessage final: public ::EmbeddedProto::MessageInterface
             break;
           case FieldNumber::IRTEMP:
             left_chars = message_.irtemp_.to_string(left_chars, indent_level, IRTEMP_NAME, first_field);
+            break;
+          case FieldNumber::MEVSTATE:
+            left_chars = message_.mevstate_.to_string(left_chars, indent_level, MEVSTATE_NAME, first_field);
             break;
           default:
             break;
