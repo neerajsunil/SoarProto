@@ -46,7 +46,9 @@ constexpr uint8_t PROTOCOL_OVERHEAD_BYTES = 1 + PROTOCOL_CHECKSUM_BYTES;        
 class ProtocolTask : public Task
 {
 public:
-    ProtocolTask(Proto::Node node, UART_HandleTypeDef* huart = SystemHandles::UART_Protocol);
+    ProtocolTask(Proto::Node node,
+        UART_HandleTypeDef* huart = SystemHandles::UART_Protocol,
+        uint16_t uartTaskCmd = DEFAULT_PROTOCOL_UART_TX_TGT);
 
     virtual void InitTask() = 0;
 
@@ -54,7 +56,7 @@ public:
     void InterruptRxData();
 
     //Main interface function for sending protobuf messages
-    static void SendProtobufMessage(EmbeddedProto::WriteBufferFixedSize<DEFAULT_PROTOCOL_WRITE_BUFFER_SIZE>& writeBuffer, Proto::MessageID msgId);
+    void SendProtobufMessage(EmbeddedProto::WriteBufferFixedSize<DEFAULT_PROTOCOL_WRITE_BUFFER_SIZE>& writeBuffer, Proto::MessageID msgId);
 
 protected:
     void Run(void* pvParams);    // Main run code
@@ -81,10 +83,11 @@ protected:
 
     Proto::Node srcNode;
 
-    static void SendData(uint8_t* data, uint16_t size, uint8_t msgId); // Send a protobuf encoded message over UART
+    void SendData(uint8_t* data, uint16_t size, uint8_t msgId); // Send a protobuf encoded message over UART
     void SendNACK(Proto::MessageID msgId = Proto::MessageID::MSG_UNKNOWN, Proto::Node msgSource = Proto::Node::NODE_UNKNOWN); // Send a NACK message over UART
 
 	const UART_HandleTypeDef* uartHandle;
+	const uint16_t uartTaskCommand;
 };
 
 #endif    // SOAR_SYSTEM_PROTOCOL_TASK_HPP_
