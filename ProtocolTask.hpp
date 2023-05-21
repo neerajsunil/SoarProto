@@ -55,15 +55,15 @@ public:
     //Functions exposed to HAL callbacks
     void InterruptRxData();
 
-    //Main interface function for sending protobuf messages
-    void SendProtobufMessage(EmbeddedProto::WriteBufferFixedSize<DEFAULT_PROTOCOL_WRITE_BUFFER_SIZE>& writeBuffer, Proto::MessageID msgId);
-
 protected:
     void Run(void* pvParams);    // Main run code
 
     void ConfigureUART();
     // This will receive a (PROTOCOL_COMMAND, PROTOCOL_RX_DECODED_DATA) with the data pointer allocated, COBS decoded (but in the SOAR Message Format)
     void HandleProtocolMessage(Command& cmd);
+
+    //Main interface function for sending protobuf messages
+    void SendProtobufMessage(EmbeddedProto::WriteBufferFixedSize<DEFAULT_PROTOCOL_WRITE_BUFFER_SIZE>& writeBuffer, Proto::MessageID msgId);
 
     // These MUST be implemented in the derived board-specific ProtocolTask object
     virtual void HandleProtobufCommandMessage(EmbeddedProto::ReadBufferFixedSize<PROTOCOL_RX_BUFFER_SZ_BYTES> readBuffer) = 0;
