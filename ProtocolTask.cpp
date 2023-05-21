@@ -149,7 +149,7 @@ void ProtocolTask::Run(void * pvParams)
  */
 bool ProtocolTask::ReceiveData()
 {
-    HAL_UART_Receive_IT(uartHandle, &protocolRxChar, 1);
+    HAL_UART_Receive_IT((UART_HandleTypeDef*)uartHandle, &protocolRxChar, 1);
     return true;
 }
 
