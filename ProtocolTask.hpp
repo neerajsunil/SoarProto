@@ -46,7 +46,7 @@ constexpr uint8_t PROTOCOL_OVERHEAD_BYTES = 1 + PROTOCOL_CHECKSUM_BYTES;        
 class ProtocolTask : public Task
 {
 public:
-    ProtocolTask(Proto::Node node);
+    ProtocolTask(Proto::Node node, UART_HandleTypeDef* huart = SystemHandles::UART_Protocol);
 
     virtual void InitTask() = 0;
 
@@ -83,6 +83,8 @@ protected:
 
     static void SendData(uint8_t* data, uint16_t size, uint8_t msgId); // Send a protobuf encoded message over UART
     void SendNACK(Proto::MessageID msgId = Proto::MessageID::MSG_UNKNOWN, Proto::Node msgSource = Proto::Node::NODE_UNKNOWN); // Send a NACK message over UART
+
+	const UART_HandleTypeDef* uartHandle;
 };
 
 #endif    // SOAR_SYSTEM_PROTOCOL_TASK_HPP_

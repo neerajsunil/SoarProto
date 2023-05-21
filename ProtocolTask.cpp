@@ -42,7 +42,7 @@ constexpr uint8_t PROTOCOL_TASK_PERIOD = 100;
 /**
  * @brief Constructor, sets all member variables
  */
-ProtocolTask::ProtocolTask(Proto::Node node) : Task(TASK_PROTOCOL_QUEUE_DEPTH_OBJS)
+ProtocolTask::ProtocolTask(Proto::Node node, UART_HandleTypeDef* huart) : Task(TASK_PROTOCOL_QUEUE_DEPTH_OBJS)
 {
     // Setup Buffers
     protocolRxBuffer = soar_malloc(PROTOCOL_RX_BUFFER_SZ_BYTES+1);
@@ -52,6 +52,9 @@ ProtocolTask::ProtocolTask(Proto::Node node) : Task(TASK_PROTOCOL_QUEUE_DEPTH_OB
     protocolMsgIdx = 0;
     isProtocolMsgReady = false;
     srcNode = node;
+
+    // Setup the internal variables
+    uartHandle = huart;
 }
 
 /**
@@ -146,7 +149,7 @@ void ProtocolTask::Run(void * pvParams)
  */
 bool ProtocolTask::ReceiveData()
 {
-    HAL_UART_Receive_IT(SystemHandles::UART_Protocol, &protocolRxChar, 1);
+    HAL_UART_Receive_IT(uartHandle, &protocolRxChar, 1);
     return true;
 }
 
