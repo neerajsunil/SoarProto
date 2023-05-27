@@ -42,7 +42,8 @@ constexpr uint8_t PROTOCOL_TASK_PERIOD = 100;
 /**
  * @brief Constructor, sets all member variables
  */
-ProtocolTask::ProtocolTask(Proto::Node node, UART_HandleTypeDef* huart) : Task(TASK_PROTOCOL_QUEUE_DEPTH_OBJS)
+ProtocolTask::ProtocolTask(Proto::Node node, UART_HandleTypeDef* huart, uint16_t uartTaskCmd) : Task(TASK_PROTOCOL_QUEUE_DEPTH_OBJS),
+	uartTaskCommand(uartTaskCmd)
 {
     // Setup Buffers
     protocolRxBuffer = soar_malloc(PROTOCOL_RX_BUFFER_SZ_BYTES+1);
@@ -125,7 +126,7 @@ void ProtocolTask::Run(void * pvParams)
 				SOAR_PRINT("PROTO-INFO-Vs: TX Request Received [%d]\n", cm.GetDataSize());
 
                 // Allocate a command for storing the encoded message
-                Command protoTx(DATA_COMMAND, DEFAULT_PROTOCOL_UART_TX_TGT);
+                Command protoTx(DATA_COMMAND, uartTaskCommand);
 
                 // Allocate enough data for a COBS encoded message
                 uint16_t msgSize = GET_COBS_MAX_LEN(cm.GetDataSize());
@@ -179,7 +180,7 @@ void ProtocolTask::SendData(uint8_t* data, uint16_t size, uint8_t msgId)
     *((uint16_t*)&arr[preCobsSize - PROTOCOL_CHECKSUM_BYTES]) = chkSum;
 
     // Send the data by wrapping in a COBS frame and sending direct to UART Task
-    Command protoTx(DATA_COMMAND, DEFAULT_PROTOCOL_UART_TX_TGT);
+	Command protoTx(DATA_COMMAND, uartTaskCommand);
     protoTx.AllocateData(msgSize);
 
     // Encode in COBS

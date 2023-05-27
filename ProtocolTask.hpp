@@ -26,7 +26,7 @@ enum PROTOCOL_TASK_COMMANDS {
 };
 
 /* Macros ------------------------------------------------------------------*/
-constexpr uint16_t PROTOCOL_RX_BUFFER_SZ_BYTES = 25;
+constexpr uint16_t PROTOCOL_RX_BUFFER_SZ_BYTES = 256;
 constexpr uint16_t DEFAULT_PROTOCOL_UART_TX_TGT = UART_TASK_COMMAND_SEND_RADIO; // Should go in systemdefines
 constexpr uint16_t DEFAULT_PROTOCOL_WRITE_BUFFER_SIZE = 256;
 
@@ -47,15 +47,14 @@ constexpr uint16_t PROTOCOL_MINIMUM_MESSAGE_LENGTH = PROTOCOL_OVERHEAD_BYTES + 1
 class ProtocolTask : public Task
 {
 public:
-    ProtocolTask(Proto::Node node, UART_HandleTypeDef* huart = SystemHandles::UART_Protocol);
+    ProtocolTask(Proto::Node node,
+        UART_HandleTypeDef* huart = SystemHandles::UART_Protocol,
+        uint16_t uartTaskCmd = DEFAULT_PROTOCOL_UART_TX_TGT);
 
     virtual void InitTask() = 0;
 
     //Functions exposed to HAL callbacks
     void InterruptRxData();
-
-    //Main interface function for sending protobuf messages
-    static void SendProtobufMessage(EmbeddedProto::WriteBufferFixedSize<DEFAULT_PROTOCOL_WRITE_BUFFER_SIZE>& writeBuffer, Proto::MessageID msgId);
 
 protected:
     void Run(void* pvParams);    // Main run code
@@ -63,6 +62,9 @@ protected:
     void ConfigureUART();
     // This will receive a (PROTOCOL_COMMAND, PROTOCOL_RX_DECODED_DATA) with the data pointer allocated, COBS decoded (but in the SOAR Message Format)
     void HandleProtocolMessage(Command& cmd);
+
+    //Main interface function for sending protobuf messages
+    void SendProtobufMessage(EmbeddedProto::WriteBufferFixedSize<DEFAULT_PROTOCOL_WRITE_BUFFER_SIZE>& writeBuffer, Proto::MessageID msgId);
 
     // These MUST be implemented in the derived board-specific ProtocolTask object
     virtual void HandleProtobufCommandMessage(EmbeddedProto::ReadBufferFixedSize<PROTOCOL_RX_BUFFER_SZ_BYTES> readBuffer) = 0;
@@ -82,10 +84,11 @@ protected:
 
     Proto::Node srcNode;
 
-    static void SendData(uint8_t* data, uint16_t size, uint8_t msgId); // Send a protobuf encoded message over UART
+    void SendData(uint8_t* data, uint16_t size, uint8_t msgId); // Send a protobuf encoded message over UART
     void SendNACK(Proto::MessageID msgId = Proto::MessageID::MSG_UNKNOWN, Proto::Node msgSource = Proto::Node::NODE_UNKNOWN); // Send a NACK message over UART
 
 	const UART_HandleTypeDef* uartHandle;
+	const uint16_t uartTaskCommand;
 };
 
 #endif    // SOAR_SYSTEM_PROTOCOL_TASK_HPP_
