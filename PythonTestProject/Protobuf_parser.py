@@ -83,8 +83,6 @@ def coord_parse_json_send(msg):
 
 def baro_parse_json_send(msg):
     dmb_jsonStr_baro = json.dumps(pbnd.tele_dmb_obj.tele_baro(msg.baro.baro_pressure, msg.baro.baro_temp))
-    #print(msg.baro.baro_pressure)
-    #print(msg.baro.baro_temp)
     client.publish("TELE_DMB_BARO", dmb_jsonStr_baro)
 
 def imu_parse_json_send(msg):

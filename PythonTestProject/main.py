@@ -7,11 +7,7 @@
 #
 
 #todo:  dont worry about acks, but do send nacks when a message is nonsensical
-#       implement reverse receive from serial interrupt and send through mqtt
-#       add RCU node to Protobuf
-#       figure out telemetry messages
-#       figure out mqtt topic names
-#       get rid of telemetry_pb2 files?
+#       Check Nacks
 
 
 
@@ -35,7 +31,8 @@ MQTT_BROKER = '127.0.0.1'
 PASSPHRASE = '1'
 
 # Setup serial port
-SER = serial.Serial(port=EXAMPLE_COM_PORT, baudrate=38400, bytesize=8, parity=serial.PARITY_NONE, timeout=None, stopbits=serial.STOPBITS_ONE)
+# 
+SER = serial.Serial(port=EXAMPLE_COM_PORT, baudrate=57600, bytesize=8, parity=serial.PARITY_NONE, timeout=None, stopbits=serial.STOPBITS_ONE)
 
 # Globals
 sequence_number = 1
@@ -44,7 +41,7 @@ current_state = "RS_ABORT"
 def populate_command_msg(command):
     global sequence_number
     
-    #create message
+    #create message  
     msg = ProtoCmd.CommandMessage()
     msg.source = Core.NODE_RCU
     msg.source_sequence_num = sequence_number
@@ -60,7 +57,7 @@ def populate_command_msg(command):
         msg.dmb_command.command_enum = dmb_command
         msg.target = Core.NODE_DMB
     else:
-        sob_comand = pbnd.STRING_TO_SOB_PROTO_STATE.get(command)
+        sob_comand = ProtoParse.STRING_TO_SOB_PROTO_COMMAND.get(command)
 
         if sob_comand != None:
             msg.sob_command.command_enum = sob_comand
@@ -77,6 +74,7 @@ def send_command_msg(command):
     #encode
     buf = msg.SerializeToString()
     encBuf = Codec.Encode(buf, len(buf), Core.MessageID.MSG_COMMAND)
+    print(len(encBuf))
     print(encBuf)
 
     # Send the data to the serial port
@@ -112,17 +110,17 @@ def send_ack_message(msg):
 
 # telemetry message
 def process_telemetry_message(data):
-
     received_message = ProtoTele.TelemetryMessage()
     try:
         received_message.ParseFromString(data)
     except message.DecodeError: 
-        #print("cannot decode telemetry message")
+        print("cannot decode telemetry message")
         return
 
     if received_message.target == Core.NODE_RCU:
         message_type = received_message.WhichOneof('message')
-        #print(message_type)
+        print(message_type)
+        print(received_message)
         ProtoParse.TELE_FUNCTION_DICTIONARY[message_type](received_message)
 
 # control message
@@ -131,7 +129,7 @@ def process_control_message(data):
 
     try:
         received_message.ParseFromString(data)
-    except message.DecodeError: 
+    except message.DecodeError:
         print("cannot decode control message")
         return
 
@@ -159,6 +157,7 @@ def process_control_message(data):
 
 def on_serial_message(message):
     if len(message) < 5:
+        print("Pi error message too short")
         ProtoParse.client.publish("TELE_PI_ERROR", json.dumps({"error": "Received ivalid message, length less than 5"}))
         return
     
@@ -171,6 +170,7 @@ def on_serial_message(message):
     elif msgId == Core.MessageID.MSG_CONTROL:
         process_control_message(data)
     else:
+        print("Pi error")
         ProtoParse.client.publish("TELE_PI_ERROR", json.dumps({"error": "Received invalid MessageID"}))
 
 if __name__ == '__main__':
@@ -181,8 +181,8 @@ if __name__ == '__main__':
     ProtoParse.client.on_message=on_mqtt_message
 
     while True:
-
         # codec encodes the end of a message through a 0x00
         serial_message = SER.read_until(expected = b'\x00', size = None)
         on_serial_message(serial_message)
+        #x = None
         
