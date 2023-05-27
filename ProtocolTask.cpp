@@ -75,6 +75,14 @@ void ProtocolTask::Run(void * pvParams)
         if (cm.GetCommand() == PROTOCOL_COMMAND) {
             switch (cm.GetTaskCommand()) {
             case EVENT_PROTOCOL_RX_COMPLETE: {                                              //Process the command -- RX Complete
+            	// If the message is of insufficient length, don't do anything
+            	if(protocolMsgIdx < PROTOCOL_MINIMUM_MESSAGE_LENGTH) {
+                    // We can mark the rx buffer as safe to write to now
+                    protocolMsgIdx = 0;
+                    isProtocolMsgReady = false;
+            		break;
+            	}
+
                 // Allocate a command for storing the decoded message
                 Command protoRx(PROTOCOL_COMMAND, PROTOCOL_RX_DECODED_DATA);
                 uint8_t* decodedDataPtr = protoRx.AllocateData(protocolMsgIdx-1); // We ignore the delimiter byte, so this is the worse case size
@@ -218,19 +226,26 @@ void ProtocolTask::InterruptRxData()
     if (!isProtocolMsgReady) {
         // Check COBS byte for end of message
         if (protocolRxChar == '\0' || protocolMsgIdx == PROTOCOL_RX_BUFFER_SZ_BYTES) {
-            // Null terminate and process
-            protocolRxBuffer[protocolMsgIdx++] = '\0';
-            isProtocolMsgReady = true;
+        	// If the message is of insufficient length, reset the buffer
+        	if(protocolMsgIdx < PROTOCOL_MINIMUM_MESSAGE_LENGTH) {
+        		protocolMsgIdx = 0;
+        		isProtocolMsgReady = false;
+        	}
+        	else {
+				// Null terminate and process
+				protocolRxBuffer[protocolMsgIdx++] = '\0';
+				isProtocolMsgReady = true;
 
-            // Notify the protocol task
-            Command cm(PROTOCOL_COMMAND, EVENT_PROTOCOL_RX_COMPLETE);
-            bool res = qEvtQueue->SendFromISR(cm);
+				// Notify the protocol task
+				Command cm(PROTOCOL_COMMAND, EVENT_PROTOCOL_RX_COMPLETE);
+				bool res = qEvtQueue->SendFromISR(cm);
 
-            // If we failed to send the event, we should reset the buffer, that way ProtocolTask doesn't stall
-            if (res == false) {
-                protocolMsgIdx = 0;
-                isProtocolMsgReady = false;
-            }
+				// If we failed to send the event, we should reset the buffer, that way ProtocolTask doesn't stall
+				if (res == false) {
+					protocolMsgIdx = 0;
+					isProtocolMsgReady = false;
+				}
+        	}
         }
         else {
             protocolRxBuffer[protocolMsgIdx++] = protocolRxChar;

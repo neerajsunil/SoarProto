@@ -41,6 +41,7 @@ constexpr uint16_t TASK_PROTOCOL_STACK_DEPTH_WORDS = 450;        // Size of the 
 // The protocol is applied BEFORE COBS encoding, and contains a message ID and a checksum footer
 constexpr uint8_t PROTOCOL_CHECKSUM_BYTES = 2;
 constexpr uint8_t PROTOCOL_OVERHEAD_BYTES = 1 + PROTOCOL_CHECKSUM_BYTES;        // Size of the protocol overhead *PRE-COBS* (message ID + 2 byte checksum)
+constexpr uint16_t PROTOCOL_MINIMUM_MESSAGE_LENGTH = PROTOCOL_OVERHEAD_BYTES + 1;
 
 /* Class ------------------------------------------------------------------*/
 class ProtocolTask : public Task
