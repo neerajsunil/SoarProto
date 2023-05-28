@@ -25,7 +25,7 @@ from Codec import Codec
 import time
 import json
 
-# Constants
+# Constant
 EXAMPLE_COM_PORT = '/dev/ttyS0'
 MQTT_BROKER = '127.0.0.1'
 PASSPHRASE = '1'
@@ -38,8 +38,10 @@ SER = serial.Serial(port=EXAMPLE_COM_PORT, baudrate=57600, bytesize=8, parity=se
 sequence_number = 1
 current_state = "RS_ABORT"
 
-def populate_command_msg(command):
+def populate_command_msg(data_dictionary):
     global sequence_number
+
+    command = data_dictionary["command"]
     
     #create message  
     msg = ProtoCmd.CommandMessage()
@@ -50,22 +52,34 @@ def populate_command_msg(command):
     dmb_command = ProtoParse.STRING_TO_RSC_PROTO_COMMAND.get(command)
 
     if dmb_command != None:
+        if data_dictionary["passphrase"] != PASSPHRASE:
+            ProtoParse.client.publish("TELE_PI_ERROR", json.dumps({"error": "Invalid Passphrase"}))
+            return False
+
         if command not in ProtoParse.ALLOWED_COMMANDS_FROM_STATE[current_state]:
-            ProtoParse.client.publish("TELE_PI_ERROR", json.dumps({"error": "Invalid Command, Not a DMB or SOB command"}))
+            ProtoParse.client.publish("TELE_PI_ERROR", json.dumps({"error": "Invalid RSC Command"}))
             return False
  
         msg.dmb_command.command_enum = dmb_command
         msg.target = Core.NODE_DMB
-    else:
-        sob_comand = ProtoParse.STRING_TO_SOB_PROTO_COMMAND.get(command)
+        return msg
+    
+    rcu_comand = ProtoParse.STRING_TO_RCU_PROTO_COMMAND.get(command)
 
-        if sob_comand != None:
-            msg.sob_command.command_enum = sob_comand
-            msg.target = Core.NODE_SOB
-        else:
-            ProtoParse.client.publish("TELE_PI_ERROR", json.dumps({"error": "Invalid Command, Not a DMB or SOB command"}))
+    if rcu_comand != None:
+        msg.rcu_command.command_enum = rcu_comand
+        msg.target = Core.NODE_RCU
+        return msg
 
-    return msg
+    sob_comand = ProtoParse.STRING_TO_SOB_PROTO_COMMAND.get(command)
+
+    if sob_comand != None:
+        msg.sob_command.command_enum = sob_comand
+        msg.target = Core.NODE_SOB
+        return msg
+    
+    ProtoParse.client.publish("TELE_PI_ERROR", json.dumps({"error": "Invalid Command"}))
+    return False
 
 def send_command_msg(command):
     #create msg
@@ -85,18 +99,15 @@ def on_mqtt_message(client, userdata, message):
     print("received message: ",str(message.payload.decode("utf-8")))
     data_dictionary = json.loads(message.payload.decode("utf-8"))
 
-    if data_dictionary["passphrase"] != PASSPHRASE:
-        ProtoParse.client.publish("TELE_PI_ERROR", json.dumps({"error": "Invalid Passphrase"}))
-        #return False
-
     if message.topic == "RCU/Commands":
-        send_command_msg(data_dictionary["command"])
+        send_command_msg(data_dictionary)
     else:
         ProtoParse.client.publish("TELE_PI_ERROR", json.dumps({"error": "Unknown Command Topic"}))
         print("unknown topic")
-        #return False
+        return False
+        
 
-    #return True
+    return True
 
 def send_ack_message(msg):
     ack_msg = ProtoCmd.ControlMessage()
@@ -123,7 +134,7 @@ def process_telemetry_message(data):
         print(received_message)
         ProtoParse.TELE_FUNCTION_DICTIONARY[message_type](received_message)
 
-# control message
+# control message 
 def process_control_message(data):
     received_message = ProtoCtr.ControlMessage()
 
@@ -132,6 +143,8 @@ def process_control_message(data):
     except message.DecodeError:
         print("cannot decode control message")
         return
+
+    print(received_message)
 
     if received_message.target == Core.NODE_RCU:
         message_type = received_message.WhichOneof('message')
@@ -161,6 +174,7 @@ def on_serial_message(message):
         ProtoParse.client.publish("TELE_PI_ERROR", json.dumps({"error": "Received ivalid message, length less than 5"}))
         return
     
+    print("message received")
     #decode, remove 0x00 byte
     msgId, data = Codec.Decode(message[:-1], len(message) - 1)
 
@@ -183,6 +197,7 @@ if __name__ == '__main__':
     while True:
         # codec encodes the end of a message through a 0x00
         serial_message = SER.read_until(expected = b'\x00', size = None)
+        print(serial_message)
         on_serial_message(serial_message)
-        #x = None
+        x = None
         

@@ -53,9 +53,14 @@ class Codec:
         return encodedBuf
 
     @staticmethod
-    def Decode(buf, len):
+    def Decode(buf, length):
+
+        print(buf)
+        print(len(buf))
         # Decode the buffer
         decodedBuf = cobs.decode(buf)
+
+        print(len(decodedBuf))
 
         # Verify the checksum (untested)
         bufChksm = decodedBuf[-2:]
