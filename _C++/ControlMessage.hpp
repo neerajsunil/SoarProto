@@ -45,9 +45,9 @@
 #include <limits>
 
 // Include external proto definitions
-#include <Core.h>
+#include <CoreProto.h>
 
-namespace proto {
+namespace Proto {
 
 class AckNack final: public ::EmbeddedProto::MessageInterface
 {
@@ -102,11 +102,10 @@ class AckNack final: public ::EmbeddedProto::MessageInterface
 
     static constexpr char const* ACKING_MSG_ID_NAME = "acking_msg_id";
     inline void clear_acking_msg_id() { acking_msg_id_.clear(); }
-    inline void set_acking_msg_id(const uint32_t& value) { acking_msg_id_ = value; }
-    inline void set_acking_msg_id(const uint32_t&& value) { acking_msg_id_ = value; }
-    inline uint32_t& mutable_acking_msg_id() { return acking_msg_id_.get(); }
-    inline const uint32_t& get_acking_msg_id() const { return acking_msg_id_.get(); }
-    inline uint32_t acking_msg_id() const { return acking_msg_id_.get(); }
+    inline void set_acking_msg_id(const MessageID& value) { acking_msg_id_ = value; }
+    inline void set_acking_msg_id(const MessageID&& value) { acking_msg_id_ = value; }
+    inline const MessageID& get_acking_msg_id() const { return acking_msg_id_.get(); }
+    inline MessageID acking_msg_id() const { return acking_msg_id_.get(); }
 
     static constexpr char const* ACKING_SEQUENCE_NUM_NAME = "acking_sequence_num";
     inline void clear_acking_sequence_num() { acking_sequence_num_.clear(); }
@@ -126,7 +125,7 @@ class AckNack final: public ::EmbeddedProto::MessageInterface
         return_value = acking_msg_source_.serialize_with_id(static_cast<uint32_t>(FieldNumber::ACKING_MSG_SOURCE), buffer, false);
       }
 
-      if((0U != acking_msg_id_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      if((static_cast<MessageID>(0) != acking_msg_id_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
         return_value = acking_msg_id_.serialize_with_id(static_cast<uint32_t>(FieldNumber::ACKING_MSG_ID), buffer, false);
       }
@@ -301,7 +300,7 @@ class AckNack final: public ::EmbeddedProto::MessageInterface
 
 
       EmbeddedProto::enumeration<Node> acking_msg_source_ = static_cast<Node>(0);
-      EmbeddedProto::uint32 acking_msg_id_ = 0U;
+      EmbeddedProto::enumeration<MessageID> acking_msg_id_ = static_cast<MessageID>(0);
       EmbeddedProto::uint32 acking_sequence_num_ = 0U;
 
 };
@@ -1284,11 +1283,10 @@ class ControlMessage final: public ::EmbeddedProto::MessageInterface
 
     static constexpr char const* MESSAGE_ID_NAME = "message_id";
     inline void clear_message_id() { message_id_.clear(); }
-    inline void set_message_id(const uint32_t& value) { message_id_ = value; }
-    inline void set_message_id(const uint32_t&& value) { message_id_ = value; }
-    inline uint32_t& mutable_message_id() { return message_id_.get(); }
-    inline const uint32_t& get_message_id() const { return message_id_.get(); }
-    inline uint32_t message_id() const { return message_id_.get(); }
+    inline void set_message_id(const MessageID& value) { message_id_ = value; }
+    inline void set_message_id(const MessageID&& value) { message_id_ = value; }
+    inline const MessageID& get_message_id() const { return message_id_.get(); }
+    inline MessageID message_id() const { return message_id_.get(); }
 
     static constexpr char const* SOURCE_SEQUENCE_NUM_NAME = "source_sequence_num";
     inline void clear_source_sequence_num() { source_sequence_num_.clear(); }
@@ -1515,7 +1513,7 @@ class ControlMessage final: public ::EmbeddedProto::MessageInterface
         return_value = target_.serialize_with_id(static_cast<uint32_t>(FieldNumber::TARGET), buffer, false);
       }
 
-      if((0U != message_id_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      if((static_cast<MessageID>(0) != message_id_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
         return_value = message_id_.serialize_with_id(static_cast<uint32_t>(FieldNumber::MESSAGE_ID), buffer, false);
       }
@@ -1766,7 +1764,7 @@ class ControlMessage final: public ::EmbeddedProto::MessageInterface
 
       EmbeddedProto::enumeration<Node> source_ = static_cast<Node>(0);
       EmbeddedProto::enumeration<Node> target_ = static_cast<Node>(0);
-      EmbeddedProto::uint32 message_id_ = 0U;
+      EmbeddedProto::enumeration<MessageID> message_id_ = static_cast<MessageID>(0);
       EmbeddedProto::uint32 source_sequence_num_ = 0U;
 
       FieldNumber which_message_ = FieldNumber::NOT_SET;
@@ -1916,5 +1914,5 @@ class ControlMessage final: public ::EmbeddedProto::MessageInterface
 #endif // End of MSG_TO_STRING
 };
 
-} // End of namespace proto
+} // End of namespace Proto
 #endif // CONTROLMESSAGE_H

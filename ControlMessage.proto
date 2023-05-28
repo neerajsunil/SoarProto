@@ -4,8 +4,8 @@
  * AUTHOR: Christopher Chan (cjchanx)
  */
 syntax = "proto3";
-package proto;
-import "Core.proto";
+package Proto;
+import "CoreProto.proto";
 
 /* Control Message ------------------------------------------------------------------*/
 
@@ -22,7 +22,7 @@ message ControlMessage {
     Node target = 2; // This is the destination of the message, if this is a broadcast message, this should be set to NODE_ANY
 
     // Message Identifiers
-    uint32 message_id = 3; // This is the message ID of the message, this is used to identify the message type
+    MessageID message_id = 3; // This is the message ID of the message, this is used to identify the message type
 
     /* There are much more robust RDT implementations, but for simplicity, we will use a sequence number simply to verify
      * ACKs are for the correct respective message. Each SOURCE node maintains a counting UINT32_T that is incremented for EVERY
@@ -49,7 +49,7 @@ message ControlMessage {
    message is not ACKed within a certain time period. (In the case of DMB -> PBB attempting retransmits would be a good idea) */
 message AckNack {
     Node acking_msg_source = 1; // The source of the message that is being acknowledged or nacked
-    uint32 acking_msg_id = 2; // The message ID of the message that is being acknowledged or nacked
+    MessageID acking_msg_id = 2; // The message ID of the message that is being acknowledged or nacked
     uint32 acking_sequence_num = 3; // The sequence number of the message that is being acknowledged or nacked
 }
 

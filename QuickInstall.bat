@@ -19,7 +19,7 @@ call refreshenv
 pip install protobuf
 
 echo Setting up ProtocolBuffers...
-C:\ProgramData\Chocolatey\bin\choco.exe install protoc
+C:\ProgramData\Chocolatey\bin\choco.exe install protoc --version=3.6.1
 call refreshenv
 
 echo Setting up EmbeddedProto...
