@@ -35,7 +35,7 @@ constexpr uint16_t PROTOCOL_READ_BUFFER_SIZE_CONTROL_COMMAND = 128;
 // Task Definition
 constexpr uint8_t TASK_PROTOCOL_PRIORITY = 2;            // Priority of the protocol task
 constexpr uint8_t TASK_PROTOCOL_QUEUE_DEPTH_OBJS = 10;        // Size of the protocol task queue
-constexpr uint16_t TASK_PROTOCOL_STACK_DEPTH_WORDS = 450;        // Size of the protocol task stack (768x4 = 3KB)
+constexpr uint16_t TASK_PROTOCOL_STACK_DEPTH_WORDS = 750;        // Size of the protocol task stack (768x4 = 3KB)
 
 // Protocol Definition
 // The protocol is applied BEFORE COBS encoding, and contains a message ID and a checksum footer
@@ -67,9 +67,9 @@ protected:
     void SendProtobufMessage(EmbeddedProto::WriteBufferFixedSize<DEFAULT_PROTOCOL_WRITE_BUFFER_SIZE>& writeBuffer, Proto::MessageID msgId);
 
     // These MUST be implemented in the derived board-specific ProtocolTask object
-    virtual void HandleProtobufCommandMessage(EmbeddedProto::ReadBufferFixedSize<PROTOCOL_RX_BUFFER_SZ_BYTES> readBuffer) = 0;
-    virtual void HandleProtobufControlMesssage(EmbeddedProto::ReadBufferFixedSize<PROTOCOL_RX_BUFFER_SZ_BYTES> readBuffer) = 0;
-    virtual void HandleProtobufTelemetryMessage(EmbeddedProto::ReadBufferFixedSize<PROTOCOL_RX_BUFFER_SZ_BYTES> readBuffer) = 0;
+    virtual void HandleProtobufCommandMessage(EmbeddedProto::ReadBufferFixedSize<PROTOCOL_RX_BUFFER_SZ_BYTES>& readBuffer) = 0;
+    virtual void HandleProtobufControlMesssage(EmbeddedProto::ReadBufferFixedSize<PROTOCOL_RX_BUFFER_SZ_BYTES>& readBuffer) = 0;
+    virtual void HandleProtobufTelemetryMessage(EmbeddedProto::ReadBufferFixedSize<PROTOCOL_RX_BUFFER_SZ_BYTES>& readBuffer) = 0;
 
     bool ReceiveData();
 
