@@ -8,6 +8,7 @@
 #include "UARTTask.hpp"
 #include "stm32f4xx_hal.h"
 #include "RepeaterTask.hpp"
+#include "cobs.h"
 
 /**
  * @brief Constructor, sets all member variables
@@ -101,4 +102,44 @@ void RepeaterTask::InterruptRxData()
 
     //Re-arm the interrupt
     ReceiveData();
+}
+
+/*
+ * @brief Interface function to quickly send a protobuf message by providing the write buffer and the message ID
+ * @param writeBuffer The write buffer containing the serialized protobuf message
+ * @param msgId The message ID of the message
+ */
+void RepeaterTask::SendProtobufMessage(EmbeddedProto::WriteBufferFixedSize<DEFAULT_PROTOCOL_WRITE_BUFFER_SIZE>& writeBuffer, Proto::MessageID msgId)
+{
+    // Note: This function runs inside the calling task
+    uint8_t* data = writeBuffer.get_data();
+    uint16_t size = writeBuffer.get_size();
+
+    uint16_t msgSize = GET_COBS_MAX_LEN(size + PROTOCOL_OVERHEAD_BYTES);
+
+    // Temporary array to store the pre-COBS message
+    const uint16_t preCobsSize = size + PROTOCOL_OVERHEAD_BYTES;
+    uint8_t arr[preCobsSize];
+
+    // Wrap in the message header and checksum
+    arr[0] = (uint8_t)msgId;
+    memcpy(&(arr[1]), data, size);
+    uint16_t chkSum = Utils::getCRC16(arr, size + 1);
+    *((uint16_t*)&arr[preCobsSize - PROTOCOL_CHECKSUM_BYTES]) = chkSum;
+
+    // Send the data by wrapping in a COBS frame and sending direct to UART Task
+    Command protoTx(DATA_COMMAND, uartTaskCommand);
+    protoTx.AllocateData(msgSize);
+
+    // Encode in COBS
+    cobs_encode_result cobsEncRes = cobs_encode(protoTx.GetDataPointer(), msgSize, arr, preCobsSize);
+
+    if (cobsEncRes.status != COBS_ENCODE_OK) {
+        protoTx.Reset();
+        SOAR_PRINT("WARNING: COBS encode failed in repeater task\n");
+    }
+
+    SOAR_ASSERT(cobsEncRes.out_len + 1 == msgSize, "COBS Size Mismatch %d %d\n", cobsEncRes.out_len + 1, msgSize);
+    protoTx.GetDataPointer()[msgSize - 1] = 0x00;
+    UARTTask::Inst().SendCommandReference(protoTx);
 }

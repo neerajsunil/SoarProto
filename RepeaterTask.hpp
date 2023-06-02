@@ -37,7 +37,11 @@ public:
     virtual void InitTask() = 0;
 
     //Public Interfaces
-    inline void SendData(uint8_t* data, uint16_t size); // Sends data to the linked UART
+    // Sends data to the linked UART. Does not wrap in transport layer, use SendProtobufMessage for messages not already wrapped
+    inline void SendData(uint8_t* data, uint16_t size);
+
+    // Sends a protobuf message to the linked UART. Wraps in transport layer, does processing in the calling task
+    void SendProtobufMessage(EmbeddedProto::WriteBufferFixedSize<DEFAULT_PROTOCOL_WRITE_BUFFER_SIZE>& writeBuffer, Proto::MessageID msgId);
 
     //Functions exposed to HAL callbacks
     void InterruptRxData();
