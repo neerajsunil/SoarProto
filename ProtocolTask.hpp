@@ -27,7 +27,7 @@ enum PROTOCOL_TASK_COMMANDS {
 
 /* Macros ------------------------------------------------------------------*/
 constexpr uint16_t PROTOCOL_RX_BUFFER_SZ_BYTES = 256;
-constexpr uint16_t DEFAULT_PROTOCOL_UART_TX_TGT = UART_TASK_COMMAND_SEND_RADIO; // Should go in systemdefines
+constexpr uint16_t DEFAULT_PROTOCOL_UART_TX_TGT = UART_TASK_COMMAND_SEND_DMB; // Should go in systemdefines
 constexpr uint16_t DEFAULT_PROTOCOL_WRITE_BUFFER_SIZE = 256;
 
 constexpr uint16_t PROTOCOL_READ_BUFFER_SIZE_CONTROL_COMMAND = 128;
@@ -48,7 +48,7 @@ class ProtocolTask : public Task
 {
 public:
     ProtocolTask(Proto::Node node,
-        UART_HandleTypeDef* huart = SystemHandles::UART_Protocol,
+        UART_HandleTypeDef* huart = SystemHandles::UART_Radio,
         uint16_t uartTaskCmd = DEFAULT_PROTOCOL_UART_TX_TGT);
 
     virtual void InitTask() = 0;
