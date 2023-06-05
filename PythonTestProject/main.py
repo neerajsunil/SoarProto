@@ -64,6 +64,13 @@ def populate_command_msg(data_dictionary):
         msg.target = Core.NODE_DMB
         return msg
     
+    pbb_comand = ProtoParse.STRING_TO_PBB_PROTO_COMMAND.get(command)
+
+    if pbb_comand != None:
+        msg.pbb_command.command_enum = pbb_comand
+        msg.target = Core.NODE_PBB
+        return msg
+
     rcu_comand = ProtoParse.STRING_TO_RCU_PROTO_COMMAND.get(command)
 
     if rcu_comand != None:
