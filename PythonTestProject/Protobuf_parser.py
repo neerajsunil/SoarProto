@@ -177,6 +177,7 @@ def relay_parse_json_send(msg):
     rcu_jsonStr_relay_status = json.dumps(pbnd.tele_rcu_obj.tele_relay_status(msg.relay.ac1_open, msg.relay.ac2_open, 
                                                                               msg.relay.pbv1_open, msg.relay.pbv2_open, msg.relay.pbv3_open,
                                                                               msg.relay.sol1_open, msg.relay.sol2_open, msg.relay.sol3_open, msg.relay.sol4_open, msg.relay.sol5_open, msg.relay.sol6_open, msg.relay.sol7_open, msg.relay.sol8a_open, msg.relay.sol8b_open))
+    print(rcu_jsonStr_relay_status)
     client.publish("TELE_RCU_RELAY", rcu_jsonStr_relay_status)
 
 def padbox_parse_json_send(msg):

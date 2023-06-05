@@ -26,7 +26,7 @@ import time
 import json
 
 # Constant
-EXAMPLE_COM_PORT = '/dev/ttyS0'
+EXAMPLE_COM_PORT = '/dev/ttyUSB0'
 MQTT_BROKER = '127.0.0.1'
 PASSPHRASE = '1'
 
@@ -95,15 +95,15 @@ def send_command_msg(command):
     #encode
     buf = msg.SerializeToString()
     encBuf = Codec.Encode(buf, len(buf), Core.MessageID.MSG_COMMAND)
-    print(len(encBuf))
-    print(encBuf)
+    #print(len(encBuf))
+    #print(encBuf)
 
     # Send the data to the serial port
     SER.write(encBuf)
 
 def on_mqtt_message(client, userdata, message):
 
-    print("received message: ",str(message.payload.decode("utf-8")))
+    #print("received message: ",str(message.payload.decode("utf-8")))
     data_dictionary = json.loads(message.payload.decode("utf-8"))
 
     if message.topic == "RCU/Commands":
@@ -138,8 +138,14 @@ def process_telemetry_message(data):
     if received_message.target == Core.NODE_RCU:
         message_type = received_message.WhichOneof('message')
         print(message_type)
-        print(received_message)
-        ProtoParse.TELE_FUNCTION_DICTIONARY[message_type](received_message)
+        #print(received_message)
+
+        if(message_type != None):
+            ProtoParse.TELE_FUNCTION_DICTIONARY[message_type](received_message)
+            return
+        else:
+            print("received invalid telemetry message type")
+            ProtoParse.client.publish("TELE_PI_ERROR", json.dumps({"error": "Invalid telemetry message type"}))
 
 # control message 
 def process_control_message(data):
@@ -181,7 +187,7 @@ def on_serial_message(message):
         ProtoParse.client.publish("TELE_PI_ERROR", json.dumps({"error": "Received ivalid message, length less than 5"}))
         return
     
-    print("message received")
+    #print("message received")
     #decode, remove 0x00 byte
     msgId, data = Codec.Decode(message[:-1], len(message) - 1)
 
@@ -204,7 +210,7 @@ if __name__ == '__main__':
     while True:
         # codec encodes the end of a message through a 0x00
         serial_message = SER.read_until(expected = b'\x00', size = None)
-        print(serial_message)
+        #print(serial_message)
         on_serial_message(serial_message)
         x = None
         
