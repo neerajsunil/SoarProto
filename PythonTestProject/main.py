@@ -19,6 +19,7 @@ import paho.mqtt.client as mqtt
 import Protobuf_parser as ProtoParse
 import Publisher_nodered as pbnd
 import google.protobuf.message as message
+from cobs import cobs   # pip install cobs
 
 import serial       # You'll need to run `pip install pyserial`
 from Codec import Codec
@@ -189,7 +190,12 @@ def on_serial_message(message):
     
     #print("message received")
     #decode, remove 0x00 byte
-    msgId, data = Codec.Decode(message[:-1], len(message) - 1)
+    try:
+        msgId, data = Codec.Decode(message[:-1], len(message) - 1)
+    except cobs.DecodeError:
+        print("invalid cobs message")
+        ProtoParse.client.publish("TELE_PI_ERROR", json.dumps({"error": "Received invalid cobs message"}))
+        return
 
     #Process essage according to ID
     if msgId == Core.MessageID.MSG_TELEMETRY:

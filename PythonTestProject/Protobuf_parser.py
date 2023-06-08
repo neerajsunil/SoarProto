@@ -152,6 +152,7 @@ def pressdmb_parse_json_send(msg):
 def presspbb_parse_json_send(msg):
     pbb_jsonStr_pressure = json.dumps(pbnd.tele_pbb_obj.tele_pressure(msg.presspbb.ib_pressure, msg.presspbb.lower_pv_pressure))
     client.publish("TELE_PBB_PRESSURE", pbb_jsonStr_pressure)
+    print(pbb_jsonStr_pressure)
 
 def temppbb_parse_json_send(msg):
     pbb_jsonStr_temperature = json.dumps(pbnd.tele_pbb_obj.tele_pressure(msg.temppbb.ib_temperature, msg.temppbb.pv_temperature))
@@ -162,8 +163,9 @@ def gpio_parse_json_send(msg):
     client.publish("TELE_PBB_GPIO", pbb_jsonStr_gpio_status)
 
 def mevstate_parse_json_send(msg):
-    pbb_jsonStr_mevstate = json.dumps(pbnd.tele_pbb_obj.tele_temp(msg.mevstate.mev_open))
+    pbb_jsonStr_mevstate = json.dumps(pbnd.tele_pbb_obj.tele_mevstate(msg.mevstate.mev_open))
     client.publish("TELE_PBB_MEVSTATE", pbb_jsonStr_mevstate)
+    print(pbb_jsonStr_mevstate)
 
 def pressrcu_parse_json_send(msg):
     rcu_jsonStr_pressure = json.dumps(pbnd.tele_rcu_obj.tele_pressure(msg.pressrcu.pt1_pressure, msg.pressrcu.pt2_pressure, msg.pressrcu.pt3_pressure, msg.pressrcu.pt4_pressure))

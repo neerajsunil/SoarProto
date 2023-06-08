@@ -71,6 +71,10 @@ class TELE_PBB:
 			"vent_open": str(vent_open),
 			"drain_open": str(drain_open)
 	    }
+	def tele_mevstate(self, mev_open):
+		return {
+			"mev_open": str(mev_open)
+		}
 
 class TELE_RCU:
 	def tele_pressure(self, pt1_pressure, pt2_pressure, pt3_pressure, pt4_pressure):
@@ -134,11 +138,7 @@ class TELE_SOB:
 		"ambient_temp": str(ambient_temp),
 		"object_temp": str(object_temp)
 	    }
-	
-	def tele_mevstate(self, mmev_open):
-		return {
-			"mev_open": str(mev_open)
-		}
+
 	
 #DMB Telemetry
 tele_dmb_obj = TELE_DMB()
