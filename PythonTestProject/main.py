@@ -89,10 +89,15 @@ def populate_command_msg(data_dictionary):
     ProtoParse.client.publish("TELE_PI_ERROR", json.dumps({"error": "Invalid Command"}))
     return False
 
-def send_command_msg(command):
+def send_command_msg(data_dictionary):
     #create msg
-    msg = populate_command_msg(command)
-    
+    msg = populate_command_msg(data_dictionary)
+
+    if(msg == False):
+        return
+
+    print(msg)
+
     #encode
     buf = msg.SerializeToString()
     encBuf = Codec.Encode(buf, len(buf), Core.MessageID.MSG_COMMAND)
@@ -108,6 +113,7 @@ def on_mqtt_message(client, userdata, message):
     data_dictionary = json.loads(message.payload.decode("utf-8"))
 
     if message.topic == "RCU/Commands":
+        #print(data_dictionary)
         send_command_msg(data_dictionary)
     else:
         ProtoParse.client.publish("TELE_PI_ERROR", json.dumps({"error": "Unknown Command Topic"}))
@@ -136,9 +142,11 @@ def process_telemetry_message(data):
         print("cannot decode telemetry message")
         return
 
+    print(received_message)
+
     if received_message.target == Core.NODE_RCU:
         message_type = received_message.WhichOneof('message')
-        print(message_type)
+        #print(message_type)
         #print(received_message)
 
         if(message_type != None):
@@ -163,11 +171,11 @@ def process_control_message(data):
     if received_message.target == Core.NODE_RCU:
         message_type = received_message.WhichOneof('message')
         if message_type == 'sys_state':
-            print(received_message.sys_state)
+            #print(received_message.sys_state)
             if received_message.source == Core.NODE_DMB:
                 global current_state
                 current_state = ProtoParse.PROTO_STATE_TO_STRING[received_message.sys_state.rocket_state]
-                print(ProtoParse.PROTO_STATE_TO_STRING[received_message.sys_state.rocket_state])
+                #print(ProtoParse.PROTO_STATE_TO_STRING[received_message.sys_state.rocket_state])
         elif message_type == 'hb':
             print('hb: ', received_message.source)
         elif message_type == 'ping':

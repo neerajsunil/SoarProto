@@ -103,18 +103,20 @@ STRING_TO_SOB_PROTO_COMMAND = {
     "SOB_LAST": ProtoCmd.SOBCommand.SOB_LAST,
 }
 
+#TODO remove drain and vent command from allowed commands
+
 ALLOWED_COMMANDS_FROM_STATE = {
-    'RS_ABORT': ["RSC_ANY_TO_ABORT", "RSC_GOTO_PRELAUNCH"],
-    'RS_ARM': ["RSC_ANY_TO_ABORT", "RSC_POWER_TRANSITION_ONBOARD", "RSC_POWER_TRANSITION_EXTERNAL", "RSC_GOTO_FILL", "RSC_GOTO_IGNITION", "RSC_OPEN_VENT", "RSC_CLOSE_VENT", "RSC_OPEN_DRAIN", "RSC_CLOSE_DRAIN", "RSC_MEV_CLOSE"],
-    'RS_BURN': ["RSC_ANY_TO_ABORT", "RSC_BURN_TO_COAST"],
-    'RS_COAST': ["RSC_ANY_TO_ABORT", "RSC_COAST_TO_DESCENT"],
-    'RS_DESCENT': ["RSC_ANY_TO_ABORT", "RSC_DESCENT_TO_RECOVERY"],
-    'RS_FILL': ["RSC_ANY_TO_ABORT", "RSC_ARM_CONFIRM_1", "RSC_ARM_CONFIRM_2", "RSC_GOTO_ARM", "RSC_GOTO_PRELAUNCH", "RSC_OPEN_VENT", "RSC_CLOSE_VENT", "RSC_OPEN_DRAIN", "RSC_CLOSE_DRAIN", "RSC_MEV_CLOSE"],
-    'RS_IGNITION': ["RSC_ANY_TO_ABORT", "RSC_IGNITION_TO_LAUNCH", "RSC_GOTO_ARM"],
-    'RS_LAUNCH': ["RSC_ANY_TO_ABORT", "RSC_LAUNCH_TO_BURN"],
-    'RS_NONE': ["RSC_ANY_TO_ABORT"],
-    'RS_PRELAUNCH': ["RSC_ANY_TO_ABORT", "RSC_GOTO_FILL", "RSC_OPEN_VENT", "RSC_CLOSE_VENT", "RSC_OPEN_DRAIN", "RSC_CLOSE_DRAIN", "RSC_MEV_CLOSE"],
-    'RS_RECOVERY': ["RSC_ANY_TO_ABORT", "RSC_OPEN_VENT", "RSC_CLOSE_VENT", "RSC_OPEN_DRAIN", "RSC_CLOSE_DRAIN", "RSC_MEV_CLOSE"]
+    'RS_ABORT': ["RSC_ANY_TO_ABORT", "RSC_GOTO_PRELAUNCH", "RSC_CLOSE_DRAIN", "RSC_OPEN_DRAIN", "RSC_CLOSE_VENT", "RSC_OPEN_VENT"],
+    'RS_ARM': ["RSC_ANY_TO_ABORT", "RSC_POWER_TRANSITION_ONBOARD", "RSC_POWER_TRANSITION_EXTERNAL", "RSC_GOTO_FILL", "RSC_GOTO_IGNITION", "RSC_OPEN_VENT", "RSC_CLOSE_VENT", "RSC_OPEN_DRAIN", "RSC_CLOSE_DRAIN", "RSC_MEV_CLOSE", "RSC_CLOSE_DRAIN", "RSC_OPEN_DRAIN", , "RSC_CLOSE_VENT", "RSC_OPEN_VENT"],
+    'RS_BURN': ["RSC_ANY_TO_ABORT", "RSC_BURN_TO_COAST", "RSC_CLOSE_DRAIN", "RSC_OPEN_DRAIN", "RSC_CLOSE_VENT", "RSC_OPEN_VENT"],
+    'RS_COAST': ["RSC_ANY_TO_ABORT", "RSC_COAST_TO_DESCENT", "RSC_CLOSE_DRAIN", "RSC_OPEN_DRAIN", "RSC_CLOSE_VENT", "RSC_OPEN_VENT"],
+    'RS_DESCENT': ["RSC_ANY_TO_ABORT", "RSC_DESCENT_TO_RECOVERY", "RSC_CLOSE_DRAIN", "RSC_OPEN_DRAIN", "RSC_CLOSE_VENT", "RSC_OPEN_VENT"],
+    'RS_FILL': ["RSC_ANY_TO_ABORT", "RSC_ARM_CONFIRM_1", "RSC_ARM_CONFIRM_2", "RSC_GOTO_ARM", "RSC_GOTO_PRELAUNCH", "RSC_OPEN_VENT", "RSC_CLOSE_VENT", "RSC_OPEN_DRAIN", "RSC_CLOSE_DRAIN", "RSC_MEV_CLOSE", "RSC_CLOSE_DRAIN", "RSC_OPEN_DRAIN", "RSC_CLOSE_VENT", "RSC_OPEN_VENT"],
+    'RS_IGNITION': ["RSC_ANY_TO_ABORT", "RSC_IGNITION_TO_LAUNCH", "RSC_GOTO_ARM", "RSC_CLOSE_DRAIN", "RSC_OPEN_DRAIN", "RSC_CLOSE_VENT", "RSC_OPEN_VENT"],
+    'RS_LAUNCH': ["RSC_ANY_TO_ABORT", "RSC_LAUNCH_TO_BURN", "RSC_CLOSE_DRAIN", "RSC_OPEN_DRAIN", "RSC_CLOSE_VENT", "RSC_OPEN_VENT"],
+    'RS_NONE': ["RSC_ANY_TO_ABORT", "RSC_CLOSE_DRAIN", "RSC_OPEN_DRAIN", "RSC_CLOSE_VENT", "RSC_OPEN_VENT"],
+    'RS_PRELAUNCH': ["RSC_ANY_TO_ABORT", "RSC_GOTO_FILL", "RSC_OPEN_VENT", "RSC_CLOSE_VENT", "RSC_OPEN_DRAIN", "RSC_CLOSE_DRAIN", "RSC_MEV_CLOSE", "RSC_CLOSE_DRAIN", "RSC_OPEN_DRAIN", "RSC_CLOSE_VENT", "RSC_OPEN_VENT"],
+    'RS_RECOVERY': ["RSC_ANY_TO_ABORT", "RSC_OPEN_VENT", "RSC_CLOSE_VENT", "RSC_OPEN_DRAIN", "RSC_CLOSE_DRAIN", "RSC_MEV_CLOSE", "RSC_CLOSE_DRAIN", "RSC_OPEN_DRAIN", "RSC_CLOSE_VENT", "RSC_OPEN_VENT"]
 }
 
 def coord_parse_json_send(msg):
@@ -152,7 +154,7 @@ def pressdmb_parse_json_send(msg):
 def presspbb_parse_json_send(msg):
     pbb_jsonStr_pressure = json.dumps(pbnd.tele_pbb_obj.tele_pressure(msg.presspbb.ib_pressure, msg.presspbb.lower_pv_pressure))
     client.publish("TELE_PBB_PRESSURE", pbb_jsonStr_pressure)
-    print(pbb_jsonStr_pressure)
+    #print(pbb_jsonStr_pressure)
 
 def temppbb_parse_json_send(msg):
     pbb_jsonStr_temperature = json.dumps(pbnd.tele_pbb_obj.tele_pressure(msg.temppbb.ib_temperature, msg.temppbb.pv_temperature))
@@ -165,7 +167,7 @@ def gpio_parse_json_send(msg):
 def mevstate_parse_json_send(msg):
     pbb_jsonStr_mevstate = json.dumps(pbnd.tele_pbb_obj.tele_mevstate(msg.mevstate.mev_open))
     client.publish("TELE_PBB_MEVSTATE", pbb_jsonStr_mevstate)
-    print(pbb_jsonStr_mevstate)
+    #print(pbb_jsonStr_mevstate)
 
 def pressrcu_parse_json_send(msg):
     rcu_jsonStr_pressure = json.dumps(pbnd.tele_rcu_obj.tele_pressure(msg.pressrcu.pt1_pressure, msg.pressrcu.pt2_pressure, msg.pressrcu.pt3_pressure, msg.pressrcu.pt4_pressure))
@@ -183,7 +185,7 @@ def relay_parse_json_send(msg):
     rcu_jsonStr_relay_status = json.dumps(pbnd.tele_rcu_obj.tele_relay_status(msg.relay.ac1_open, msg.relay.ac2_open, 
                                                                               msg.relay.pbv1_open, msg.relay.pbv2_open, msg.relay.pbv3_open,
                                                                               msg.relay.sol1_open, msg.relay.sol2_open, msg.relay.sol3_open, msg.relay.sol4_open, msg.relay.sol5_open, msg.relay.sol6_open, msg.relay.sol7_open, msg.relay.sol8a_open, msg.relay.sol8b_open))
-    print(rcu_jsonStr_relay_status)
+    #print(rcu_jsonStr_relay_status)
     client.publish("TELE_RCU_RELAY", rcu_jsonStr_relay_status)
 
 def padbox_parse_json_send(msg):
