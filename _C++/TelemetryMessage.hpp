@@ -2523,8 +2523,6 @@ class LatLong final: public ::EmbeddedProto::MessageInterface
 
 };
 
-<<<<<<< HEAD
-=======
 class MEVState final: public ::EmbeddedProto::MessageInterface
 {
   public:
@@ -2727,7 +2725,6 @@ class MEVState final: public ::EmbeddedProto::MessageInterface
 
 };
 
->>>>>>> master
 class NOSLoadCell final: public ::EmbeddedProto::MessageInterface
 {
   public:
@@ -5387,13 +5384,10 @@ class TelemetryMessage final: public ::EmbeddedProto::MessageInterface
           set_irtemp(rhs.get_irtemp());
           break;
 
-<<<<<<< HEAD
-=======
         case FieldNumber::MEVSTATE:
           set_mevstate(rhs.get_mevstate());
           break;
 
->>>>>>> master
         default:
           break;
       }
@@ -5481,13 +5475,10 @@ class TelemetryMessage final: public ::EmbeddedProto::MessageInterface
           set_irtemp(rhs.get_irtemp());
           break;
 
-<<<<<<< HEAD
-=======
         case FieldNumber::MEVSTATE:
           set_mevstate(rhs.get_mevstate());
           break;
 
->>>>>>> master
         default:
           break;
       }
@@ -5518,12 +5509,8 @@ class TelemetryMessage final: public ::EmbeddedProto::MessageInterface
       PADBOX = 17,
       LR = 18,
       TEMPSOB = 19,
-<<<<<<< HEAD
-      IRTEMP = 20
-=======
       IRTEMP = 20,
       MEVSTATE = 21
->>>>>>> master
     };
 
     TelemetryMessage& operator=(const TelemetryMessage& rhs)
@@ -5607,13 +5594,10 @@ class TelemetryMessage final: public ::EmbeddedProto::MessageInterface
           set_irtemp(rhs.get_irtemp());
           break;
 
-<<<<<<< HEAD
-=======
         case FieldNumber::MEVSTATE:
           set_mevstate(rhs.get_mevstate());
           break;
 
->>>>>>> master
         default:
           break;
       }
@@ -5702,13 +5686,10 @@ class TelemetryMessage final: public ::EmbeddedProto::MessageInterface
           set_irtemp(rhs.get_irtemp());
           break;
 
-<<<<<<< HEAD
-=======
         case FieldNumber::MEVSTATE:
           set_mevstate(rhs.get_mevstate());
           break;
 
->>>>>>> master
         default:
           break;
       }
@@ -6420,8 +6401,6 @@ class TelemetryMessage final: public ::EmbeddedProto::MessageInterface
     inline const IRTemperature& get_irtemp() const { return message_.irtemp_; }
     inline const IRTemperature& irtemp() const { return message_.irtemp_; }
 
-<<<<<<< HEAD
-=======
     static constexpr char const* MEVSTATE_NAME = "mevstate";
     inline bool has_mevstate() const
     {
@@ -6462,7 +6441,6 @@ class TelemetryMessage final: public ::EmbeddedProto::MessageInterface
     inline const MEVState& get_mevstate() const { return message_.mevstate_; }
     inline const MEVState& mevstate() const { return message_.mevstate_; }
 
->>>>>>> master
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
     {
@@ -6604,8 +6582,6 @@ class TelemetryMessage final: public ::EmbeddedProto::MessageInterface
           }
           break;
 
-<<<<<<< HEAD
-=======
         case FieldNumber::MEVSTATE:
           if(has_mevstate() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
           {
@@ -6613,7 +6589,6 @@ class TelemetryMessage final: public ::EmbeddedProto::MessageInterface
           }
           break;
 
->>>>>>> master
         default:
           break;
       }
@@ -6663,10 +6638,7 @@ class TelemetryMessage final: public ::EmbeddedProto::MessageInterface
           case FieldNumber::LR:
           case FieldNumber::TEMPSOB:
           case FieldNumber::IRTEMP:
-<<<<<<< HEAD
-=======
           case FieldNumber::MEVSTATE:
->>>>>>> master
             return_value = deserialize_message(id_tag, buffer, wire_type);
             break;
 
@@ -6771,12 +6743,9 @@ class TelemetryMessage final: public ::EmbeddedProto::MessageInterface
         case FieldNumber::IRTEMP:
           name = IRTEMP_NAME;
           break;
-<<<<<<< HEAD
-=======
         case FieldNumber::MEVSTATE:
           name = MEVSTATE_NAME;
           break;
->>>>>>> master
         default:
           name = "Invalid FieldNumber";
           break;
@@ -6891,10 +6860,7 @@ class TelemetryMessage final: public ::EmbeddedProto::MessageInterface
         LRLoadCell lr_;
         SOBTemp tempsob_;
         IRTemperature irtemp_;
-<<<<<<< HEAD
-=======
         MEVState mevstate_;
->>>>>>> master
       };
       message message_;
 
@@ -6977,13 +6943,10 @@ class TelemetryMessage final: public ::EmbeddedProto::MessageInterface
             new(&message_.irtemp_) IRTemperature;
             break;
 
-<<<<<<< HEAD
-=======
           case FieldNumber::MEVSTATE:
             new(&message_.mevstate_) MEVState;
             break;
 
->>>>>>> master
           default:
             break;
          }
@@ -7046,12 +7009,9 @@ class TelemetryMessage final: public ::EmbeddedProto::MessageInterface
           case FieldNumber::IRTEMP:
             ::EmbeddedProto::destroy_at(&message_.irtemp_);
             break;
-<<<<<<< HEAD
-=======
           case FieldNumber::MEVSTATE:
             ::EmbeddedProto::destroy_at(&message_.mevstate_);
             break;
->>>>>>> master
           default:
             break;
         }
@@ -7122,12 +7082,9 @@ class TelemetryMessage final: public ::EmbeddedProto::MessageInterface
           case FieldNumber::IRTEMP:
             return_value = message_.irtemp_.deserialize_check_type(buffer, wire_type);
             break;
-<<<<<<< HEAD
-=======
           case FieldNumber::MEVSTATE:
             return_value = message_.mevstate_.deserialize_check_type(buffer, wire_type);
             break;
->>>>>>> master
           default:
             break;
         }
@@ -7197,12 +7154,9 @@ class TelemetryMessage final: public ::EmbeddedProto::MessageInterface
           case FieldNumber::IRTEMP:
             left_chars = message_.irtemp_.to_string(left_chars, indent_level, IRTEMP_NAME, first_field);
             break;
-<<<<<<< HEAD
-=======
           case FieldNumber::MEVSTATE:
             left_chars = message_.mevstate_.to_string(left_chars, indent_level, MEVSTATE_NAME, first_field);
             break;
->>>>>>> master
           default:
             break;
         }

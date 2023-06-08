@@ -11,15 +11,8 @@ import CoreProto_pb2 as Core
 class TELE_DMB:
 	def tele_gps(self, lat_minutes, lat_degrees, long_minutes, long_degrees, antenna_alt, antenna_unit, geoid_altitude, geoid_unit, total_altitude, total_unit, time):
 	    return {
-<<<<<<< HEAD
 	        "latitude": str(lat_minutes) + "." + str(lat_degrees),
 	        "longitude": str(long_minutes) + "." + str(long_degrees),
-=======
-	        "lat_minutes": str(lat_minutes),
-	        "lat_degrees": str(lat_degrees),
-	        "long_minutes": str(long_minutes),
-	        "long_seconds": str(long_degrees),
->>>>>>> master
 			"ant_altitude": str(antenna_alt),
 			"ant_unit": str(antenna_unit),
 			"geoid_altitude": str(geoid_altitude),
@@ -37,21 +30,9 @@ class TELE_DMB:
 	
 	def tele_imu(self, accel, gyro, mag):
 	    return {
-<<<<<<< HEAD
 		    "accel": accel,
 			"gyro": gyro,
 			"mag": mag
-=======
-			"accel_x": str(accel[0]),
-			"accel_y": str(accel[1]),
-			"accel_z": str(accel[2]),
-			"gyro_x": str(gyro[0]),
-			"gyro_y": str(gyro[1]),
-			"gyro_z": str(gyro[2]),
-			"mag_x": str(mag[0]),
-			"mag_y": str(mag[1]),
-			"mag_z": str(mag[2])
->>>>>>> master
 	    }
 	
 	def tele_battery(self, power_src, bat_volt):
@@ -63,11 +44,7 @@ class TELE_DMB:
 	def tele_flash(self, sector_address, logging_rate):
 		return {
 			"sector_address": str(sector_address),
-<<<<<<< HEAD
-			"f": str(logging_rate)
-=======
 			"logging_rate": str(logging_rate)
->>>>>>> master
 		}
 
 	def tele_pressure(self, upper_pv_pressure):
@@ -78,13 +55,8 @@ class TELE_DMB:
 class TELE_PBB:
 	def tele_pressure(self, ib_pressure, lower_pv_pressure):
 		return {
-<<<<<<< HEAD
 			"ib_pressure": str(ib_pressure),
 			"lower_pv_pressure": str(lower_pv_pressure)
-=======
-		"ib_pressure": str(ib_pressure),
-		"lower_pv_pressure": str(lower_pv_pressure)
->>>>>>> master
 		}
 	
 	def tele_temp(self, ib_temperature, pv_temperature):
@@ -162,6 +134,11 @@ class TELE_SOB:
 		"ambient_temp": str(ambient_temp),
 		"object_temp": str(object_temp)
 	    }
+	
+	def tele_mevstate(self, mmev_open):
+		return {
+			"mev_open": str(mev_open)
+		}
 	
 #DMB Telemetry
 tele_dmb_obj = TELE_DMB()
