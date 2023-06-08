@@ -37,7 +37,11 @@ class Codec:
         calc = Calculator(Crc16.CCITT)
         chksum = calc.checksum(encodedBuf)
 
+<<<<<<< HEAD
         #print(f'Calculated checksum: {chksum}')
+=======
+        print(f'Calculated checksum: {chksum}')
+>>>>>>> master
 
         # Then we append the checksum in little endian order
         encodedBuf.append(chksum & 0xFF)
@@ -53,6 +57,7 @@ class Codec:
         return encodedBuf
 
     @staticmethod
+<<<<<<< HEAD
     def Decode(buf, length):
 
         #print(buf)
@@ -62,6 +67,12 @@ class Codec:
 
         #print(len(decodedBuf))
 
+=======
+    def Decode(buf, len):
+        # Decode the buffer
+        decodedBuf = cobs.decode(buf)
+
+>>>>>>> master
         # Verify the checksum (untested)
         bufChksm = decodedBuf[-2:]
         bufChksm = bufChksm[0] + (bufChksm[1] << 8)

@@ -49,6 +49,7 @@ STRING_TO_RSC_PROTO_COMMAND = {
 	"RSC_NONE" : ProtoCmd.DMBCommand.RSC_NONE
 }
 
+<<<<<<< HEAD
 STRING_TO_PBB_PROTO_COMMAND = {
 	"PBB_NONE": ProtoCmd.PBBCommand.PBB_NONE,
 	"PBB_OPEN_MEV": ProtoCmd.PBBCommand.PBB_OPEN_MEV,
@@ -94,6 +95,8 @@ STRING_TO_RCU_PROTO_COMMAND = {
     "RCU_LAST": ProtoCmd.RCUCommand.RCU_LAST
 }
 
+=======
+>>>>>>> master
 STRING_TO_SOB_PROTO_COMMAND = {
 	"SOB_NONE": ProtoCmd.SOBCommand.SOB_NONE,
 	"SOB_SLOW_SAMPLE_IR": ProtoCmd.SOBCommand.SOB_SLOW_SAMPLE_IR,
@@ -128,6 +131,11 @@ def coord_parse_json_send(msg):
 
 def baro_parse_json_send(msg):
     dmb_jsonStr_baro = json.dumps(pbnd.tele_dmb_obj.tele_baro(msg.baro.baro_pressure, msg.baro.baro_temp))
+<<<<<<< HEAD
+=======
+    #print(msg.baro.baro_pressure)
+    #print(msg.baro.baro_temp)
+>>>>>>> master
     client.publish("TELE_DMB_BARO", dmb_jsonStr_baro)
 
 def imu_parse_json_send(msg):
@@ -177,7 +185,10 @@ def relay_parse_json_send(msg):
     rcu_jsonStr_relay_status = json.dumps(pbnd.tele_rcu_obj.tele_relay_status(msg.relay.ac1_open, msg.relay.ac2_open, 
                                                                               msg.relay.pbv1_open, msg.relay.pbv2_open, msg.relay.pbv3_open,
                                                                               msg.relay.sol1_open, msg.relay.sol2_open, msg.relay.sol3_open, msg.relay.sol4_open, msg.relay.sol5_open, msg.relay.sol6_open, msg.relay.sol7_open, msg.relay.sol8a_open, msg.relay.sol8b_open))
+<<<<<<< HEAD
     print(rcu_jsonStr_relay_status)
+=======
+>>>>>>> master
     client.publish("TELE_RCU_RELAY", rcu_jsonStr_relay_status)
 
 def padbox_parse_json_send(msg):

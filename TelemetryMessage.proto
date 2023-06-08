@@ -37,6 +37,10 @@ import "CoreProto.proto";
         LRLoadCell lr = 18;
         SOBTemp tempsob = 19;
         IRTemperature irtemp = 20;
+<<<<<<< HEAD
+=======
+        MEVState mevstate = 21;
+>>>>>>> master
     }
 }
 
@@ -114,6 +118,12 @@ message CombustionControlStatus {
     bool drain_open = 3;
 }
 
+<<<<<<< HEAD
+=======
+message MEVState {
+    bool mev_open = 1;
+}
+>>>>>>> master
 /* RCU Messages ---------------------------------------------------------------- */
 
 message RCUPressure {
