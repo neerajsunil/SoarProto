@@ -110,7 +110,6 @@ message PBBTemp {
 }
 
 message CombustionControlStatus {
-    bool main_engine_valve_open = 1;
     bool vent_open = 2;
     bool drain_open = 3;
 }

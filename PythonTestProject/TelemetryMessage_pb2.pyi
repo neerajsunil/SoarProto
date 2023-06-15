@@ -36,14 +36,12 @@ class Battery(_message.Message):
     def __init__(self, p_source: _Optional[_Union[Battery.power_source, str]] = ..., volt: _Optional[int] = ...) -> None: ...
 
 class CombustionControlStatus(_message.Message):
-    __slots__ = ["drain_open", "main_engine_valve_open", "vent_open"]
+    __slots__ = ["drain_open", "vent_open"]
     DRAIN_OPEN_FIELD_NUMBER: _ClassVar[int]
-    MAIN_ENGINE_VALVE_OPEN_FIELD_NUMBER: _ClassVar[int]
     VENT_OPEN_FIELD_NUMBER: _ClassVar[int]
     drain_open: bool
-    main_engine_valve_open: bool
     vent_open: bool
-    def __init__(self, main_engine_valve_open: bool = ..., vent_open: bool = ..., drain_open: bool = ...) -> None: ...
+    def __init__(self, vent_open: bool = ..., drain_open: bool = ...) -> None: ...
 
 class DMBPressure(_message.Message):
     __slots__ = ["upper_pv_pressure"]

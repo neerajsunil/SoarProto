@@ -87,7 +87,11 @@ class DMBCommand final: public ::EmbeddedProto::MessageInterface
       RSC_BURN_TO_COAST = 17,
       RSC_COAST_TO_DESCENT = 18,
       RSC_DESCENT_TO_RECOVERY = 19,
-      RSC_NONE = 20
+      RSC_GOTO_TEST = 20,
+      RSC_TEST_MEV_OPEN = 21,
+      RSC_TEST_MEV_ENABLE = 22,
+      RSC_TEST_MEV_DISABLE = 23,
+      RSC_NONE = 24
     };
 
     enum class FieldNumber : uint32_t

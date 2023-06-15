@@ -44,6 +44,7 @@ class DMBCommand(_message.Message):
     RSC_GOTO_FILL: DMBCommand.Command
     RSC_GOTO_IGNITION: DMBCommand.Command
     RSC_GOTO_PRELAUNCH: DMBCommand.Command
+    RSC_GOTO_TEST: DMBCommand.Command
     RSC_IGNITION_TO_LAUNCH: DMBCommand.Command
     RSC_LAUNCH_TO_BURN: DMBCommand.Command
     RSC_MEV_CLOSE: DMBCommand.Command
@@ -52,6 +53,9 @@ class DMBCommand(_message.Message):
     RSC_OPEN_VENT: DMBCommand.Command
     RSC_POWER_TRANSITION_EXTERNAL: DMBCommand.Command
     RSC_POWER_TRANSITION_ONBOARD: DMBCommand.Command
+    RSC_TEST_MEV_DISABLE: DMBCommand.Command
+    RSC_TEST_MEV_ENABLE: DMBCommand.Command
+    RSC_TEST_MEV_OPEN: DMBCommand.Command
     command_enum: DMBCommand.Command
     def __init__(self, command_enum: _Optional[_Union[DMBCommand.Command, str]] = ...) -> None: ...
 

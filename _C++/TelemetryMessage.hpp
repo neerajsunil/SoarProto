@@ -751,14 +751,12 @@ class CombustionControlStatus final: public ::EmbeddedProto::MessageInterface
     CombustionControlStatus() = default;
     CombustionControlStatus(const CombustionControlStatus& rhs )
     {
-      set_main_engine_valve_open(rhs.get_main_engine_valve_open());
       set_vent_open(rhs.get_vent_open());
       set_drain_open(rhs.get_drain_open());
     }
 
     CombustionControlStatus(const CombustionControlStatus&& rhs ) noexcept
     {
-      set_main_engine_valve_open(rhs.get_main_engine_valve_open());
       set_vent_open(rhs.get_vent_open());
       set_drain_open(rhs.get_drain_open());
     }
@@ -768,14 +766,12 @@ class CombustionControlStatus final: public ::EmbeddedProto::MessageInterface
     enum class FieldNumber : uint32_t
     {
       NOT_SET = 0,
-      MAIN_ENGINE_VALVE_OPEN = 1,
       VENT_OPEN = 2,
       DRAIN_OPEN = 3
     };
 
     CombustionControlStatus& operator=(const CombustionControlStatus& rhs)
     {
-      set_main_engine_valve_open(rhs.get_main_engine_valve_open());
       set_vent_open(rhs.get_vent_open());
       set_drain_open(rhs.get_drain_open());
       return *this;
@@ -783,19 +779,10 @@ class CombustionControlStatus final: public ::EmbeddedProto::MessageInterface
 
     CombustionControlStatus& operator=(const CombustionControlStatus&& rhs) noexcept
     {
-      set_main_engine_valve_open(rhs.get_main_engine_valve_open());
       set_vent_open(rhs.get_vent_open());
       set_drain_open(rhs.get_drain_open());
       return *this;
     }
-
-    static constexpr char const* MAIN_ENGINE_VALVE_OPEN_NAME = "main_engine_valve_open";
-    inline void clear_main_engine_valve_open() { main_engine_valve_open_.clear(); }
-    inline void set_main_engine_valve_open(const bool& value) { main_engine_valve_open_ = value; }
-    inline void set_main_engine_valve_open(const bool&& value) { main_engine_valve_open_ = value; }
-    inline bool& mutable_main_engine_valve_open() { return main_engine_valve_open_.get(); }
-    inline const bool& get_main_engine_valve_open() const { return main_engine_valve_open_.get(); }
-    inline bool main_engine_valve_open() const { return main_engine_valve_open_.get(); }
 
     static constexpr char const* VENT_OPEN_NAME = "vent_open";
     inline void clear_vent_open() { vent_open_.clear(); }
@@ -817,11 +804,6 @@ class CombustionControlStatus final: public ::EmbeddedProto::MessageInterface
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
     {
       ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
-
-      if((false != main_engine_valve_open_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
-      {
-        return_value = main_engine_valve_open_.serialize_with_id(static_cast<uint32_t>(FieldNumber::MAIN_ENGINE_VALVE_OPEN), buffer, false);
-      }
 
       if((false != vent_open_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
@@ -849,10 +831,6 @@ class CombustionControlStatus final: public ::EmbeddedProto::MessageInterface
         id_tag = static_cast<FieldNumber>(id_number);
         switch(id_tag)
         {
-          case FieldNumber::MAIN_ENGINE_VALVE_OPEN:
-            return_value = main_engine_valve_open_.deserialize_check_type(buffer, wire_type);
-            break;
-
           case FieldNumber::VENT_OPEN:
             return_value = vent_open_.deserialize_check_type(buffer, wire_type);
             break;
@@ -890,7 +868,6 @@ class CombustionControlStatus final: public ::EmbeddedProto::MessageInterface
 
     void clear() override
     {
-      clear_main_engine_valve_open();
       clear_vent_open();
       clear_drain_open();
 
@@ -901,9 +878,6 @@ class CombustionControlStatus final: public ::EmbeddedProto::MessageInterface
       char const* name = nullptr;
       switch(fieldNumber)
       {
-        case FieldNumber::MAIN_ENGINE_VALVE_OPEN:
-          name = MAIN_ENGINE_VALVE_OPEN_NAME;
-          break;
         case FieldNumber::VENT_OPEN:
           name = VENT_OPEN_NAME;
           break;
@@ -970,8 +944,7 @@ class CombustionControlStatus final: public ::EmbeddedProto::MessageInterface
         left_chars.size -= n_chars_used;
       }
 
-      left_chars = main_engine_valve_open_.to_string(left_chars, indent_level + 2, MAIN_ENGINE_VALVE_OPEN_NAME, true);
-      left_chars = vent_open_.to_string(left_chars, indent_level + 2, VENT_OPEN_NAME, false);
+      left_chars = vent_open_.to_string(left_chars, indent_level + 2, VENT_OPEN_NAME, true);
       left_chars = drain_open_.to_string(left_chars, indent_level + 2, DRAIN_OPEN_NAME, false);
   
       if( 0 == indent_level) 
@@ -997,7 +970,6 @@ class CombustionControlStatus final: public ::EmbeddedProto::MessageInterface
   private:
 
 
-      EmbeddedProto::boolean main_engine_valve_open_ = false;
       EmbeddedProto::boolean vent_open_ = false;
       EmbeddedProto::boolean drain_open_ = false;
 
