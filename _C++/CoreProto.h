@@ -71,7 +71,8 @@ enum class RocketState : uint32_t
   RS_DESCENT = 8,
   RS_RECOVERY = 9,
   RS_ABORT = 10,
-  RS_NONE = 11
+  RS_TEST = 11,
+  RS_NONE = 12
 };
 
 } // End of namespace Proto
