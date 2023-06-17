@@ -6,7 +6,7 @@
   ******************************************************************************
 */
 #include "UARTTask.hpp"
-#include "stm32l4xx_hal.h"
+#include "SystemDefines.hpp"
 #include "RepeaterTask.hpp"
 #include "cobs.h"
 
