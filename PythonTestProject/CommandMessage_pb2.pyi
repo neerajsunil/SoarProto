@@ -123,12 +123,14 @@ class SOBCommand(_message.Message):
         __slots__ = []
     COMMAND_ENUM_FIELD_NUMBER: _ClassVar[int]
     COMMAND_PARAM_FIELD_NUMBER: _ClassVar[int]
-    SOB_CALIBRATE_LOAD_CELL: SOBCommand.Command
+    SOB_CALIBRATE_NOS1_LOAD_CELL: SOBCommand.Command
+    SOB_CALIBRATE_NOS2_LOAD_CELL: SOBCommand.Command
     SOB_FAST_SAMPLE_IR: SOBCommand.Command
     SOB_LAST: SOBCommand.Command
     SOB_NONE: SOBCommand.Command
     SOB_SLOW_SAMPLE_IR: SOBCommand.Command
-    SOB_TARE_LOAD_CELL: SOBCommand.Command
+    SOB_TARE_NOS1_LOAD_CELL: SOBCommand.Command
+    SOB_TARE_NOS2_LOAD_CELL: SOBCommand.Command
     command_enum: SOBCommand.Command
     command_param: int
     def __init__(self, command_enum: _Optional[_Union[SOBCommand.Command, str]] = ..., command_param: _Optional[int] = ...) -> None: ...

@@ -780,9 +780,11 @@ class SOBCommand final: public ::EmbeddedProto::MessageInterface
       SOB_NONE = 0,
       SOB_SLOW_SAMPLE_IR = 1,
       SOB_FAST_SAMPLE_IR = 2,
-      SOB_TARE_LOAD_CELL = 3,
-      SOB_CALIBRATE_LOAD_CELL = 4,
-      SOB_LAST = 5
+      SOB_TARE_NOS1_LOAD_CELL = 3,
+      SOB_TARE_NOS2_LOAD_CELL = 4,
+      SOB_CALIBRATE_NOS1_LOAD_CELL = 5,
+      SOB_CALIBRATE_NOS2_LOAD_CELL = 6,
+      SOB_LAST = 7
     };
 
     enum class FieldNumber : uint32_t
