@@ -108,8 +108,6 @@ message PBBCommand {
 
         PBB_OPEN_MEV = 1;
         PBB_CLOSE_MEV = 2;
-        PBB_OPEN_DRAIN = 3;
-        PBB_CLOSE_DRAIN = 4;
 
         PMB_LAST = 5;
     }

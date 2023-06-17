@@ -64,10 +64,8 @@ class PBBCommand(_message.Message):
     class Command(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
         __slots__ = []
     COMMAND_ENUM_FIELD_NUMBER: _ClassVar[int]
-    PBB_CLOSE_DRAIN: PBBCommand.Command
     PBB_CLOSE_MEV: PBBCommand.Command
     PBB_NONE: PBBCommand.Command
-    PBB_OPEN_DRAIN: PBBCommand.Command
     PBB_OPEN_MEV: PBBCommand.Command
     PMB_LAST: PBBCommand.Command
     command_enum: PBBCommand.Command

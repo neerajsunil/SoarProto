@@ -300,8 +300,6 @@ class PBBCommand final: public ::EmbeddedProto::MessageInterface
       PBB_NONE = 0,
       PBB_OPEN_MEV = 1,
       PBB_CLOSE_MEV = 2,
-      PBB_OPEN_DRAIN = 3,
-      PBB_CLOSE_DRAIN = 4,
       PMB_LAST = 5
     };
 
