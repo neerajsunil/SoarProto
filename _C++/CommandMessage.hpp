@@ -511,8 +511,6 @@ class RCUCommand final: public ::EmbeddedProto::MessageInterface
     enum class Command : uint32_t
     {
       RCU_NONE = 0,
-      RCU_TARE_LOAD_CELL = 1,
-      RCU_CALIBRATE_LOAD_CELL = 2,
       RCU_OPEN_AC1 = 3,
       RCU_CLOSE_AC1 = 4,
       RCU_OPEN_AC2 = 5,
@@ -543,7 +541,11 @@ class RCUCommand final: public ::EmbeddedProto::MessageInterface
       RCU_CLOSE_SOL8B = 30,
       RCU_IGNITE_PAD_BOX1 = 31,
       RCU_IGNITE_PAD_BOX2 = 32,
-      RCU_LAST = 33
+      RCU_TARE_NOS1_LOAD_CELL = 33,
+      RCU_TARE_NOS2_LOAD_CELL = 34,
+      RCU_CALIBRATE_NOS1_LOAD_CELL = 35,
+      RCU_CALIBRATE_NOS2_LOAD_CELL = 36,
+      RCU_LAST = 37
     };
 
     enum class FieldNumber : uint32_t
@@ -780,11 +782,9 @@ class SOBCommand final: public ::EmbeddedProto::MessageInterface
       SOB_NONE = 0,
       SOB_SLOW_SAMPLE_IR = 1,
       SOB_FAST_SAMPLE_IR = 2,
-      SOB_TARE_NOS1_LOAD_CELL = 3,
-      SOB_TARE_NOS2_LOAD_CELL = 4,
-      SOB_CALIBRATE_NOS1_LOAD_CELL = 5,
-      SOB_CALIBRATE_NOS2_LOAD_CELL = 6,
-      SOB_LAST = 7
+      SOB_TARE_LOAD_CELL = 3,
+      SOB_CALIBRATE_LOAD_CELL = 4,
+      SOB_LAST = 5
     };
 
     enum class FieldNumber : uint32_t
