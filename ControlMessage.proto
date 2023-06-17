@@ -39,6 +39,7 @@ message ControlMessage {
         Ping ping = 7;
         Heartbeat hb = 8;
         SystemState sys_state = 9;
+        SystemControl sys_ctrl = 10;
     }
 }
 
@@ -92,3 +93,17 @@ message SystemState {
 }
 
 
+/* System control commands may not necessarily be handled by the board */
+message SystemControl {
+    enum Command {
+        SYS_INVALID = 0;
+
+        // These are used to signal bootup and reset events
+        SYS_RESET = 1;                  // Reset the system
+        SYS_FLASH_ERASE = 2;            // Erase the flash memory
+        SYS_LOG_PERIOD_CHANGE = 3;      // Change the log period, to the provided period in seconds as cmd_param 
+    }
+
+    Command sys_cmd = 1;  // The current state of the system
+    uint32 cmd_param = 2; // The parameter for the command, if applicable
+}

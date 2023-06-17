@@ -87,9 +87,16 @@ message DMBCommand {
         //RSC_GOTO_PRELAUNCH, // Confirm transition back into prelaunch state
 
         //-- GENERAL --
+       
+        //-- TEST --
+        RSC_GOTO_TEST = 20;
+        RSC_TEST_MEV_OPEN = 21;
+        //RSC_MEV_CLOSE
+        RSC_TEST_MEV_ENABLE = 22;
+        RSC_TEST_MEV_DISABLE = 23;
 
         //-- TECHNICAL --
-        RSC_NONE = 20;  // Invalid command, must be last
+        RSC_NONE = 24;  // Invalid command, must be last
     }
     
     Command command_enum = 1;
@@ -101,8 +108,6 @@ message PBBCommand {
 
         PBB_OPEN_MEV = 1;
         PBB_CLOSE_MEV = 2;
-        PBB_OPEN_DRAIN = 3;
-        PBB_CLOSE_DRAIN = 4;
 
         PMB_LAST = 5;
     }
@@ -116,6 +121,7 @@ message SOBCommand {
 
         SOB_SLOW_SAMPLE_IR = 1;
         SOB_FAST_SAMPLE_IR = 2;
+        
         SOB_TARE_LOAD_CELL = 3;
         SOB_CALIBRATE_LOAD_CELL = 4;
 
@@ -130,14 +136,11 @@ message RCUCommand {
     enum Command {
         RCU_NONE = 0;
 
-        RCU_TARE_LOAD_CELL = 1;
-        RCU_CALIBRATE_LOAD_CELL = 2;
-
-        RCU_OPEN_AC1 = 3;
-        RCU_CLOSE_AC1 = 4;
-        RCU_OPEN_AC2 = 5;
-        RCU_CLOSE_AC2 = 6;
-        RCU_OPEN_PBV1 = 7;
+        RCU_OPEN_AC1 = 3;   // Unused
+        RCU_CLOSE_AC1 = 4;  // Unused
+        RCU_OPEN_AC2 = 5;   // Unused
+        RCU_CLOSE_AC2 = 6;  // Unused
+        RCU_OPEN_PBV1 = 7; 
         RCU_CLOSE_PBV1 = 8;
         RCU_OPEN_PBV2 = 9;
         RCU_CLOSE_PBV2 = 10;
@@ -165,7 +168,13 @@ message RCUCommand {
         RCU_IGNITE_PAD_BOX1 = 31; //may be unused
         RCU_IGNITE_PAD_BOX2 = 32;
 
-        RCU_LAST = 33;
+        RCU_TARE_NOS1_LOAD_CELL = 33;
+        RCU_TARE_NOS2_LOAD_CELL = 34;
+
+        RCU_CALIBRATE_NOS1_LOAD_CELL = 35;
+        RCU_CALIBRATE_NOS2_LOAD_CELL = 36;
+
+        RCU_LAST = 37;
     }
     
     Command command_enum = 1;

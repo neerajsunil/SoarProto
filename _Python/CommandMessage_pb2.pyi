@@ -44,6 +44,7 @@ class DMBCommand(_message.Message):
     RSC_GOTO_FILL: DMBCommand.Command
     RSC_GOTO_IGNITION: DMBCommand.Command
     RSC_GOTO_PRELAUNCH: DMBCommand.Command
+    RSC_GOTO_TEST: DMBCommand.Command
     RSC_IGNITION_TO_LAUNCH: DMBCommand.Command
     RSC_LAUNCH_TO_BURN: DMBCommand.Command
     RSC_MEV_CLOSE: DMBCommand.Command
@@ -52,6 +53,9 @@ class DMBCommand(_message.Message):
     RSC_OPEN_VENT: DMBCommand.Command
     RSC_POWER_TRANSITION_EXTERNAL: DMBCommand.Command
     RSC_POWER_TRANSITION_ONBOARD: DMBCommand.Command
+    RSC_TEST_MEV_DISABLE: DMBCommand.Command
+    RSC_TEST_MEV_ENABLE: DMBCommand.Command
+    RSC_TEST_MEV_OPEN: DMBCommand.Command
     command_enum: DMBCommand.Command
     def __init__(self, command_enum: _Optional[_Union[DMBCommand.Command, str]] = ...) -> None: ...
 
@@ -60,10 +64,8 @@ class PBBCommand(_message.Message):
     class Command(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
         __slots__ = []
     COMMAND_ENUM_FIELD_NUMBER: _ClassVar[int]
-    PBB_CLOSE_DRAIN: PBBCommand.Command
     PBB_CLOSE_MEV: PBBCommand.Command
     PBB_NONE: PBBCommand.Command
-    PBB_OPEN_DRAIN: PBBCommand.Command
     PBB_OPEN_MEV: PBBCommand.Command
     PMB_LAST: PBBCommand.Command
     command_enum: PBBCommand.Command
@@ -75,7 +77,8 @@ class RCUCommand(_message.Message):
         __slots__ = []
     COMMAND_ENUM_FIELD_NUMBER: _ClassVar[int]
     COMMAND_PARAM_FIELD_NUMBER: _ClassVar[int]
-    RCU_CALIBRATE_LOAD_CELL: RCUCommand.Command
+    RCU_CALIBRATE_NOS1_LOAD_CELL: RCUCommand.Command
+    RCU_CALIBRATE_NOS2_LOAD_CELL: RCUCommand.Command
     RCU_CLOSE_AC1: RCUCommand.Command
     RCU_CLOSE_AC2: RCUCommand.Command
     RCU_CLOSE_PBV1: RCUCommand.Command
@@ -108,7 +111,8 @@ class RCUCommand(_message.Message):
     RCU_OPEN_SOL7: RCUCommand.Command
     RCU_OPEN_SOL8A: RCUCommand.Command
     RCU_OPEN_SOL8B: RCUCommand.Command
-    RCU_TARE_LOAD_CELL: RCUCommand.Command
+    RCU_TARE_NOS1_LOAD_CELL: RCUCommand.Command
+    RCU_TARE_NOS2_LOAD_CELL: RCUCommand.Command
     command_enum: RCUCommand.Command
     command_param: int
     def __init__(self, command_enum: _Optional[_Union[RCUCommand.Command, str]] = ..., command_param: _Optional[int] = ...) -> None: ...

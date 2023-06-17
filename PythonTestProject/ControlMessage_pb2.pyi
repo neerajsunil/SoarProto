@@ -17,7 +17,7 @@ class AckNack(_message.Message):
     def __init__(self, acking_msg_source: _Optional[_Union[_CoreProto_pb2.Node, str]] = ..., acking_msg_id: _Optional[_Union[_CoreProto_pb2.MessageID, str]] = ..., acking_sequence_num: _Optional[int] = ...) -> None: ...
 
 class ControlMessage(_message.Message):
-    __slots__ = ["ack", "hb", "message_id", "nack", "ping", "source", "source_sequence_num", "sys_state", "target"]
+    __slots__ = ["ack", "hb", "message_id", "nack", "ping", "source", "source_sequence_num", "sys_ctrl", "sys_state", "target"]
     ACK_FIELD_NUMBER: _ClassVar[int]
     HB_FIELD_NUMBER: _ClassVar[int]
     MESSAGE_ID_FIELD_NUMBER: _ClassVar[int]
@@ -25,6 +25,7 @@ class ControlMessage(_message.Message):
     PING_FIELD_NUMBER: _ClassVar[int]
     SOURCE_FIELD_NUMBER: _ClassVar[int]
     SOURCE_SEQUENCE_NUM_FIELD_NUMBER: _ClassVar[int]
+    SYS_CTRL_FIELD_NUMBER: _ClassVar[int]
     SYS_STATE_FIELD_NUMBER: _ClassVar[int]
     TARGET_FIELD_NUMBER: _ClassVar[int]
     ack: AckNack
@@ -34,9 +35,10 @@ class ControlMessage(_message.Message):
     ping: Ping
     source: _CoreProto_pb2.Node
     source_sequence_num: int
+    sys_ctrl: SystemControl
     sys_state: SystemState
     target: _CoreProto_pb2.Node
-    def __init__(self, source: _Optional[_Union[_CoreProto_pb2.Node, str]] = ..., target: _Optional[_Union[_CoreProto_pb2.Node, str]] = ..., message_id: _Optional[_Union[_CoreProto_pb2.MessageID, str]] = ..., source_sequence_num: _Optional[int] = ..., ack: _Optional[_Union[AckNack, _Mapping]] = ..., nack: _Optional[_Union[AckNack, _Mapping]] = ..., ping: _Optional[_Union[Ping, _Mapping]] = ..., hb: _Optional[_Union[Heartbeat, _Mapping]] = ..., sys_state: _Optional[_Union[SystemState, _Mapping]] = ...) -> None: ...
+    def __init__(self, source: _Optional[_Union[_CoreProto_pb2.Node, str]] = ..., target: _Optional[_Union[_CoreProto_pb2.Node, str]] = ..., message_id: _Optional[_Union[_CoreProto_pb2.MessageID, str]] = ..., source_sequence_num: _Optional[int] = ..., ack: _Optional[_Union[AckNack, _Mapping]] = ..., nack: _Optional[_Union[AckNack, _Mapping]] = ..., ping: _Optional[_Union[Ping, _Mapping]] = ..., hb: _Optional[_Union[Heartbeat, _Mapping]] = ..., sys_state: _Optional[_Union[SystemState, _Mapping]] = ..., sys_ctrl: _Optional[_Union[SystemControl, _Mapping]] = ...) -> None: ...
 
 class Heartbeat(_message.Message):
     __slots__ = ["hb_response_sequence_num"]
@@ -53,6 +55,20 @@ class Ping(_message.Message):
     ping_response_sequence_num: int
     sys_state_response_required: bool
     def __init__(self, ping_ack_id: _Optional[int] = ..., ping_response_sequence_num: _Optional[int] = ..., sys_state_response_required: bool = ...) -> None: ...
+
+class SystemControl(_message.Message):
+    __slots__ = ["cmd_param", "sys_cmd"]
+    class Command(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+        __slots__ = []
+    CMD_PARAM_FIELD_NUMBER: _ClassVar[int]
+    SYS_CMD_FIELD_NUMBER: _ClassVar[int]
+    SYS_FLASH_ERASE: SystemControl.Command
+    SYS_INVALID: SystemControl.Command
+    SYS_LOG_PERIOD_CHANGE: SystemControl.Command
+    SYS_RESET: SystemControl.Command
+    cmd_param: int
+    sys_cmd: SystemControl.Command
+    def __init__(self, sys_cmd: _Optional[_Union[SystemControl.Command, str]] = ..., cmd_param: _Optional[int] = ...) -> None: ...
 
 class SystemState(_message.Message):
     __slots__ = ["rocket_state", "sys_state"]

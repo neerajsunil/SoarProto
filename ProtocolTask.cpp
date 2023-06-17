@@ -14,7 +14,7 @@
 
 #include "FlightTask.hpp"
 #include "UARTTask.hpp"
-#include "stm32f4xx_hal.h"
+#include "SystemDefines.hpp" // Note: Must include stm32x_hal.h in this file
 #include "cobs.h"
 
 #include "ControlMessage.hpp"

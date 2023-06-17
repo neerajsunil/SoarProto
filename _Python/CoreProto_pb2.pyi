@@ -28,6 +28,7 @@ RS_LAUNCH: RocketState
 RS_NONE: RocketState
 RS_PRELAUNCH: RocketState
 RS_RECOVERY: RocketState
+RS_TEST: RocketState
 
 class Node(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     __slots__ = []
