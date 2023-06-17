@@ -11,6 +11,7 @@
 
 
 
+from asyncio import sleep
 import ControlMessage_pb2 as ProtoCtr
 import CommandMessage_pb2 as ProtoCmd
 import TelemetryMessage_pb2 as ProtoTele
@@ -27,23 +28,41 @@ import time
 import json
 
 # Constant
-EXAMPLE_COM_PORT = '/dev/ttyUSB0'
+EXAMPLE_COM_PORT = '/dev/ttyS0'
 MQTT_BROKER = '127.0.0.1'
 PASSPHRASE = '1'
 
 # Setup serial port
 # 
-SER = serial.Serial(port=EXAMPLE_COM_PORT, baudrate=57600, bytesize=8, parity=serial.PARITY_NONE, timeout=None, stopbits=serial.STOPBITS_ONE)
+SER = serial.Serial(port=EXAMPLE_COM_PORT, baudrate=115200, bytesize=8, parity=serial.PARITY_NONE, timeout=None, stopbits=serial.STOPBITS_ONE)
 
 # Globals
 sequence_number = 1
 current_state = "RS_ABORT"
+nos1_hold_mass = 0
+nos2_hold_mass = 0
+
+def handle_pi_command(data_dictionary):
+    global nos1_hold_mass, nos2_hold_mass
+    command = data_dictionary["command"]
+ 
+    if command == "NOS1_HOLD":
+        pbnd.tele_rcu_obj.is_nos1_hold_enable = True
+    elif command == "NOS2_HOLD":
+        pbnd.tele_rcu_obj.is_nos2_hold_enable = True
+    elif command == "NOS1_RESET":
+        pbnd.tele_rcu_obj.is_nos1_hold_enable = False
+    elif command == "NOS2_RESET":
+        pbnd.tele_rcu_obj.is_nos2_hold_enable = False
+    else:
+        ProtoParse.client.publish("TELE_PI_ERROR", json.dumps({"error": "Invalid Command"}))
+        return False
 
 def populate_command_msg(data_dictionary):
     global sequence_number
 
     command = data_dictionary["command"]
-    
+
     #create message  
     msg = ProtoCmd.CommandMessage()
     msg.source = Core.NODE_RCU
@@ -65,24 +84,30 @@ def populate_command_msg(data_dictionary):
         msg.target = Core.NODE_DMB
         return msg
     
-    pbb_comand = ProtoParse.STRING_TO_PBB_PROTO_COMMAND.get(command)
+    pbb_command = ProtoParse.STRING_TO_PBB_PROTO_COMMAND.get(command)
 
-    if pbb_comand != None:
-        msg.pbb_command.command_enum = pbb_comand
+    if pbb_command != None:
+        msg.pbb_command.command_enum = pbb_command
         msg.target = Core.NODE_PBB
         return msg
 
-    rcu_comand = ProtoParse.STRING_TO_RCU_PROTO_COMMAND.get(command)
+    rcu_command = ProtoParse.STRING_TO_RCU_PROTO_COMMAND.get(command)
 
-    if rcu_comand != None:
-        msg.rcu_command.command_enum = rcu_comand
+    if rcu_command != None:
+        msg.rcu_command.command_enum = rcu_command
+        if rcu_command == ProtoCmd.RCUCommand.RCU_CALIBRATE_NOS1_LOAD_CELL or rcu_command == ProtoCmd.RCUCommand.RCU_CALIBRATE_NOS2_LOAD_CELL:
+            # for now, sending calibration known mass as passphrase
+            msg.rcu_command.command_param = data_dictionary["passphrase"]
         msg.target = Core.NODE_RCU
         return msg
 
-    sob_comand = ProtoParse.STRING_TO_SOB_PROTO_COMMAND.get(command)
+    sob_command = ProtoParse.STRING_TO_SOB_PROTO_COMMAND.get(command)
 
-    if sob_comand != None:
-        msg.sob_command.command_enum = sob_comand
+    if sob_command != None:
+        msg.sob_command.command_enum = sob_command
+        if sob_command == ProtoCmd.SOBCommand.SOB_CALIBRATE_LOAD_CELL:
+            # for now, sending calibration known mass as passphrase
+            msg.sob_command.command_param = data_dictionary["passphrase"]
         msg.target = Core.NODE_SOB
         return msg
     
@@ -108,13 +133,13 @@ def send_command_msg(data_dictionary):
     SER.write(encBuf)
 
 def on_mqtt_message(client, userdata, message):
-
-    #print("received message: ",str(message.payload.decode("utf-8")))
+    print("----------------------------------------------------received message:\n ",str(message.payload.decode("utf-8")))
     data_dictionary = json.loads(message.payload.decode("utf-8"))
 
     if message.topic == "RCU/Commands":
-        #print(data_dictionary)
         send_command_msg(data_dictionary)
+    elif message.topic == "Pi/Commands":
+        handle_pi_command(data_dictionary)
     else:
         ProtoParse.client.publish("TELE_PI_ERROR", json.dumps({"error": "Unknown Command Topic"}))
         print("unknown topic")
@@ -138,7 +163,7 @@ def process_telemetry_message(data):
     received_message = ProtoTele.TelemetryMessage()
     try:
         received_message.ParseFromString(data)
-    except message.DecodeError: 
+    except message.Decoprocess_control_messagedeError: 
         print("cannot decode telemetry message")
         return
 
@@ -170,11 +195,13 @@ def process_control_message(data):
 
     if received_message.target == Core.NODE_RCU:
         message_type = received_message.WhichOneof('message')
-        if message_type == 'sys_state':
+        if message_typeprocess_control_message == 'sys_state':
             #print(received_message.sys_state)
             if received_message.source == Core.NODE_DMB:
                 global current_state
                 current_state = ProtoParse.PROTO_STATE_TO_STRING[received_message.sys_state.rocket_state]
+                ProtoParse.client.publish("CONTROL_SYS_STATE", json.dumps({"dmb_state": str(current_state)}))
+
                 #print(ProtoParse.PROTO_STATE_TO_STRING[received_message.sys_state.rocket_state])
         elif message_type == 'hb':
             print('hb: ', received_message.source)
@@ -193,8 +220,7 @@ def process_control_message(data):
 def on_serial_message(message):
     if len(message) < 5:
         print("Pi error message too short")
-        ProtoParse.client.publish("TELE_PI_ERROR", json.dumps({"error": "Received ivalid message, length less than 5"}))
-        return
+        ProtoParse.cliprocess_control_message
     
     #print("message received")
     #decode, remove 0x00 byte
@@ -219,12 +245,15 @@ if __name__ == '__main__':
 
     ProtoParse.client.loop_start()
     ProtoParse.client.subscribe("RCU/Commands")
+    ProtoParse.client.subscribe("Pi/Commands")
     ProtoParse.client.on_message=on_mqtt_message
+
+    print("listening to RCU Commands")
 
     while True:
         # codec encodes the end of a message through a 0x00
         serial_message = SER.read_until(expected = b'\x00', size = None)
-        #print(serial_message)
+        # print(serial_message)
         on_serial_message(serial_message)
         x = None
         
