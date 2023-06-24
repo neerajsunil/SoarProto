@@ -31,6 +31,9 @@ import json
 EXAMPLE_COM_PORT = '/dev/ttyS0'
 MQTT_BROKER = '127.0.0.1'
 PASSPHRASE = '1'
+DMB_SEQ_NUM = 10
+PBB_SEQ_NUM = 20
+SOB_SEQ_NUM = 30
 
 # Setup serial port
 # 
@@ -97,7 +100,7 @@ def populate_command_msg(data_dictionary):
         msg.rcu_command.command_enum = rcu_command
         if rcu_command == ProtoCmd.RCUCommand.RCU_CALIBRATE_NOS1_LOAD_CELL or rcu_command == ProtoCmd.RCUCommand.RCU_CALIBRATE_NOS2_LOAD_CELL:
             # for now, sending calibration known mass as passphrase
-            msg.rcu_command.command_param = data_dictionary["passphrase"]
+            msg.rcu_command.command_param = int(data_dictionary["passphrase"])
         msg.target = Core.NODE_RCU
         return msg
 
@@ -107,9 +110,15 @@ def populate_command_msg(data_dictionary):
         msg.sob_command.command_enum = sob_command
         if sob_command == ProtoCmd.SOBCommand.SOB_CALIBRATE_LOAD_CELL:
             # for now, sending calibration known mass as passphrase
-            msg.sob_command.command_param = data_dictionary["passphrase"]
+            msg.sob_command.command_param = int(data_dictionary["passphrase"])
         msg.target = Core.NODE_SOB
         return msg
+    
+    # insert handling for control message
+    # if PING_DMB
+    # if PING_PBB
+    # if PING_SOB
+    # Send received PING ACKS to TELE_PI_ERROR :)
     
     ProtoParse.client.publish("TELE_PI_ERROR", json.dumps({"error": "Invalid Command"}))
     return False
@@ -132,12 +141,54 @@ def send_command_msg(data_dictionary):
     # Send the data to the serial port
     SER.write(encBuf)
 
+def send_ping_message(data_dictionary):
+    global sequence_number
+
+    #create message  
+    msg = ProtoCtr.ControlMessage()
+    msg.source = Core.NODE_RCU
+    msg.source_sequence_num = sequence_number
+    sequence_number = sequence_number + 1
+    ping = ProtoCtr.Ping()
+
+    if data_dictionary.get("Target") == "DMB":
+        msg.target == Core.NODE_DMB
+        ping.ping_ack_id = Core.MSG_CONTROL
+        ping.ping_response_sequence_num = DMB_SEQ_NUM
+        ping.sys_state_response_required = True
+    elif data_dictionary.get("Target") == "PBB":
+        msg.target == Core.NODE_PBB
+        ping.ping_ack_id = Core.MSG_CONTROL
+        ping.ping_response_sequence_num = PBB_SEQ_NUM
+        ping.sys_state_response_required = False
+    elif data_dictionary.get("Target") == "SOB":
+        msg.target == Core.NODE_SOB
+        ping.ping_ack_id = Core.MSG_CONTROL
+        ping.ping_response_sequence_num = SOB_SEQ_NUM
+        ping.sys_state_response_required = False
+
+    msg.ping.CopyFrom(ping)
+
+    #encode
+    buf = msg.SerializeToString()
+    encBuf = Codec.Encode(buf, len(buf), Core.MessageID.MSG_COMMAND)
+    #print(len(encBuf))
+    #print(encBuf)
+
+    # Send the data to the serial port
+    SER.write(encBuf)
+
+
+    
+
 def on_mqtt_message(client, userdata, message):
     print("----------------------------------------------------received message:\n ",str(message.payload.decode("utf-8")))
     data_dictionary = json.loads(message.payload.decode("utf-8"))
 
     if message.topic == "RCU/Commands":
         send_command_msg(data_dictionary)
+    elif message.topic == "RCU/Pings":
+        send_ping_message(data_dictionary)
     elif message.topic == "Pi/Commands":
         handle_pi_command(data_dictionary)
     else:
@@ -145,7 +196,6 @@ def on_mqtt_message(client, userdata, message):
         print("unknown topic")
         return False
         
-
     return True
 
 def send_ack_message(msg):
@@ -195,7 +245,7 @@ def process_control_message(data):
 
     if received_message.target == Core.NODE_RCU:
         message_type = received_message.WhichOneof('message')
-        if message_typeprocess_control_message == 'sys_state':
+        if message_type == 'sys_state':
             #print(received_message.sys_state)
             if received_message.source == Core.NODE_DMB:
                 global current_state
@@ -206,7 +256,14 @@ def process_control_message(data):
         elif message_type == 'hb':
             print('hb: ', received_message.source)
         elif message_type == 'ping':
-            send_ack_message(received_message)
+            if received_message.source == Core.NODE_DMB and received_message.ping.ping_response_sequence_num == DMB_SEQ_NUM:
+                ProtoParse.client.publish("TELE_PI_ERROR", '{"ping_status" : "ping from DMB received"}')
+            elif received_message.source == Core.NODE_PBB and received_message.ping.ping_response_sequence_num == PBB_SEQ_NUM:
+                ProtoParse.client.publish("TELE_PI_ERROR", '{"ping_status" : "ping from PBB received"}')
+            elif received_message.source == Core.NODE_SOB and received_message.ping.ping_response_sequence_num == SOB_SEQ_NUM:
+                ProtoParse.client.publish("TELE_PI_ERROR", '{"ping_status" : "ping from SOB received"}')
+            else:
+                ProtoParse.client.publish("TELE_PI_ERROR", '{"ping_status" : "unknown ping received"}')
             print('we were pinged: ', received_message.source)
         elif message_type == 'ack':
             print('oh hey, we ack: ', received_message.source)
@@ -246,6 +303,7 @@ if __name__ == '__main__':
     ProtoParse.client.loop_start()
     ProtoParse.client.subscribe("RCU/Commands")
     ProtoParse.client.subscribe("Pi/Commands")
+    ProtoParse.client.subscribe("RCU/Pings")
     ProtoParse.client.on_message=on_mqtt_message
 
     print("listening to RCU Commands")
