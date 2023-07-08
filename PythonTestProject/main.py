@@ -12,6 +12,8 @@
 
 
 from asyncio import sleep
+import time
+import threading
 import ControlMessage_pb2 as ProtoCtr
 import CommandMessage_pb2 as ProtoCmd
 import TelemetryMessage_pb2 as ProtoTele
@@ -34,6 +36,7 @@ PASSPHRASE = '1'
 DMB_SEQ_NUM = 10
 PBB_SEQ_NUM = 20
 SOB_SEQ_NUM = 30
+HEARTBEAT_PERIOD = 1
 
 # Setup serial port
 # 
@@ -297,6 +300,36 @@ def on_serial_message(message):
         print("Pi error")
         ProtoParse.client.publish("TELE_PI_ERROR", json.dumps({"error": "Received invalid MessageID"}))
 
+
+
+
+def timerhandler():
+    global sequence_number
+
+    #create message  
+    msg = ProtoCtr.ControlMessage()
+    msg.source = Core.NODE_RCU
+    msg.source_sequence_num = sequence_number
+    sequence_number = sequence_number + 1
+    heartbeat = ProtoCtr.Heartbeat()
+    msg.target == Core.NODE_DMB
+    heartbeat.hb_response_sequence_num = DMB_SEQ_NUM
+
+    msg.hb.CopyFrom(heartbeat)
+
+    #encode
+    buf = msg.SerializeToString()
+    encBuf = Codec.Encode(buf, len(buf), Core.MessageID.MSG_CONTROL)
+    #print(len(encBuf))
+    #print(encBuf)
+
+    # Send the data to the serial port
+    SER.write(encBuf)
+    print("heartbeat sent")
+
+    time.sleep(HEARTBEAT_PERIOD)
+
+
 if __name__ == '__main__':
     ProtoParse.client.connect(MQTT_BROKER)
 
@@ -313,5 +346,4 @@ if __name__ == '__main__':
         serial_message = SER.read_until(expected = b'\x00', size = None)
         # print(serial_message)
         on_serial_message(serial_message)
-        x = None
         
