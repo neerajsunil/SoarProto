@@ -302,7 +302,7 @@ def on_serial_message(message):
 
 
 
-
+#TODO: SER.write should probably be locked under a mutex since multiple functions can call it at the same time
 def timerhandler():
     global sequence_number
 
