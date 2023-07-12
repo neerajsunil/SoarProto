@@ -87,7 +87,11 @@ class DMBCommand final: public ::EmbeddedProto::MessageInterface
       RSC_BURN_TO_COAST = 17,
       RSC_COAST_TO_DESCENT = 18,
       RSC_DESCENT_TO_RECOVERY = 19,
-      RSC_NONE = 20
+      RSC_GOTO_TEST = 20,
+      RSC_TEST_MEV_OPEN = 21,
+      RSC_TEST_MEV_ENABLE = 22,
+      RSC_TEST_MEV_DISABLE = 23,
+      RSC_NONE = 24
     };
 
     enum class FieldNumber : uint32_t
@@ -296,8 +300,6 @@ class PBBCommand final: public ::EmbeddedProto::MessageInterface
       PBB_NONE = 0,
       PBB_OPEN_MEV = 1,
       PBB_CLOSE_MEV = 2,
-      PBB_OPEN_DRAIN = 3,
-      PBB_CLOSE_DRAIN = 4,
       PMB_LAST = 5
     };
 
@@ -507,8 +509,6 @@ class RCUCommand final: public ::EmbeddedProto::MessageInterface
     enum class Command : uint32_t
     {
       RCU_NONE = 0,
-      RCU_TARE_LOAD_CELL = 1,
-      RCU_CALIBRATE_LOAD_CELL = 2,
       RCU_OPEN_AC1 = 3,
       RCU_CLOSE_AC1 = 4,
       RCU_OPEN_AC2 = 5,
@@ -539,7 +539,11 @@ class RCUCommand final: public ::EmbeddedProto::MessageInterface
       RCU_CLOSE_SOL8B = 30,
       RCU_IGNITE_PAD_BOX1 = 31,
       RCU_IGNITE_PAD_BOX2 = 32,
-      RCU_LAST = 33
+      RCU_TARE_NOS1_LOAD_CELL = 33,
+      RCU_TARE_NOS2_LOAD_CELL = 34,
+      RCU_CALIBRATE_NOS1_LOAD_CELL = 35,
+      RCU_CALIBRATE_NOS2_LOAD_CELL = 36,
+      RCU_LAST = 37
     };
 
     enum class FieldNumber : uint32_t

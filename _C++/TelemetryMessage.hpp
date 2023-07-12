@@ -564,11 +564,11 @@ class Battery final: public ::EmbeddedProto::MessageInterface
 
     static constexpr char const* VOLT_NAME = "volt";
     inline void clear_volt() { volt_.clear(); }
-    inline void set_volt(const uint32_t& value) { volt_ = value; }
-    inline void set_volt(const uint32_t&& value) { volt_ = value; }
-    inline uint32_t& mutable_volt() { return volt_.get(); }
-    inline const uint32_t& get_volt() const { return volt_.get(); }
-    inline uint32_t volt() const { return volt_.get(); }
+    inline void set_volt(const int32_t& value) { volt_ = value; }
+    inline void set_volt(const int32_t&& value) { volt_ = value; }
+    inline int32_t& mutable_volt() { return volt_.get(); }
+    inline const int32_t& get_volt() const { return volt_.get(); }
+    inline int32_t volt() const { return volt_.get(); }
 
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
@@ -580,7 +580,7 @@ class Battery final: public ::EmbeddedProto::MessageInterface
         return_value = p_source_.serialize_with_id(static_cast<uint32_t>(FieldNumber::P_SOURCE), buffer, false);
       }
 
-      if((0U != volt_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      if((0 != volt_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
         return_value = volt_.serialize_with_id(static_cast<uint32_t>(FieldNumber::VOLT), buffer, false);
       }
@@ -741,7 +741,7 @@ class Battery final: public ::EmbeddedProto::MessageInterface
 
 
       EmbeddedProto::enumeration<power_source> p_source_ = static_cast<power_source>(0);
-      EmbeddedProto::uint32 volt_ = 0U;
+      EmbeddedProto::int32 volt_ = 0;
 
 };
 
@@ -751,7 +751,6 @@ class CombustionControlStatus final: public ::EmbeddedProto::MessageInterface
     CombustionControlStatus() = default;
     CombustionControlStatus(const CombustionControlStatus& rhs )
     {
-      set_main_engine_valve_open(rhs.get_main_engine_valve_open());
       set_vent_open(rhs.get_vent_open());
       set_drain_open(rhs.get_drain_open());
       set_mev_power_enable(rhs.get_mev_power_enable());
@@ -759,7 +758,6 @@ class CombustionControlStatus final: public ::EmbeddedProto::MessageInterface
 
     CombustionControlStatus(const CombustionControlStatus&& rhs ) noexcept
     {
-      set_main_engine_valve_open(rhs.get_main_engine_valve_open());
       set_vent_open(rhs.get_vent_open());
       set_drain_open(rhs.get_drain_open());
       set_mev_power_enable(rhs.get_mev_power_enable());
@@ -770,7 +768,6 @@ class CombustionControlStatus final: public ::EmbeddedProto::MessageInterface
     enum class FieldNumber : uint32_t
     {
       NOT_SET = 0,
-      MAIN_ENGINE_VALVE_OPEN = 1,
       VENT_OPEN = 2,
       DRAIN_OPEN = 3,
       MEV_POWER_ENABLE = 4
@@ -778,7 +775,6 @@ class CombustionControlStatus final: public ::EmbeddedProto::MessageInterface
 
     CombustionControlStatus& operator=(const CombustionControlStatus& rhs)
     {
-      set_main_engine_valve_open(rhs.get_main_engine_valve_open());
       set_vent_open(rhs.get_vent_open());
       set_drain_open(rhs.get_drain_open());
       set_mev_power_enable(rhs.get_mev_power_enable());
@@ -787,20 +783,11 @@ class CombustionControlStatus final: public ::EmbeddedProto::MessageInterface
 
     CombustionControlStatus& operator=(const CombustionControlStatus&& rhs) noexcept
     {
-      set_main_engine_valve_open(rhs.get_main_engine_valve_open());
       set_vent_open(rhs.get_vent_open());
       set_drain_open(rhs.get_drain_open());
       set_mev_power_enable(rhs.get_mev_power_enable());
       return *this;
     }
-
-    static constexpr char const* MAIN_ENGINE_VALVE_OPEN_NAME = "main_engine_valve_open";
-    inline void clear_main_engine_valve_open() { main_engine_valve_open_.clear(); }
-    inline void set_main_engine_valve_open(const bool& value) { main_engine_valve_open_ = value; }
-    inline void set_main_engine_valve_open(const bool&& value) { main_engine_valve_open_ = value; }
-    inline bool& mutable_main_engine_valve_open() { return main_engine_valve_open_.get(); }
-    inline const bool& get_main_engine_valve_open() const { return main_engine_valve_open_.get(); }
-    inline bool main_engine_valve_open() const { return main_engine_valve_open_.get(); }
 
     static constexpr char const* VENT_OPEN_NAME = "vent_open";
     inline void clear_vent_open() { vent_open_.clear(); }
@@ -830,11 +817,6 @@ class CombustionControlStatus final: public ::EmbeddedProto::MessageInterface
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
     {
       ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
-
-      if((false != main_engine_valve_open_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
-      {
-        return_value = main_engine_valve_open_.serialize_with_id(static_cast<uint32_t>(FieldNumber::MAIN_ENGINE_VALVE_OPEN), buffer, false);
-      }
 
       if((false != vent_open_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
@@ -867,10 +849,6 @@ class CombustionControlStatus final: public ::EmbeddedProto::MessageInterface
         id_tag = static_cast<FieldNumber>(id_number);
         switch(id_tag)
         {
-          case FieldNumber::MAIN_ENGINE_VALVE_OPEN:
-            return_value = main_engine_valve_open_.deserialize_check_type(buffer, wire_type);
-            break;
-
           case FieldNumber::VENT_OPEN:
             return_value = vent_open_.deserialize_check_type(buffer, wire_type);
             break;
@@ -912,7 +890,6 @@ class CombustionControlStatus final: public ::EmbeddedProto::MessageInterface
 
     void clear() override
     {
-      clear_main_engine_valve_open();
       clear_vent_open();
       clear_drain_open();
       clear_mev_power_enable();
@@ -924,9 +901,6 @@ class CombustionControlStatus final: public ::EmbeddedProto::MessageInterface
       char const* name = nullptr;
       switch(fieldNumber)
       {
-        case FieldNumber::MAIN_ENGINE_VALVE_OPEN:
-          name = MAIN_ENGINE_VALVE_OPEN_NAME;
-          break;
         case FieldNumber::VENT_OPEN:
           name = VENT_OPEN_NAME;
           break;
@@ -996,8 +970,7 @@ class CombustionControlStatus final: public ::EmbeddedProto::MessageInterface
         left_chars.size -= n_chars_used;
       }
 
-      left_chars = main_engine_valve_open_.to_string(left_chars, indent_level + 2, MAIN_ENGINE_VALVE_OPEN_NAME, true);
-      left_chars = vent_open_.to_string(left_chars, indent_level + 2, VENT_OPEN_NAME, false);
+      left_chars = vent_open_.to_string(left_chars, indent_level + 2, VENT_OPEN_NAME, true);
       left_chars = drain_open_.to_string(left_chars, indent_level + 2, DRAIN_OPEN_NAME, false);
       left_chars = mev_power_enable_.to_string(left_chars, indent_level + 2, MEV_POWER_ENABLE_NAME, false);
   
@@ -1024,7 +997,6 @@ class CombustionControlStatus final: public ::EmbeddedProto::MessageInterface
   private:
 
 
-      EmbeddedProto::boolean main_engine_valve_open_ = false;
       EmbeddedProto::boolean vent_open_ = false;
       EmbeddedProto::boolean drain_open_ = false;
       EmbeddedProto::boolean mev_power_enable_ = false;
@@ -1067,18 +1039,18 @@ class DMBPressure final: public ::EmbeddedProto::MessageInterface
 
     static constexpr char const* UPPER_PV_PRESSURE_NAME = "upper_pv_pressure";
     inline void clear_upper_pv_pressure() { upper_pv_pressure_.clear(); }
-    inline void set_upper_pv_pressure(const uint32_t& value) { upper_pv_pressure_ = value; }
-    inline void set_upper_pv_pressure(const uint32_t&& value) { upper_pv_pressure_ = value; }
-    inline uint32_t& mutable_upper_pv_pressure() { return upper_pv_pressure_.get(); }
-    inline const uint32_t& get_upper_pv_pressure() const { return upper_pv_pressure_.get(); }
-    inline uint32_t upper_pv_pressure() const { return upper_pv_pressure_.get(); }
+    inline void set_upper_pv_pressure(const int32_t& value) { upper_pv_pressure_ = value; }
+    inline void set_upper_pv_pressure(const int32_t&& value) { upper_pv_pressure_ = value; }
+    inline int32_t& mutable_upper_pv_pressure() { return upper_pv_pressure_.get(); }
+    inline const int32_t& get_upper_pv_pressure() const { return upper_pv_pressure_.get(); }
+    inline int32_t upper_pv_pressure() const { return upper_pv_pressure_.get(); }
 
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
     {
       ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
 
-      if((0U != upper_pv_pressure_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      if((0 != upper_pv_pressure_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
         return_value = upper_pv_pressure_.serialize_with_id(static_cast<uint32_t>(FieldNumber::UPPER_PV_PRESSURE), buffer, false);
       }
@@ -1229,7 +1201,7 @@ class DMBPressure final: public ::EmbeddedProto::MessageInterface
   private:
 
 
-      EmbeddedProto::uint32 upper_pv_pressure_ = 0U;
+      EmbeddedProto::int32 upper_pv_pressure_ = 0;
 
 };
 
@@ -2155,18 +2127,18 @@ class LRLoadCell final: public ::EmbeddedProto::MessageInterface
 
     static constexpr char const* ROCKET_MASS_NAME = "rocket_mass";
     inline void clear_rocket_mass() { rocket_mass_.clear(); }
-    inline void set_rocket_mass(const uint32_t& value) { rocket_mass_ = value; }
-    inline void set_rocket_mass(const uint32_t&& value) { rocket_mass_ = value; }
-    inline uint32_t& mutable_rocket_mass() { return rocket_mass_.get(); }
-    inline const uint32_t& get_rocket_mass() const { return rocket_mass_.get(); }
-    inline uint32_t rocket_mass() const { return rocket_mass_.get(); }
+    inline void set_rocket_mass(const int32_t& value) { rocket_mass_ = value; }
+    inline void set_rocket_mass(const int32_t&& value) { rocket_mass_ = value; }
+    inline int32_t& mutable_rocket_mass() { return rocket_mass_.get(); }
+    inline const int32_t& get_rocket_mass() const { return rocket_mass_.get(); }
+    inline int32_t rocket_mass() const { return rocket_mass_.get(); }
 
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
     {
       ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
 
-      if((0U != rocket_mass_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      if((0 != rocket_mass_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
         return_value = rocket_mass_.serialize_with_id(static_cast<uint32_t>(FieldNumber::ROCKET_MASS), buffer, false);
       }
@@ -2317,7 +2289,7 @@ class LRLoadCell final: public ::EmbeddedProto::MessageInterface
   private:
 
 
-      EmbeddedProto::uint32 rocket_mass_ = 0U;
+      EmbeddedProto::int32 rocket_mass_ = 0;
 
 };
 
@@ -2794,31 +2766,31 @@ class NOSLoadCell final: public ::EmbeddedProto::MessageInterface
 
     static constexpr char const* NOS1_MASS_NAME = "nos1_mass";
     inline void clear_nos1_mass() { nos1_mass_.clear(); }
-    inline void set_nos1_mass(const uint32_t& value) { nos1_mass_ = value; }
-    inline void set_nos1_mass(const uint32_t&& value) { nos1_mass_ = value; }
-    inline uint32_t& mutable_nos1_mass() { return nos1_mass_.get(); }
-    inline const uint32_t& get_nos1_mass() const { return nos1_mass_.get(); }
-    inline uint32_t nos1_mass() const { return nos1_mass_.get(); }
+    inline void set_nos1_mass(const int32_t& value) { nos1_mass_ = value; }
+    inline void set_nos1_mass(const int32_t&& value) { nos1_mass_ = value; }
+    inline int32_t& mutable_nos1_mass() { return nos1_mass_.get(); }
+    inline const int32_t& get_nos1_mass() const { return nos1_mass_.get(); }
+    inline int32_t nos1_mass() const { return nos1_mass_.get(); }
 
     static constexpr char const* NOS2_MASS_NAME = "nos2_mass";
     inline void clear_nos2_mass() { nos2_mass_.clear(); }
-    inline void set_nos2_mass(const uint32_t& value) { nos2_mass_ = value; }
-    inline void set_nos2_mass(const uint32_t&& value) { nos2_mass_ = value; }
-    inline uint32_t& mutable_nos2_mass() { return nos2_mass_.get(); }
-    inline const uint32_t& get_nos2_mass() const { return nos2_mass_.get(); }
-    inline uint32_t nos2_mass() const { return nos2_mass_.get(); }
+    inline void set_nos2_mass(const int32_t& value) { nos2_mass_ = value; }
+    inline void set_nos2_mass(const int32_t&& value) { nos2_mass_ = value; }
+    inline int32_t& mutable_nos2_mass() { return nos2_mass_.get(); }
+    inline const int32_t& get_nos2_mass() const { return nos2_mass_.get(); }
+    inline int32_t nos2_mass() const { return nos2_mass_.get(); }
 
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
     {
       ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
 
-      if((0U != nos1_mass_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      if((0 != nos1_mass_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
         return_value = nos1_mass_.serialize_with_id(static_cast<uint32_t>(FieldNumber::NOS1_MASS), buffer, false);
       }
 
-      if((0U != nos2_mass_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      if((0 != nos2_mass_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
         return_value = nos2_mass_.serialize_with_id(static_cast<uint32_t>(FieldNumber::NOS2_MASS), buffer, false);
       }
@@ -2978,8 +2950,8 @@ class NOSLoadCell final: public ::EmbeddedProto::MessageInterface
   private:
 
 
-      EmbeddedProto::uint32 nos1_mass_ = 0U;
-      EmbeddedProto::uint32 nos2_mass_ = 0U;
+      EmbeddedProto::int32 nos1_mass_ = 0;
+      EmbeddedProto::int32 nos2_mass_ = 0;
 
 };
 
@@ -3024,31 +2996,31 @@ class PBBPressure final: public ::EmbeddedProto::MessageInterface
 
     static constexpr char const* IB_PRESSURE_NAME = "ib_pressure";
     inline void clear_ib_pressure() { ib_pressure_.clear(); }
-    inline void set_ib_pressure(const uint32_t& value) { ib_pressure_ = value; }
-    inline void set_ib_pressure(const uint32_t&& value) { ib_pressure_ = value; }
-    inline uint32_t& mutable_ib_pressure() { return ib_pressure_.get(); }
-    inline const uint32_t& get_ib_pressure() const { return ib_pressure_.get(); }
-    inline uint32_t ib_pressure() const { return ib_pressure_.get(); }
+    inline void set_ib_pressure(const int32_t& value) { ib_pressure_ = value; }
+    inline void set_ib_pressure(const int32_t&& value) { ib_pressure_ = value; }
+    inline int32_t& mutable_ib_pressure() { return ib_pressure_.get(); }
+    inline const int32_t& get_ib_pressure() const { return ib_pressure_.get(); }
+    inline int32_t ib_pressure() const { return ib_pressure_.get(); }
 
     static constexpr char const* LOWER_PV_PRESSURE_NAME = "lower_pv_pressure";
     inline void clear_lower_pv_pressure() { lower_pv_pressure_.clear(); }
-    inline void set_lower_pv_pressure(const uint32_t& value) { lower_pv_pressure_ = value; }
-    inline void set_lower_pv_pressure(const uint32_t&& value) { lower_pv_pressure_ = value; }
-    inline uint32_t& mutable_lower_pv_pressure() { return lower_pv_pressure_.get(); }
-    inline const uint32_t& get_lower_pv_pressure() const { return lower_pv_pressure_.get(); }
-    inline uint32_t lower_pv_pressure() const { return lower_pv_pressure_.get(); }
+    inline void set_lower_pv_pressure(const int32_t& value) { lower_pv_pressure_ = value; }
+    inline void set_lower_pv_pressure(const int32_t&& value) { lower_pv_pressure_ = value; }
+    inline int32_t& mutable_lower_pv_pressure() { return lower_pv_pressure_.get(); }
+    inline const int32_t& get_lower_pv_pressure() const { return lower_pv_pressure_.get(); }
+    inline int32_t lower_pv_pressure() const { return lower_pv_pressure_.get(); }
 
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
     {
       ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
 
-      if((0U != ib_pressure_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      if((0 != ib_pressure_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
         return_value = ib_pressure_.serialize_with_id(static_cast<uint32_t>(FieldNumber::IB_PRESSURE), buffer, false);
       }
 
-      if((0U != lower_pv_pressure_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      if((0 != lower_pv_pressure_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
         return_value = lower_pv_pressure_.serialize_with_id(static_cast<uint32_t>(FieldNumber::LOWER_PV_PRESSURE), buffer, false);
       }
@@ -3208,8 +3180,8 @@ class PBBPressure final: public ::EmbeddedProto::MessageInterface
   private:
 
 
-      EmbeddedProto::uint32 ib_pressure_ = 0U;
-      EmbeddedProto::uint32 lower_pv_pressure_ = 0U;
+      EmbeddedProto::int32 ib_pressure_ = 0;
+      EmbeddedProto::int32 lower_pv_pressure_ = 0;
 
 };
 
@@ -3254,31 +3226,31 @@ class PBBTemp final: public ::EmbeddedProto::MessageInterface
 
     static constexpr char const* IB_TEMPERATURE_NAME = "ib_temperature";
     inline void clear_ib_temperature() { ib_temperature_.clear(); }
-    inline void set_ib_temperature(const uint32_t& value) { ib_temperature_ = value; }
-    inline void set_ib_temperature(const uint32_t&& value) { ib_temperature_ = value; }
-    inline uint32_t& mutable_ib_temperature() { return ib_temperature_.get(); }
-    inline const uint32_t& get_ib_temperature() const { return ib_temperature_.get(); }
-    inline uint32_t ib_temperature() const { return ib_temperature_.get(); }
+    inline void set_ib_temperature(const int32_t& value) { ib_temperature_ = value; }
+    inline void set_ib_temperature(const int32_t&& value) { ib_temperature_ = value; }
+    inline int32_t& mutable_ib_temperature() { return ib_temperature_.get(); }
+    inline const int32_t& get_ib_temperature() const { return ib_temperature_.get(); }
+    inline int32_t ib_temperature() const { return ib_temperature_.get(); }
 
     static constexpr char const* PV_TEMPERATURE_NAME = "pv_temperature";
     inline void clear_pv_temperature() { pv_temperature_.clear(); }
-    inline void set_pv_temperature(const uint32_t& value) { pv_temperature_ = value; }
-    inline void set_pv_temperature(const uint32_t&& value) { pv_temperature_ = value; }
-    inline uint32_t& mutable_pv_temperature() { return pv_temperature_.get(); }
-    inline const uint32_t& get_pv_temperature() const { return pv_temperature_.get(); }
-    inline uint32_t pv_temperature() const { return pv_temperature_.get(); }
+    inline void set_pv_temperature(const int32_t& value) { pv_temperature_ = value; }
+    inline void set_pv_temperature(const int32_t&& value) { pv_temperature_ = value; }
+    inline int32_t& mutable_pv_temperature() { return pv_temperature_.get(); }
+    inline const int32_t& get_pv_temperature() const { return pv_temperature_.get(); }
+    inline int32_t pv_temperature() const { return pv_temperature_.get(); }
 
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
     {
       ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
 
-      if((0U != ib_temperature_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      if((0 != ib_temperature_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
         return_value = ib_temperature_.serialize_with_id(static_cast<uint32_t>(FieldNumber::IB_TEMPERATURE), buffer, false);
       }
 
-      if((0U != pv_temperature_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      if((0 != pv_temperature_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
         return_value = pv_temperature_.serialize_with_id(static_cast<uint32_t>(FieldNumber::PV_TEMPERATURE), buffer, false);
       }
@@ -3438,8 +3410,8 @@ class PBBTemp final: public ::EmbeddedProto::MessageInterface
   private:
 
 
-      EmbeddedProto::uint32 ib_temperature_ = 0U;
-      EmbeddedProto::uint32 pv_temperature_ = 0U;
+      EmbeddedProto::int32 ib_temperature_ = 0;
+      EmbeddedProto::int32 pv_temperature_ = 0;
 
 };
 
@@ -3724,57 +3696,57 @@ class RCUPressure final: public ::EmbeddedProto::MessageInterface
 
     static constexpr char const* PT1_PRESSURE_NAME = "pt1_pressure";
     inline void clear_pt1_pressure() { pt1_pressure_.clear(); }
-    inline void set_pt1_pressure(const uint32_t& value) { pt1_pressure_ = value; }
-    inline void set_pt1_pressure(const uint32_t&& value) { pt1_pressure_ = value; }
-    inline uint32_t& mutable_pt1_pressure() { return pt1_pressure_.get(); }
-    inline const uint32_t& get_pt1_pressure() const { return pt1_pressure_.get(); }
-    inline uint32_t pt1_pressure() const { return pt1_pressure_.get(); }
+    inline void set_pt1_pressure(const int32_t& value) { pt1_pressure_ = value; }
+    inline void set_pt1_pressure(const int32_t&& value) { pt1_pressure_ = value; }
+    inline int32_t& mutable_pt1_pressure() { return pt1_pressure_.get(); }
+    inline const int32_t& get_pt1_pressure() const { return pt1_pressure_.get(); }
+    inline int32_t pt1_pressure() const { return pt1_pressure_.get(); }
 
     static constexpr char const* PT2_PRESSURE_NAME = "pt2_pressure";
     inline void clear_pt2_pressure() { pt2_pressure_.clear(); }
-    inline void set_pt2_pressure(const uint32_t& value) { pt2_pressure_ = value; }
-    inline void set_pt2_pressure(const uint32_t&& value) { pt2_pressure_ = value; }
-    inline uint32_t& mutable_pt2_pressure() { return pt2_pressure_.get(); }
-    inline const uint32_t& get_pt2_pressure() const { return pt2_pressure_.get(); }
-    inline uint32_t pt2_pressure() const { return pt2_pressure_.get(); }
+    inline void set_pt2_pressure(const int32_t& value) { pt2_pressure_ = value; }
+    inline void set_pt2_pressure(const int32_t&& value) { pt2_pressure_ = value; }
+    inline int32_t& mutable_pt2_pressure() { return pt2_pressure_.get(); }
+    inline const int32_t& get_pt2_pressure() const { return pt2_pressure_.get(); }
+    inline int32_t pt2_pressure() const { return pt2_pressure_.get(); }
 
     static constexpr char const* PT3_PRESSURE_NAME = "pt3_pressure";
     inline void clear_pt3_pressure() { pt3_pressure_.clear(); }
-    inline void set_pt3_pressure(const uint32_t& value) { pt3_pressure_ = value; }
-    inline void set_pt3_pressure(const uint32_t&& value) { pt3_pressure_ = value; }
-    inline uint32_t& mutable_pt3_pressure() { return pt3_pressure_.get(); }
-    inline const uint32_t& get_pt3_pressure() const { return pt3_pressure_.get(); }
-    inline uint32_t pt3_pressure() const { return pt3_pressure_.get(); }
+    inline void set_pt3_pressure(const int32_t& value) { pt3_pressure_ = value; }
+    inline void set_pt3_pressure(const int32_t&& value) { pt3_pressure_ = value; }
+    inline int32_t& mutable_pt3_pressure() { return pt3_pressure_.get(); }
+    inline const int32_t& get_pt3_pressure() const { return pt3_pressure_.get(); }
+    inline int32_t pt3_pressure() const { return pt3_pressure_.get(); }
 
     static constexpr char const* PT4_PRESSURE_NAME = "pt4_pressure";
     inline void clear_pt4_pressure() { pt4_pressure_.clear(); }
-    inline void set_pt4_pressure(const uint32_t& value) { pt4_pressure_ = value; }
-    inline void set_pt4_pressure(const uint32_t&& value) { pt4_pressure_ = value; }
-    inline uint32_t& mutable_pt4_pressure() { return pt4_pressure_.get(); }
-    inline const uint32_t& get_pt4_pressure() const { return pt4_pressure_.get(); }
-    inline uint32_t pt4_pressure() const { return pt4_pressure_.get(); }
+    inline void set_pt4_pressure(const int32_t& value) { pt4_pressure_ = value; }
+    inline void set_pt4_pressure(const int32_t&& value) { pt4_pressure_ = value; }
+    inline int32_t& mutable_pt4_pressure() { return pt4_pressure_.get(); }
+    inline const int32_t& get_pt4_pressure() const { return pt4_pressure_.get(); }
+    inline int32_t pt4_pressure() const { return pt4_pressure_.get(); }
 
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
     {
       ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
 
-      if((0U != pt1_pressure_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      if((0 != pt1_pressure_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
         return_value = pt1_pressure_.serialize_with_id(static_cast<uint32_t>(FieldNumber::PT1_PRESSURE), buffer, false);
       }
 
-      if((0U != pt2_pressure_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      if((0 != pt2_pressure_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
         return_value = pt2_pressure_.serialize_with_id(static_cast<uint32_t>(FieldNumber::PT2_PRESSURE), buffer, false);
       }
 
-      if((0U != pt3_pressure_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      if((0 != pt3_pressure_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
         return_value = pt3_pressure_.serialize_with_id(static_cast<uint32_t>(FieldNumber::PT3_PRESSURE), buffer, false);
       }
 
-      if((0U != pt4_pressure_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      if((0 != pt4_pressure_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
         return_value = pt4_pressure_.serialize_with_id(static_cast<uint32_t>(FieldNumber::PT4_PRESSURE), buffer, false);
       }
@@ -3952,10 +3924,10 @@ class RCUPressure final: public ::EmbeddedProto::MessageInterface
   private:
 
 
-      EmbeddedProto::uint32 pt1_pressure_ = 0U;
-      EmbeddedProto::uint32 pt2_pressure_ = 0U;
-      EmbeddedProto::uint32 pt3_pressure_ = 0U;
-      EmbeddedProto::uint32 pt4_pressure_ = 0U;
+      EmbeddedProto::int32 pt1_pressure_ = 0;
+      EmbeddedProto::int32 pt2_pressure_ = 0;
+      EmbeddedProto::int32 pt3_pressure_ = 0;
+      EmbeddedProto::int32 pt4_pressure_ = 0;
 
 };
 
@@ -4000,31 +3972,31 @@ class RCUTemp final: public ::EmbeddedProto::MessageInterface
 
     static constexpr char const* TC1_TEMP_NAME = "tc1_temp";
     inline void clear_tc1_temp() { tc1_temp_.clear(); }
-    inline void set_tc1_temp(const uint32_t& value) { tc1_temp_ = value; }
-    inline void set_tc1_temp(const uint32_t&& value) { tc1_temp_ = value; }
-    inline uint32_t& mutable_tc1_temp() { return tc1_temp_.get(); }
-    inline const uint32_t& get_tc1_temp() const { return tc1_temp_.get(); }
-    inline uint32_t tc1_temp() const { return tc1_temp_.get(); }
+    inline void set_tc1_temp(const int32_t& value) { tc1_temp_ = value; }
+    inline void set_tc1_temp(const int32_t&& value) { tc1_temp_ = value; }
+    inline int32_t& mutable_tc1_temp() { return tc1_temp_.get(); }
+    inline const int32_t& get_tc1_temp() const { return tc1_temp_.get(); }
+    inline int32_t tc1_temp() const { return tc1_temp_.get(); }
 
     static constexpr char const* TC2_TEMP_NAME = "tc2_temp";
     inline void clear_tc2_temp() { tc2_temp_.clear(); }
-    inline void set_tc2_temp(const uint32_t& value) { tc2_temp_ = value; }
-    inline void set_tc2_temp(const uint32_t&& value) { tc2_temp_ = value; }
-    inline uint32_t& mutable_tc2_temp() { return tc2_temp_.get(); }
-    inline const uint32_t& get_tc2_temp() const { return tc2_temp_.get(); }
-    inline uint32_t tc2_temp() const { return tc2_temp_.get(); }
+    inline void set_tc2_temp(const int32_t& value) { tc2_temp_ = value; }
+    inline void set_tc2_temp(const int32_t&& value) { tc2_temp_ = value; }
+    inline int32_t& mutable_tc2_temp() { return tc2_temp_.get(); }
+    inline const int32_t& get_tc2_temp() const { return tc2_temp_.get(); }
+    inline int32_t tc2_temp() const { return tc2_temp_.get(); }
 
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
     {
       ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
 
-      if((0U != tc1_temp_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      if((0 != tc1_temp_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
         return_value = tc1_temp_.serialize_with_id(static_cast<uint32_t>(FieldNumber::TC1_TEMP), buffer, false);
       }
 
-      if((0U != tc2_temp_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      if((0 != tc2_temp_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
         return_value = tc2_temp_.serialize_with_id(static_cast<uint32_t>(FieldNumber::TC2_TEMP), buffer, false);
       }
@@ -4184,8 +4156,8 @@ class RCUTemp final: public ::EmbeddedProto::MessageInterface
   private:
 
 
-      EmbeddedProto::uint32 tc1_temp_ = 0U;
-      EmbeddedProto::uint32 tc2_temp_ = 0U;
+      EmbeddedProto::int32 tc1_temp_ = 0;
+      EmbeddedProto::int32 tc2_temp_ = 0;
 
 };
 

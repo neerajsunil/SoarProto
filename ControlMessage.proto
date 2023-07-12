@@ -39,6 +39,7 @@ message ControlMessage {
         Ping ping = 7;
         Heartbeat hb = 8;
         SystemState sys_state = 9;
+        SystemControl sys_ctrl = 10;
     }
 }
 
