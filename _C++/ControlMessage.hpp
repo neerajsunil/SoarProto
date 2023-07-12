@@ -765,6 +765,245 @@ class Ping final: public ::EmbeddedProto::MessageInterface
 
 };
 
+class SystemControl final: public ::EmbeddedProto::MessageInterface
+{
+  public:
+    SystemControl() = default;
+    SystemControl(const SystemControl& rhs )
+    {
+      set_sys_cmd(rhs.get_sys_cmd());
+      set_cmd_param(rhs.get_cmd_param());
+    }
+
+    SystemControl(const SystemControl&& rhs ) noexcept
+    {
+      set_sys_cmd(rhs.get_sys_cmd());
+      set_cmd_param(rhs.get_cmd_param());
+    }
+
+    ~SystemControl() override = default;
+
+    enum class Command : uint32_t
+    {
+      SYS_INVALID = 0,
+      SYS_RESET = 1,
+      SYS_FLASH_ERASE = 2,
+      SYS_LOG_PERIOD_CHANGE = 3,
+      HEARTBEAT_ENABLE = 4,
+      HEARTBEAT_DISABLE = 5
+    };
+
+    enum class FieldNumber : uint32_t
+    {
+      NOT_SET = 0,
+      SYS_CMD = 1,
+      CMD_PARAM = 2
+    };
+
+    SystemControl& operator=(const SystemControl& rhs)
+    {
+      set_sys_cmd(rhs.get_sys_cmd());
+      set_cmd_param(rhs.get_cmd_param());
+      return *this;
+    }
+
+    SystemControl& operator=(const SystemControl&& rhs) noexcept
+    {
+      set_sys_cmd(rhs.get_sys_cmd());
+      set_cmd_param(rhs.get_cmd_param());
+      return *this;
+    }
+
+    static constexpr char const* SYS_CMD_NAME = "sys_cmd";
+    inline void clear_sys_cmd() { sys_cmd_.clear(); }
+    inline void set_sys_cmd(const Command& value) { sys_cmd_ = value; }
+    inline void set_sys_cmd(const Command&& value) { sys_cmd_ = value; }
+    inline const Command& get_sys_cmd() const { return sys_cmd_.get(); }
+    inline Command sys_cmd() const { return sys_cmd_.get(); }
+
+    static constexpr char const* CMD_PARAM_NAME = "cmd_param";
+    inline void clear_cmd_param() { cmd_param_.clear(); }
+    inline void set_cmd_param(const uint32_t& value) { cmd_param_ = value; }
+    inline void set_cmd_param(const uint32_t&& value) { cmd_param_ = value; }
+    inline uint32_t& mutable_cmd_param() { return cmd_param_.get(); }
+    inline const uint32_t& get_cmd_param() const { return cmd_param_.get(); }
+    inline uint32_t cmd_param() const { return cmd_param_.get(); }
+
+
+    ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+
+      if((static_cast<Command>(0) != sys_cmd_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = sys_cmd_.serialize_with_id(static_cast<uint32_t>(FieldNumber::SYS_CMD), buffer, false);
+      }
+
+      if((0U != cmd_param_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = cmd_param_.serialize_with_id(static_cast<uint32_t>(FieldNumber::CMD_PARAM), buffer, false);
+      }
+
+      return return_value;
+    };
+
+    ::EmbeddedProto::Error deserialize(::EmbeddedProto::ReadBufferInterface& buffer) override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+      ::EmbeddedProto::WireFormatter::WireType wire_type = ::EmbeddedProto::WireFormatter::WireType::VARINT;
+      uint32_t id_number = 0;
+      FieldNumber id_tag = FieldNumber::NOT_SET;
+
+      ::EmbeddedProto::Error tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+      while((::EmbeddedProto::Error::NO_ERRORS == return_value) && (::EmbeddedProto::Error::NO_ERRORS == tag_value))
+      {
+        id_tag = static_cast<FieldNumber>(id_number);
+        switch(id_tag)
+        {
+          case FieldNumber::SYS_CMD:
+            return_value = sys_cmd_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case FieldNumber::CMD_PARAM:
+            return_value = cmd_param_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case FieldNumber::NOT_SET:
+            return_value = ::EmbeddedProto::Error::INVALID_FIELD_ID;
+            break;
+
+          default:
+            return_value = skip_unknown_field(buffer, wire_type);
+            break;
+        }
+
+        if(::EmbeddedProto::Error::NO_ERRORS == return_value)
+        {
+          // Read the next tag.
+          tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+        }
+      }
+
+      // When an error was detect while reading the tag but no other errors where found, set it in the return value.
+      if((::EmbeddedProto::Error::NO_ERRORS == return_value)
+         && (::EmbeddedProto::Error::NO_ERRORS != tag_value)
+         && (::EmbeddedProto::Error::END_OF_BUFFER != tag_value)) // The end of the buffer is not an array in this case.
+      {
+        return_value = tag_value;
+      }
+
+      return return_value;
+    };
+
+    void clear() override
+    {
+      clear_sys_cmd();
+      clear_cmd_param();
+
+    }
+
+    static char const* field_number_to_name(const FieldNumber fieldNumber)
+    {
+      char const* name = nullptr;
+      switch(fieldNumber)
+      {
+        case FieldNumber::SYS_CMD:
+          name = SYS_CMD_NAME;
+          break;
+        case FieldNumber::CMD_PARAM:
+          name = CMD_PARAM_NAME;
+          break;
+        default:
+          name = "Invalid FieldNumber";
+          break;
+      }
+      return name;
+    }
+
+#ifdef MSG_TO_STRING
+
+    ::EmbeddedProto::string_view to_string(::EmbeddedProto::string_view& str) const
+    {
+      return this->to_string(str, 0, nullptr, true);
+    }
+
+    ::EmbeddedProto::string_view to_string(::EmbeddedProto::string_view& str, const uint32_t indent_level, char const* name, const bool first_field) const override
+    {
+      ::EmbeddedProto::string_view left_chars = str;
+      int32_t n_chars_used = 0;
+
+      if(!first_field)
+      {
+        // Add a comma behind the previous field.
+        n_chars_used = snprintf(left_chars.data, left_chars.size, ",\n");
+        if(0 < n_chars_used)
+        {
+          // Update the character pointer and characters left in the array.
+          left_chars.data += n_chars_used;
+          left_chars.size -= n_chars_used;
+        }
+      }
+
+      if(nullptr != name)
+      {
+        if( 0 == indent_level)
+        {
+          n_chars_used = snprintf(left_chars.data, left_chars.size, "\"%s\": {\n", name);
+        }
+        else
+        {
+          n_chars_used = snprintf(left_chars.data, left_chars.size, "%*s\"%s\": {\n", indent_level, " ", name);
+        }
+      }
+      else
+      {
+        if( 0 == indent_level)
+        {
+          n_chars_used = snprintf(left_chars.data, left_chars.size, "{\n");
+        }
+        else
+        {
+          n_chars_used = snprintf(left_chars.data, left_chars.size, "%*s{\n", indent_level, " ");
+        }
+      }
+      
+      if(0 < n_chars_used)
+      {
+        left_chars.data += n_chars_used;
+        left_chars.size -= n_chars_used;
+      }
+
+      left_chars = sys_cmd_.to_string(left_chars, indent_level + 2, SYS_CMD_NAME, true);
+      left_chars = cmd_param_.to_string(left_chars, indent_level + 2, CMD_PARAM_NAME, false);
+  
+      if( 0 == indent_level) 
+      {
+        n_chars_used = snprintf(left_chars.data, left_chars.size, "\n}");
+      }
+      else 
+      {
+        n_chars_used = snprintf(left_chars.data, left_chars.size, "\n%*s}", indent_level, " ");
+      }
+
+      if(0 < n_chars_used)
+      {
+        left_chars.data += n_chars_used;
+        left_chars.size -= n_chars_used;
+      }
+
+      return left_chars;
+    }
+
+#endif // End of MSG_TO_STRING
+
+  private:
+
+
+      EmbeddedProto::enumeration<Command> sys_cmd_ = static_cast<Command>(0);
+      EmbeddedProto::uint32 cmd_param_ = 0U;
+
+};
+
 class SystemState final: public ::EmbeddedProto::MessageInterface
 {
   public:
@@ -805,7 +1044,9 @@ class SystemState final: public ::EmbeddedProto::MessageInterface
       SYS_BOOTUP_COMPLETE = 1,
       SYS_ASSERT_FAILURE_RESET = 2,
       SYS_UNCAUGHT_RESET = 3,
-      SYS_NORMAL_OPERATION = 4
+      SYS_NORMAL_OPERATION = 4,
+      SYS_HEARTBEAT_LOSS_HALF_WARNING = 5,
+      SYS_HEARTBEAT_LOST_ABORTING = 6
     };
 
     enum class FieldNumber : uint32_t

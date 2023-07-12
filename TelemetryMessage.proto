@@ -113,6 +113,9 @@ message CombustionControlStatus {
     bool main_engine_valve_open = 1;
     bool vent_open = 2;
     bool drain_open = 3;
+
+    // SoarProto v1.3.2
+    bool mev_power_enable = 4;
 }
 
 message MEVState {

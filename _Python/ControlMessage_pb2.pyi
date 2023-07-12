@@ -54,6 +54,22 @@ class Ping(_message.Message):
     sys_state_response_required: bool
     def __init__(self, ping_ack_id: _Optional[int] = ..., ping_response_sequence_num: _Optional[int] = ..., sys_state_response_required: bool = ...) -> None: ...
 
+class SystemControl(_message.Message):
+    __slots__ = ["cmd_param", "sys_cmd"]
+    class Command(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+        __slots__ = []
+    CMD_PARAM_FIELD_NUMBER: _ClassVar[int]
+    HEARTBEAT_DISABLE: SystemControl.Command
+    HEARTBEAT_ENABLE: SystemControl.Command
+    SYS_CMD_FIELD_NUMBER: _ClassVar[int]
+    SYS_FLASH_ERASE: SystemControl.Command
+    SYS_INVALID: SystemControl.Command
+    SYS_LOG_PERIOD_CHANGE: SystemControl.Command
+    SYS_RESET: SystemControl.Command
+    cmd_param: int
+    sys_cmd: SystemControl.Command
+    def __init__(self, sys_cmd: _Optional[_Union[SystemControl.Command, str]] = ..., cmd_param: _Optional[int] = ...) -> None: ...
+
 class SystemState(_message.Message):
     __slots__ = ["rocket_state", "sys_state"]
     class State(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
@@ -61,6 +77,8 @@ class SystemState(_message.Message):
     ROCKET_STATE_FIELD_NUMBER: _ClassVar[int]
     SYS_ASSERT_FAILURE_RESET: SystemState.State
     SYS_BOOTUP_COMPLETE: SystemState.State
+    SYS_HEARTBEAT_LOSS_HALF_WARNING: SystemState.State
+    SYS_HEARTBEAT_LOST_ABORTING: SystemState.State
     SYS_INVALID: SystemState.State
     SYS_NORMAL_OPERATION: SystemState.State
     SYS_STATE_FIELD_NUMBER: _ClassVar[int]

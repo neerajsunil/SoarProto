@@ -754,6 +754,7 @@ class CombustionControlStatus final: public ::EmbeddedProto::MessageInterface
       set_main_engine_valve_open(rhs.get_main_engine_valve_open());
       set_vent_open(rhs.get_vent_open());
       set_drain_open(rhs.get_drain_open());
+      set_mev_power_enable(rhs.get_mev_power_enable());
     }
 
     CombustionControlStatus(const CombustionControlStatus&& rhs ) noexcept
@@ -761,6 +762,7 @@ class CombustionControlStatus final: public ::EmbeddedProto::MessageInterface
       set_main_engine_valve_open(rhs.get_main_engine_valve_open());
       set_vent_open(rhs.get_vent_open());
       set_drain_open(rhs.get_drain_open());
+      set_mev_power_enable(rhs.get_mev_power_enable());
     }
 
     ~CombustionControlStatus() override = default;
@@ -770,7 +772,8 @@ class CombustionControlStatus final: public ::EmbeddedProto::MessageInterface
       NOT_SET = 0,
       MAIN_ENGINE_VALVE_OPEN = 1,
       VENT_OPEN = 2,
-      DRAIN_OPEN = 3
+      DRAIN_OPEN = 3,
+      MEV_POWER_ENABLE = 4
     };
 
     CombustionControlStatus& operator=(const CombustionControlStatus& rhs)
@@ -778,6 +781,7 @@ class CombustionControlStatus final: public ::EmbeddedProto::MessageInterface
       set_main_engine_valve_open(rhs.get_main_engine_valve_open());
       set_vent_open(rhs.get_vent_open());
       set_drain_open(rhs.get_drain_open());
+      set_mev_power_enable(rhs.get_mev_power_enable());
       return *this;
     }
 
@@ -786,6 +790,7 @@ class CombustionControlStatus final: public ::EmbeddedProto::MessageInterface
       set_main_engine_valve_open(rhs.get_main_engine_valve_open());
       set_vent_open(rhs.get_vent_open());
       set_drain_open(rhs.get_drain_open());
+      set_mev_power_enable(rhs.get_mev_power_enable());
       return *this;
     }
 
@@ -813,6 +818,14 @@ class CombustionControlStatus final: public ::EmbeddedProto::MessageInterface
     inline const bool& get_drain_open() const { return drain_open_.get(); }
     inline bool drain_open() const { return drain_open_.get(); }
 
+    static constexpr char const* MEV_POWER_ENABLE_NAME = "mev_power_enable";
+    inline void clear_mev_power_enable() { mev_power_enable_.clear(); }
+    inline void set_mev_power_enable(const bool& value) { mev_power_enable_ = value; }
+    inline void set_mev_power_enable(const bool&& value) { mev_power_enable_ = value; }
+    inline bool& mutable_mev_power_enable() { return mev_power_enable_.get(); }
+    inline const bool& get_mev_power_enable() const { return mev_power_enable_.get(); }
+    inline bool mev_power_enable() const { return mev_power_enable_.get(); }
+
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
     {
@@ -831,6 +844,11 @@ class CombustionControlStatus final: public ::EmbeddedProto::MessageInterface
       if((false != drain_open_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
         return_value = drain_open_.serialize_with_id(static_cast<uint32_t>(FieldNumber::DRAIN_OPEN), buffer, false);
+      }
+
+      if((false != mev_power_enable_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = mev_power_enable_.serialize_with_id(static_cast<uint32_t>(FieldNumber::MEV_POWER_ENABLE), buffer, false);
       }
 
       return return_value;
@@ -859,6 +877,10 @@ class CombustionControlStatus final: public ::EmbeddedProto::MessageInterface
 
           case FieldNumber::DRAIN_OPEN:
             return_value = drain_open_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case FieldNumber::MEV_POWER_ENABLE:
+            return_value = mev_power_enable_.deserialize_check_type(buffer, wire_type);
             break;
 
           case FieldNumber::NOT_SET:
@@ -893,6 +915,7 @@ class CombustionControlStatus final: public ::EmbeddedProto::MessageInterface
       clear_main_engine_valve_open();
       clear_vent_open();
       clear_drain_open();
+      clear_mev_power_enable();
 
     }
 
@@ -909,6 +932,9 @@ class CombustionControlStatus final: public ::EmbeddedProto::MessageInterface
           break;
         case FieldNumber::DRAIN_OPEN:
           name = DRAIN_OPEN_NAME;
+          break;
+        case FieldNumber::MEV_POWER_ENABLE:
+          name = MEV_POWER_ENABLE_NAME;
           break;
         default:
           name = "Invalid FieldNumber";
@@ -973,6 +999,7 @@ class CombustionControlStatus final: public ::EmbeddedProto::MessageInterface
       left_chars = main_engine_valve_open_.to_string(left_chars, indent_level + 2, MAIN_ENGINE_VALVE_OPEN_NAME, true);
       left_chars = vent_open_.to_string(left_chars, indent_level + 2, VENT_OPEN_NAME, false);
       left_chars = drain_open_.to_string(left_chars, indent_level + 2, DRAIN_OPEN_NAME, false);
+      left_chars = mev_power_enable_.to_string(left_chars, indent_level + 2, MEV_POWER_ENABLE_NAME, false);
   
       if( 0 == indent_level) 
       {
@@ -1000,6 +1027,7 @@ class CombustionControlStatus final: public ::EmbeddedProto::MessageInterface
       EmbeddedProto::boolean main_engine_valve_open_ = false;
       EmbeddedProto::boolean vent_open_ = false;
       EmbeddedProto::boolean drain_open_ = false;
+      EmbeddedProto::boolean mev_power_enable_ = false;
 
 };
 
