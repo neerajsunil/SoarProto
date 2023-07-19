@@ -790,7 +790,10 @@ class SystemControl final: public ::EmbeddedProto::MessageInterface
       SYS_FLASH_ERASE = 2,
       SYS_LOG_PERIOD_CHANGE = 3,
       HEARTBEAT_ENABLE = 4,
-      HEARTBEAT_DISABLE = 5
+      HEARTBEAT_DISABLE = 5,
+      SYS_FLASH_LOG_ENABLE = 6,
+      SYS_FLASH_LOG_DISABLE = 7,
+      SYS_CRITICAL_FLASH_FULL_ERASE = 8
     };
 
     enum class FieldNumber : uint32_t

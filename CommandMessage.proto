@@ -140,12 +140,16 @@ message RCUCommand {
         RCU_CLOSE_AC1 = 4;  // Unused
         RCU_OPEN_AC2 = 5;   // Unused
         RCU_CLOSE_AC2 = 6;  // Unused
+
+        // RCU Valve Controls
         RCU_OPEN_PBV1 = 7; 
         RCU_CLOSE_PBV1 = 8;
         RCU_OPEN_PBV2 = 9;
         RCU_CLOSE_PBV2 = 10;
         RCU_OPEN_PBV3 = 11;
         RCU_CLOSE_PBV3 = 12;
+
+        // RCU Solenoid Controls
         RCU_OPEN_SOL1 = 13;
         RCU_CLOSE_SOL1 = 14;
         RCU_OPEN_SOL2 = 15;
@@ -165,16 +169,19 @@ message RCUCommand {
         RCU_OPEN_SOL8B = 29;
         RCU_CLOSE_SOL8B = 30;
 
-        RCU_IGNITE_PAD_BOX1 = 31; //may be unused
-        RCU_IGNITE_PAD_BOX2 = 32;
-
+        // RCU LOAD CELL Control
         RCU_TARE_NOS1_LOAD_CELL = 33;
         RCU_TARE_NOS2_LOAD_CELL = 34;
-
         RCU_CALIBRATE_NOS1_LOAD_CELL = 35;
         RCU_CALIBRATE_NOS2_LOAD_CELL = 36;
 
-        RCU_LAST = 37;
+        // RCU PAD BOX Control
+        RCU_IGNITE_PAD_BOX1 = 31;
+        RCU_IGNITE_PAD_BOX2 = 32;
+        RCU_KILL_PAD_BOX1 = 37;
+        RCU_KILL_PAD_BOX2 = 38;
+
+        RCU_LAST = 39;
     }
     
     Command command_enum = 1;

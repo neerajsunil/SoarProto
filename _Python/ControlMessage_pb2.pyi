@@ -64,7 +64,10 @@ class SystemControl(_message.Message):
     HEARTBEAT_DISABLE: SystemControl.Command
     HEARTBEAT_ENABLE: SystemControl.Command
     SYS_CMD_FIELD_NUMBER: _ClassVar[int]
+    SYS_CRITICAL_FLASH_FULL_ERASE: SystemControl.Command
     SYS_FLASH_ERASE: SystemControl.Command
+    SYS_FLASH_LOG_DISABLE: SystemControl.Command
+    SYS_FLASH_LOG_ENABLE: SystemControl.Command
     SYS_INVALID: SystemControl.Command
     SYS_LOG_PERIOD_CHANGE: SystemControl.Command
     SYS_RESET: SystemControl.Command
