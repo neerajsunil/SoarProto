@@ -150,12 +150,16 @@ class PBBTemp(_message.Message):
     def __init__(self, ib_temperature: _Optional[int] = ..., pv_temperature: _Optional[int] = ...) -> None: ...
 
 class PadBoxStatus(_message.Message):
-    __slots__ = ["cont1", "cont2"]
+    __slots__ = ["box1_on", "box2_on", "cont1", "cont2"]
+    BOX1_ON_FIELD_NUMBER: _ClassVar[int]
+    BOX2_ON_FIELD_NUMBER: _ClassVar[int]
     CONT1_FIELD_NUMBER: _ClassVar[int]
     CONT2_FIELD_NUMBER: _ClassVar[int]
+    box1_on: bool
+    box2_on: bool
     cont1: bool
     cont2: bool
-    def __init__(self, cont1: bool = ..., cont2: bool = ...) -> None: ...
+    def __init__(self, cont1: bool = ..., cont2: bool = ..., box1_on: bool = ..., box2_on: bool = ...) -> None: ...
 
 class RCUPressure(_message.Message):
     __slots__ = ["pt1_pressure", "pt2_pressure", "pt3_pressure", "pt4_pressure"]
