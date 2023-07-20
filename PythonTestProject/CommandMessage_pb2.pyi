@@ -95,6 +95,8 @@ class RCUCommand(_message.Message):
     RCU_CLOSE_SOL8B: RCUCommand.Command
     RCU_IGNITE_PAD_BOX1: RCUCommand.Command
     RCU_IGNITE_PAD_BOX2: RCUCommand.Command
+    RCU_KILL_PAD_BOX1: RCUCommand.Command
+    RCU_KILL_PAD_BOX2: RCUCommand.Command
     RCU_LAST: RCUCommand.Command
     RCU_NONE: RCUCommand.Command
     RCU_OPEN_AC1: RCUCommand.Command

@@ -61,8 +61,13 @@ class SystemControl(_message.Message):
     class Command(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
         __slots__ = []
     CMD_PARAM_FIELD_NUMBER: _ClassVar[int]
+    HEARTBEAT_DISABLE: SystemControl.Command
+    HEARTBEAT_ENABLE: SystemControl.Command
     SYS_CMD_FIELD_NUMBER: _ClassVar[int]
+    SYS_CRITICAL_FLASH_FULL_ERASE: SystemControl.Command
     SYS_FLASH_ERASE: SystemControl.Command
+    SYS_FLASH_LOG_DISABLE: SystemControl.Command
+    SYS_FLASH_LOG_ENABLE: SystemControl.Command
     SYS_INVALID: SystemControl.Command
     SYS_LOG_PERIOD_CHANGE: SystemControl.Command
     SYS_RESET: SystemControl.Command
@@ -77,6 +82,8 @@ class SystemState(_message.Message):
     ROCKET_STATE_FIELD_NUMBER: _ClassVar[int]
     SYS_ASSERT_FAILURE_RESET: SystemState.State
     SYS_BOOTUP_COMPLETE: SystemState.State
+    SYS_HEARTBEAT_LOSS_HALF_WARNING: SystemState.State
+    SYS_HEARTBEAT_LOST_ABORTING: SystemState.State
     SYS_INVALID: SystemState.State
     SYS_NORMAL_OPERATION: SystemState.State
     SYS_STATE_FIELD_NUMBER: _ClassVar[int]

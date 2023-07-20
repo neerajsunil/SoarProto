@@ -112,6 +112,9 @@ message PBBTemp {
 message CombustionControlStatus {
     bool vent_open = 2;
     bool drain_open = 3;
+
+    // SoarProto v1.3.2
+    bool mev_power_enable = 4;
 }
 
 message MEVState {
@@ -158,6 +161,9 @@ message RelayStatus {
 message PadBoxStatus {
     bool cont1 = 1;  // continuity state 1
     bool cont2 = 2;  // continuity state 2
+
+    bool box1_on = 3; // box 1 gpio state - may be unused
+    bool box2_on = 4; // box 2 gpio state - may be unused
 }
 
 /* SOB Messages ---------------------------------------------------------------- */

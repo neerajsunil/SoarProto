@@ -788,7 +788,12 @@ class SystemControl final: public ::EmbeddedProto::MessageInterface
       SYS_INVALID = 0,
       SYS_RESET = 1,
       SYS_FLASH_ERASE = 2,
-      SYS_LOG_PERIOD_CHANGE = 3
+      SYS_LOG_PERIOD_CHANGE = 3,
+      HEARTBEAT_ENABLE = 4,
+      HEARTBEAT_DISABLE = 5,
+      SYS_FLASH_LOG_ENABLE = 6,
+      SYS_FLASH_LOG_DISABLE = 7,
+      SYS_CRITICAL_FLASH_FULL_ERASE = 8
     };
 
     enum class FieldNumber : uint32_t
@@ -1042,7 +1047,9 @@ class SystemState final: public ::EmbeddedProto::MessageInterface
       SYS_BOOTUP_COMPLETE = 1,
       SYS_ASSERT_FAILURE_RESET = 2,
       SYS_UNCAUGHT_RESET = 3,
-      SYS_NORMAL_OPERATION = 4
+      SYS_NORMAL_OPERATION = 4,
+      SYS_HEARTBEAT_LOSS_HALF_WARNING = 5,
+      SYS_HEARTBEAT_LOST_ABORTING = 6
     };
 
     enum class FieldNumber : uint32_t

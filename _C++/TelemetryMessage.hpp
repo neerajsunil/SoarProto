@@ -753,12 +753,14 @@ class CombustionControlStatus final: public ::EmbeddedProto::MessageInterface
     {
       set_vent_open(rhs.get_vent_open());
       set_drain_open(rhs.get_drain_open());
+      set_mev_power_enable(rhs.get_mev_power_enable());
     }
 
     CombustionControlStatus(const CombustionControlStatus&& rhs ) noexcept
     {
       set_vent_open(rhs.get_vent_open());
       set_drain_open(rhs.get_drain_open());
+      set_mev_power_enable(rhs.get_mev_power_enable());
     }
 
     ~CombustionControlStatus() override = default;
@@ -767,13 +769,15 @@ class CombustionControlStatus final: public ::EmbeddedProto::MessageInterface
     {
       NOT_SET = 0,
       VENT_OPEN = 2,
-      DRAIN_OPEN = 3
+      DRAIN_OPEN = 3,
+      MEV_POWER_ENABLE = 4
     };
 
     CombustionControlStatus& operator=(const CombustionControlStatus& rhs)
     {
       set_vent_open(rhs.get_vent_open());
       set_drain_open(rhs.get_drain_open());
+      set_mev_power_enable(rhs.get_mev_power_enable());
       return *this;
     }
 
@@ -781,6 +785,7 @@ class CombustionControlStatus final: public ::EmbeddedProto::MessageInterface
     {
       set_vent_open(rhs.get_vent_open());
       set_drain_open(rhs.get_drain_open());
+      set_mev_power_enable(rhs.get_mev_power_enable());
       return *this;
     }
 
@@ -800,6 +805,14 @@ class CombustionControlStatus final: public ::EmbeddedProto::MessageInterface
     inline const bool& get_drain_open() const { return drain_open_.get(); }
     inline bool drain_open() const { return drain_open_.get(); }
 
+    static constexpr char const* MEV_POWER_ENABLE_NAME = "mev_power_enable";
+    inline void clear_mev_power_enable() { mev_power_enable_.clear(); }
+    inline void set_mev_power_enable(const bool& value) { mev_power_enable_ = value; }
+    inline void set_mev_power_enable(const bool&& value) { mev_power_enable_ = value; }
+    inline bool& mutable_mev_power_enable() { return mev_power_enable_.get(); }
+    inline const bool& get_mev_power_enable() const { return mev_power_enable_.get(); }
+    inline bool mev_power_enable() const { return mev_power_enable_.get(); }
+
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
     {
@@ -813,6 +826,11 @@ class CombustionControlStatus final: public ::EmbeddedProto::MessageInterface
       if((false != drain_open_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
         return_value = drain_open_.serialize_with_id(static_cast<uint32_t>(FieldNumber::DRAIN_OPEN), buffer, false);
+      }
+
+      if((false != mev_power_enable_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = mev_power_enable_.serialize_with_id(static_cast<uint32_t>(FieldNumber::MEV_POWER_ENABLE), buffer, false);
       }
 
       return return_value;
@@ -837,6 +855,10 @@ class CombustionControlStatus final: public ::EmbeddedProto::MessageInterface
 
           case FieldNumber::DRAIN_OPEN:
             return_value = drain_open_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case FieldNumber::MEV_POWER_ENABLE:
+            return_value = mev_power_enable_.deserialize_check_type(buffer, wire_type);
             break;
 
           case FieldNumber::NOT_SET:
@@ -870,6 +892,7 @@ class CombustionControlStatus final: public ::EmbeddedProto::MessageInterface
     {
       clear_vent_open();
       clear_drain_open();
+      clear_mev_power_enable();
 
     }
 
@@ -883,6 +906,9 @@ class CombustionControlStatus final: public ::EmbeddedProto::MessageInterface
           break;
         case FieldNumber::DRAIN_OPEN:
           name = DRAIN_OPEN_NAME;
+          break;
+        case FieldNumber::MEV_POWER_ENABLE:
+          name = MEV_POWER_ENABLE_NAME;
           break;
         default:
           name = "Invalid FieldNumber";
@@ -946,6 +972,7 @@ class CombustionControlStatus final: public ::EmbeddedProto::MessageInterface
 
       left_chars = vent_open_.to_string(left_chars, indent_level + 2, VENT_OPEN_NAME, true);
       left_chars = drain_open_.to_string(left_chars, indent_level + 2, DRAIN_OPEN_NAME, false);
+      left_chars = mev_power_enable_.to_string(left_chars, indent_level + 2, MEV_POWER_ENABLE_NAME, false);
   
       if( 0 == indent_level) 
       {
@@ -972,6 +999,7 @@ class CombustionControlStatus final: public ::EmbeddedProto::MessageInterface
 
       EmbeddedProto::boolean vent_open_ = false;
       EmbeddedProto::boolean drain_open_ = false;
+      EmbeddedProto::boolean mev_power_enable_ = false;
 
 };
 
@@ -3395,12 +3423,16 @@ class PadBoxStatus final: public ::EmbeddedProto::MessageInterface
     {
       set_cont1(rhs.get_cont1());
       set_cont2(rhs.get_cont2());
+      set_box1_on(rhs.get_box1_on());
+      set_box2_on(rhs.get_box2_on());
     }
 
     PadBoxStatus(const PadBoxStatus&& rhs ) noexcept
     {
       set_cont1(rhs.get_cont1());
       set_cont2(rhs.get_cont2());
+      set_box1_on(rhs.get_box1_on());
+      set_box2_on(rhs.get_box2_on());
     }
 
     ~PadBoxStatus() override = default;
@@ -3409,13 +3441,17 @@ class PadBoxStatus final: public ::EmbeddedProto::MessageInterface
     {
       NOT_SET = 0,
       CONT1 = 1,
-      CONT2 = 2
+      CONT2 = 2,
+      BOX1_ON = 3,
+      BOX2_ON = 4
     };
 
     PadBoxStatus& operator=(const PadBoxStatus& rhs)
     {
       set_cont1(rhs.get_cont1());
       set_cont2(rhs.get_cont2());
+      set_box1_on(rhs.get_box1_on());
+      set_box2_on(rhs.get_box2_on());
       return *this;
     }
 
@@ -3423,6 +3459,8 @@ class PadBoxStatus final: public ::EmbeddedProto::MessageInterface
     {
       set_cont1(rhs.get_cont1());
       set_cont2(rhs.get_cont2());
+      set_box1_on(rhs.get_box1_on());
+      set_box2_on(rhs.get_box2_on());
       return *this;
     }
 
@@ -3442,6 +3480,22 @@ class PadBoxStatus final: public ::EmbeddedProto::MessageInterface
     inline const bool& get_cont2() const { return cont2_.get(); }
     inline bool cont2() const { return cont2_.get(); }
 
+    static constexpr char const* BOX1_ON_NAME = "box1_on";
+    inline void clear_box1_on() { box1_on_.clear(); }
+    inline void set_box1_on(const bool& value) { box1_on_ = value; }
+    inline void set_box1_on(const bool&& value) { box1_on_ = value; }
+    inline bool& mutable_box1_on() { return box1_on_.get(); }
+    inline const bool& get_box1_on() const { return box1_on_.get(); }
+    inline bool box1_on() const { return box1_on_.get(); }
+
+    static constexpr char const* BOX2_ON_NAME = "box2_on";
+    inline void clear_box2_on() { box2_on_.clear(); }
+    inline void set_box2_on(const bool& value) { box2_on_ = value; }
+    inline void set_box2_on(const bool&& value) { box2_on_ = value; }
+    inline bool& mutable_box2_on() { return box2_on_.get(); }
+    inline const bool& get_box2_on() const { return box2_on_.get(); }
+    inline bool box2_on() const { return box2_on_.get(); }
+
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
     {
@@ -3455,6 +3509,16 @@ class PadBoxStatus final: public ::EmbeddedProto::MessageInterface
       if((false != cont2_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
         return_value = cont2_.serialize_with_id(static_cast<uint32_t>(FieldNumber::CONT2), buffer, false);
+      }
+
+      if((false != box1_on_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = box1_on_.serialize_with_id(static_cast<uint32_t>(FieldNumber::BOX1_ON), buffer, false);
+      }
+
+      if((false != box2_on_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = box2_on_.serialize_with_id(static_cast<uint32_t>(FieldNumber::BOX2_ON), buffer, false);
       }
 
       return return_value;
@@ -3479,6 +3543,14 @@ class PadBoxStatus final: public ::EmbeddedProto::MessageInterface
 
           case FieldNumber::CONT2:
             return_value = cont2_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case FieldNumber::BOX1_ON:
+            return_value = box1_on_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case FieldNumber::BOX2_ON:
+            return_value = box2_on_.deserialize_check_type(buffer, wire_type);
             break;
 
           case FieldNumber::NOT_SET:
@@ -3512,6 +3584,8 @@ class PadBoxStatus final: public ::EmbeddedProto::MessageInterface
     {
       clear_cont1();
       clear_cont2();
+      clear_box1_on();
+      clear_box2_on();
 
     }
 
@@ -3525,6 +3599,12 @@ class PadBoxStatus final: public ::EmbeddedProto::MessageInterface
           break;
         case FieldNumber::CONT2:
           name = CONT2_NAME;
+          break;
+        case FieldNumber::BOX1_ON:
+          name = BOX1_ON_NAME;
+          break;
+        case FieldNumber::BOX2_ON:
+          name = BOX2_ON_NAME;
           break;
         default:
           name = "Invalid FieldNumber";
@@ -3588,6 +3668,8 @@ class PadBoxStatus final: public ::EmbeddedProto::MessageInterface
 
       left_chars = cont1_.to_string(left_chars, indent_level + 2, CONT1_NAME, true);
       left_chars = cont2_.to_string(left_chars, indent_level + 2, CONT2_NAME, false);
+      left_chars = box1_on_.to_string(left_chars, indent_level + 2, BOX1_ON_NAME, false);
+      left_chars = box2_on_.to_string(left_chars, indent_level + 2, BOX2_ON_NAME, false);
   
       if( 0 == indent_level) 
       {
@@ -3614,6 +3696,8 @@ class PadBoxStatus final: public ::EmbeddedProto::MessageInterface
 
       EmbeddedProto::boolean cont1_ = false;
       EmbeddedProto::boolean cont2_ = false;
+      EmbeddedProto::boolean box1_on_ = false;
+      EmbeddedProto::boolean box2_on_ = false;
 
 };
 
