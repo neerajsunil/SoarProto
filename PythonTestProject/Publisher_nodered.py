@@ -123,7 +123,7 @@ class TELE_RCU:
 	        "nos2_mass": str(nos2_mass),
 			"nos1_hold": nos1_hold_str,
 			"nos2_hold": nos2_hold_str
-	    }
+		    }
 	
 	def tele_relay_status(self, ac1_open, ac2_open, pbv1_open, pbv2_open, pbv3_open, sol1_open, sol2_open, sol3_open, sol4_open, sol5_open, sol6_open, sol7_open, sol8a_open, sol8b_open):
 	    return {
@@ -142,10 +142,12 @@ class TELE_RCU:
 			"sol8b_open": sol8b_open
 	    }
 
-	def tele_padbox_status(self, cont1, cont2):
+	def tele_padbox_status(self, cont1, cont2, box1_on, box2_on):
 		return {
 			"cont1": cont1,
-			"cont2": cont2
+			"cont2": cont2,
+			"box1_on": box1_on,
+			"box2_on": box2_on
 		}
 
 class TELE_SOB:

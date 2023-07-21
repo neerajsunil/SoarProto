@@ -91,6 +91,8 @@ STRING_TO_RCU_PROTO_COMMAND = {
     "RCU_CLOSE_SOL8B": ProtoCmd.RCUCommand.RCU_CLOSE_SOL8B,
     "RCU_IGNITE_PAD_BOX1": ProtoCmd.RCUCommand.RCU_IGNITE_PAD_BOX1,
     "RCU_IGNITE_PAD_BOX2": ProtoCmd.RCUCommand.RCU_IGNITE_PAD_BOX2,
+    "RCU_KILL_PAD_BOX1": ProtoCmd.RCUCommand.RCU_KILL_PAD_BOX1,
+    "RCU_KILL_PAD_BOX2": ProtoCmd.RCUCommand.RCU_KILL_PAD_BOX2,
     "RCU_LAST": ProtoCmd.RCUCommand.RCU_LAST
 }
 
@@ -187,7 +189,7 @@ def relay_parse_json_send(msg):
     client.publish("TELE_RCU_RELAY", rcu_jsonStr_relay_status)
 
 def padbox_parse_json_send(msg):
-    rcu_jsonStr_padbox_status = json.dumps(pbnd.tele_rcu_obj.tele_padbox_status(msg.padbox.cont1, msg.padbox.cont2))
+    rcu_jsonStr_padbox_status = json.dumps(pbnd.tele_rcu_obj.tele_padbox_status(msg.padbox.cont1, msg.padbox.cont2, msg.padbox.box1_on, msg.padbox.box2_on))
     client.publish("TELE_RCU_PADBOX", rcu_jsonStr_padbox_status)
 
 def lr_parse_json_send(msg):
