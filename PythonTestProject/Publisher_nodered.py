@@ -11,15 +11,18 @@ import CoreProto_pb2 as Core
 class TELE_DMB:
 	def tele_gps(self, lat_minutes, lat_degrees, long_minutes, long_degrees, antenna_alt, antenna_unit, geoid_altitude, geoid_unit, total_altitude, total_unit, time):
 	    return {
-	        "latitude": str(lat_minutes) + "." + str(lat_degrees),
-	        "longitude": str(long_minutes) + "." + str(long_degrees),
-			"ant_altitude": str(antenna_alt),
-			"ant_unit": str(antenna_unit),
-			"geoid_altitude": str(geoid_altitude),
-			"geoid_unit": str(geoid_unit),
+	        "lat": str(lat_minutes) + "." + str(lat_degrees),
+	        "lon": str(long_minutes) + "." + str(long_degrees),
+		"ant_altitude": str(antenna_alt),
+		"ant_unit": str(antenna_unit),
+		"geoid_altitude": str(geoid_altitude),
+		"geoid_unit": str(geoid_unit),
 	        "total_altitude": str(total_altitude),
-			"total_unit": str(total_unit),
-			"time": str(time)
+		"total_unit": str(total_unit),
+		"time": str(time),
+		"name": "Ouroboros",
+		"icon": "rocket",
+		"color": "#000"
 	    }
 	
 	def tele_baro(self, baro_pressure, baro_temp):
@@ -65,11 +68,10 @@ class TELE_PBB:
 	        "pv_temperature": str(pv_temperature)
 	    }
 	
-	def tele_gpio_status(self, main_engine_valve_open, vent_open, drain_open):
+	def tele_gpio_status(self, vent_open, drain_open):
 	    return {
-	        "mev_open": main_engine_valve_open,
-			"vent_open": vent_open,
-			"drain_open": drain_open
+		"vent_open": vent_open,
+		"drain_open": drain_open
 	    }
 	
 	def tele_mevstate(self, mev_open):
@@ -125,8 +127,7 @@ class TELE_RCU:
 	
 	def tele_relay_status(self, ac1_open, ac2_open, pbv1_open, pbv2_open, pbv3_open, sol1_open, sol2_open, sol3_open, sol4_open, sol5_open, sol6_open, sol7_open, sol8a_open, sol8b_open):
 	    return {
-	        "ac1_open": ac1_open,
-	        "ac2_open": ac2_open,
+	        "ac_shed_open": ac1_open,
 	        "pbv1_open": pbv1_open,
 	        "pbv2_open": pbv2_open,
 	        "pbv3_open": pbv3_open,

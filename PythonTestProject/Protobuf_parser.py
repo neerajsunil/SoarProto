@@ -62,8 +62,8 @@ STRING_TO_RCU_PROTO_COMMAND = {
     "RCU_TARE_NOS2_LOAD_CELL": ProtoCmd.RCUCommand.RCU_TARE_NOS2_LOAD_CELL,
     "RCU_CAL_NOS1_LOAD_CELL": ProtoCmd.RCUCommand.RCU_CALIBRATE_NOS1_LOAD_CELL,
     "RCU_CAL_NOS2_LOAD_CELL": ProtoCmd.RCUCommand.RCU_CALIBRATE_NOS2_LOAD_CELL,
-	"RCU_OPEN_AC1": ProtoCmd.RCUCommand.RCU_OPEN_AC1,
-    "RCU_CLOSE_AC1": ProtoCmd.RCUCommand.RCU_CLOSE_AC1,
+	"RCU_OPEN_AC1": ProtoCmd.RCUCommand.RCU_OPEN_AC1,     # sged ac
+    "RCU_CLOSE_AC1": ProtoCmd.RCUCommand.RCU_CLOSE_AC1,   # shed ac
 	"RCU_OPEN_AC2": ProtoCmd.RCUCommand.RCU_OPEN_AC2,
     "RCU_CLOSE_AC2": ProtoCmd.RCUCommand.RCU_CLOSE_AC2,
     "RCU_OPEN_PBV1": ProtoCmd.RCUCommand.RCU_OPEN_PBV1,
@@ -160,7 +160,7 @@ def temppbb_parse_json_send(msg):
     client.publish("TELE_PBB_TEMP", pbb_jsonStr_temperature)
 
 def gpio_parse_json_send(msg):
-    pbb_jsonStr_gpio_status = json.dumps(pbnd.tele_pbb_obj.tele_gpio_status(msg.gpio.main_engine_valve_open, msg.gpio.vent_open, msg.gpio.drain_open))
+    pbb_jsonStr_gpio_status = json.dumps(pbnd.tele_pbb_obj.tele_gpio_status(msg.gpio.vent_open, msg.gpio.drain_open))
     client.publish("TELE_PBB_GPIO", pbb_jsonStr_gpio_status)
 
 def mevstate_parse_json_send(msg):

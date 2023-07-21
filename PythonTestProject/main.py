@@ -28,6 +28,7 @@ import time
 import json
 
 # Constant
+#EXAMPLE_COM_PORT = '/dev/ttyS0'
 EXAMPLE_COM_PORT = '/dev/ttyS0'
 MQTT_BROKER = '127.0.0.1'
 PASSPHRASE = '1'
@@ -103,6 +104,8 @@ def populate_command_msg(data_dictionary):
             msg.rcu_command.command_param = int(data_dictionary["passphrase"])
         msg.target = Core.NODE_RCU
         return msg
+	
+	# if rcu command is sol8a, then send also send the opposite command for the sol8b & vice versa
 
     sob_command = ProtoParse.STRING_TO_SOB_PROTO_COMMAND.get(command)
 
@@ -221,8 +224,10 @@ def process_telemetry_message(data):
 
     if received_message.target == Core.NODE_RCU:
         message_type = received_message.WhichOneof('message')
-        #print(message_type)
-        #print(received_message)
+        print('========')
+        print(message_type)
+        print(received_message)
+        print('========')
 
         if(message_type != None):
             ProtoParse.TELE_FUNCTION_DICTIONARY[message_type](received_message)
