@@ -537,13 +537,15 @@ class RCUCommand final: public ::EmbeddedProto::MessageInterface
       RCU_CLOSE_SOL8A = 28,
       RCU_OPEN_SOL8B = 29,
       RCU_CLOSE_SOL8B = 30,
-      RCU_IGNITE_PAD_BOX1 = 31,
-      RCU_IGNITE_PAD_BOX2 = 32,
       RCU_TARE_NOS1_LOAD_CELL = 33,
       RCU_TARE_NOS2_LOAD_CELL = 34,
       RCU_CALIBRATE_NOS1_LOAD_CELL = 35,
       RCU_CALIBRATE_NOS2_LOAD_CELL = 36,
-      RCU_LAST = 37
+      RCU_IGNITE_PAD_BOX1 = 31,
+      RCU_IGNITE_PAD_BOX2 = 32,
+      RCU_KILL_PAD_BOX1 = 37,
+      RCU_KILL_PAD_BOX2 = 38,
+      RCU_LAST = 39
     };
 
     enum class FieldNumber : uint32_t

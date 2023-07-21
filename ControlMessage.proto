@@ -86,12 +86,15 @@ message SystemState {
 
         // These are used to signal current operation status
         SYS_NORMAL_OPERATION = 4;       // System is in normal operation
+
+        // SoarProto v1.3.2
+        SYS_HEARTBEAT_LOSS_HALF_WARNING = 5; // The system has lost heartbeat and 1/2 of the time to abort has passed
+        SYS_HEARTBEAT_LOST_ABORTING = 6;     // The system has lost heartbeat and is aborting
     }
 
     State sys_state = 1; // The current state of the system
     optional RocketState rocket_state = 2; // If this is the DMB, this will respond with the current RocketSM State
 }
-
 
 /* System control commands may not necessarily be handled by the board */
 message SystemControl {
@@ -100,8 +103,17 @@ message SystemControl {
 
         // These are used to signal bootup and reset events
         SYS_RESET = 1;                  // Reset the system
-        SYS_FLASH_ERASE = 2;            // Erase the flash memory
+        SYS_FLASH_ERASE = 2;            // Erase the flash memory (only erases logging data)
         SYS_LOG_PERIOD_CHANGE = 3;      // Change the log period, to the provided period in seconds as cmd_param 
+
+        // SoarProto v1.3.2
+        HEARTBEAT_ENABLE = 4;           // Enable heartbeat timeout-abort
+        HEARTBEAT_DISABLE = 5;          // Disable heartbeat timeout-abort
+
+        SYS_FLASH_LOG_ENABLE = 6;             // Enable logging
+        SYS_FLASH_LOG_DISABLE = 7;            // Disable logging
+
+        SYS_CRITICAL_FLASH_FULL_ERASE = 8;    // Erase the entire flash memory (including state and log data)
     }
 
     Command sys_cmd = 1;  // The current state of the system

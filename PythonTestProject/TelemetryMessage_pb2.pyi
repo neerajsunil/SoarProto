@@ -36,12 +36,14 @@ class Battery(_message.Message):
     def __init__(self, p_source: _Optional[_Union[Battery.power_source, str]] = ..., volt: _Optional[int] = ...) -> None: ...
 
 class CombustionControlStatus(_message.Message):
-    __slots__ = ["drain_open", "vent_open"]
+    __slots__ = ["drain_open", "mev_power_enable", "vent_open"]
     DRAIN_OPEN_FIELD_NUMBER: _ClassVar[int]
+    MEV_POWER_ENABLE_FIELD_NUMBER: _ClassVar[int]
     VENT_OPEN_FIELD_NUMBER: _ClassVar[int]
     drain_open: bool
+    mev_power_enable: bool
     vent_open: bool
-    def __init__(self, vent_open: bool = ..., drain_open: bool = ...) -> None: ...
+    def __init__(self, vent_open: bool = ..., drain_open: bool = ..., mev_power_enable: bool = ...) -> None: ...
 
 class DMBPressure(_message.Message):
     __slots__ = ["upper_pv_pressure"]
@@ -148,12 +150,16 @@ class PBBTemp(_message.Message):
     def __init__(self, ib_temperature: _Optional[int] = ..., pv_temperature: _Optional[int] = ...) -> None: ...
 
 class PadBoxStatus(_message.Message):
-    __slots__ = ["cont1", "cont2"]
+    __slots__ = ["box1_on", "box2_on", "cont1", "cont2"]
+    BOX1_ON_FIELD_NUMBER: _ClassVar[int]
+    BOX2_ON_FIELD_NUMBER: _ClassVar[int]
     CONT1_FIELD_NUMBER: _ClassVar[int]
     CONT2_FIELD_NUMBER: _ClassVar[int]
+    box1_on: bool
+    box2_on: bool
     cont1: bool
     cont2: bool
-    def __init__(self, cont1: bool = ..., cont2: bool = ...) -> None: ...
+    def __init__(self, cont1: bool = ..., cont2: bool = ..., box1_on: bool = ..., box2_on: bool = ...) -> None: ...
 
 class RCUPressure(_message.Message):
     __slots__ = ["pt1_pressure", "pt2_pressure", "pt3_pressure", "pt4_pressure"]
