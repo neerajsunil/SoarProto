@@ -54,10 +54,14 @@ def handle_pi_command(data_dictionary):
         pbnd.tele_rcu_obj.is_nos1_hold_enable = True
     elif command == "NOS2_HOLD":
         pbnd.tele_rcu_obj.is_nos2_hold_enable = True
+    elif command == "NOS3_HOLD":
+        pbnd.tele_rcu_obj.is_nos3_hold_enable = True
     elif command == "NOS1_RESET":
         pbnd.tele_rcu_obj.is_nos1_hold_enable = False
     elif command == "NOS2_RESET":
         pbnd.tele_rcu_obj.is_nos2_hold_enable = False
+    elif command == "NOS3_RESET":
+        pbnd.tele_sob_obj.is_nos3_hold_enable = False
     else:
         ProtoParse.client.publish("TELE_PI_ERROR", json.dumps({"error": "Invalid Command"}))
         return False

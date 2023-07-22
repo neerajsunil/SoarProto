@@ -151,21 +151,30 @@ class TELE_RCU:
 		}
 
 class TELE_SOB:
-	def tele_lr_load_cell(self, rocket_mass):
-		return {
-		"rocket_mass": str(rocket_mass)
-		}
-	
-	def tele_temp(self, tc1_temp, tc2_temp):
-	    return {
-	        "tc1_temp": str(tc1_temp),
-	        "tc2_temp": str(tc2_temp)
-	    }
+        def __init__ (self):
+               self.is_nos3_hold_enable = False
+               self.nos3_hold_mass = 0
+        def tele_lr_load_cell(self, rocket_mass):
+               nos3_hold_str = "0"
 
-	def tele_irtemp(self, ambient_temp, object_temp):
-	    return {
-			"ambient_temp": str(ambient_temp),
-			"object_temp": str(object_temp)
+               if self.is_nos3_hold_enable is False:
+                        self.nos3_hold_mass = rocket_mass
+               else:
+                        nos3_hold_str = str(self.nos3_hold_mass)
+                        rocket_mass -= self.nos3_hold_mass
+               return {
+	        "rocket_mass": str(rocket_mass),
+                "rocket_hold": nos3_hold_str
+		}
+        def tele_temp(self, tc1_temp, tc2_temp):
+               return {
+                "tc1_temp": str(tc1_temp),
+                "tc2_temp": str(tc2_temp)
+	       }
+        def tele_irtemp(self, ambient_temp, object_temp):
+            return {
+		"ambient_temp": str(ambient_temp),
+		"object_temp": str(object_temp)
 	    }
 
 	
