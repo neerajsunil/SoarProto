@@ -162,6 +162,7 @@ class TELE_SOB:
                else:
                         nos3_hold_str = str(self.nos3_hold_mass)
                         rocket_mass -= self.nos3_hold_mass
+                        print(nos3_hold_str)
                return {
 	        "rocket_mass": str(rocket_mass),
                 "rocket_hold": nos3_hold_str

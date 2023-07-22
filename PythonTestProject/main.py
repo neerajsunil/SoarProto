@@ -55,7 +55,7 @@ def handle_pi_command(data_dictionary):
     elif command == "NOS2_HOLD":
         pbnd.tele_rcu_obj.is_nos2_hold_enable = True
     elif command == "NOS3_HOLD":
-        pbnd.tele_rcu_obj.is_nos3_hold_enable = True
+        pbnd.tele_sob_obj.is_nos3_hold_enable = True
     elif command == "NOS1_RESET":
         pbnd.tele_rcu_obj.is_nos1_hold_enable = False
     elif command == "NOS2_RESET":
@@ -224,14 +224,14 @@ def process_telemetry_message(data):
         print("cannot decode telemetry message")
         return
 
-    print(received_message)
+    #print(received_message)
 
     if received_message.target == Core.NODE_RCU:
         message_type = received_message.WhichOneof('message')
-        print('========')
-        print(message_type)
-        print(received_message)
-        print('========')
+        #print('========')
+        #print(message_type)
+        #print(received_message)
+        #print('========')
 
         if(message_type != None):
             ProtoParse.TELE_FUNCTION_DICTIONARY[message_type](received_message)
