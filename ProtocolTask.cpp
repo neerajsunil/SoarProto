@@ -158,7 +158,16 @@ void ProtocolTask::Run(void * pvParams)
  */
 bool ProtocolTask::ReceiveData()
 {
-    HAL_UART_Receive_IT((UART_HandleTypeDef*)uartHandle, &protocolRxChar, 1);
+    if(HAL_OK != HAL_UART_Receive_IT((UART_HandleTypeDef*)uartHandle, &protocolRxChar, 1)) {
+        // Error, attempt to abort the receive to force the UART back into a known state
+        HAL_UART_AbortReceive((UART_HandleTypeDef*)uartHandle);
+
+        // Attempt to Re-arm the interrupt
+        if(HAL_OK != HAL_UART_Receive_IT((UART_HandleTypeDef*)uartHandle, &protocolRxChar, 1)) {
+            // Error, we can't recover from this, we have no choice but to reset the board
+            HAL_NVIC_SystemReset();
+        }
+    }
     return true;
 }
 
