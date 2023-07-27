@@ -46,7 +46,7 @@ constexpr uint8_t PROTOCOL_OVERHEAD_BYTES = 1 + PROTOCOL_CHECKSUM_BYTES;        
 constexpr uint16_t PROTOCOL_MINIMUM_MESSAGE_LENGTH = PROTOCOL_OVERHEAD_BYTES + 1;
 
 // Error Handling
-constexpr uint8_t PROTOCOL_MAX_NUM_ERRORS_UNTIL_RESET = 5;        // Number of consecutive UART errors before a system reset is triggered
+constexpr uint8_t PROTOCOL_MAX_NUM_ERRORS_UNTIL_RESET = 50;        // Number of consecutive UART errors before a system reset is triggered
 constexpr uint16_t PROTOCOL_UART_RX_ERROR_RETRY_DELAY_MS = 1;     // Delay between UART error retries
 
 /* Class ------------------------------------------------------------------*/
