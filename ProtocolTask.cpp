@@ -43,7 +43,7 @@ constexpr uint8_t PROTOCOL_TASK_PERIOD = 100;
  * @brief Constructor, sets all member variables
  */
 ProtocolTask::ProtocolTask(Proto::Node node, UART_HandleTypeDef* huart, uint16_t uartTaskCmd) : Task(TASK_PROTOCOL_QUEUE_DEPTH_OBJS),
-	uartTaskCommand(uartTaskCmd)
+	uartTaskCommand(uartTaskCmd), numUartErrors_(0)
 {
     // Setup Buffers
     protocolRxBuffer = soar_malloc(PROTOCOL_RX_BUFFER_SZ_BYTES+1);
@@ -144,6 +144,11 @@ void ProtocolTask::Run(void * pvParams)
                 UARTTask::Inst().SendCommandReference(protoTx);
                 break;
             }
+            case EVENT_UART_INTERRUPT_ARM_ERROR: {
+                // Attempt to receive data again
+                ReceiveData();
+                break;
+            }
             default:
                 break;
             }
@@ -158,17 +163,50 @@ void ProtocolTask::Run(void * pvParams)
  */
 bool ProtocolTask::ReceiveData()
 {
-    if(HAL_OK != HAL_UART_Receive_IT((UART_HandleTypeDef*)uartHandle, &protocolRxChar, 1)) {
-        // Error, attempt to abort the receive to force the UART back into a known state
-        HAL_UART_AbortReceive((UART_HandleTypeDef*)uartHandle);
-
-        // Attempt to Re-arm the interrupt
-        if(HAL_OK != HAL_UART_Receive_IT((UART_HandleTypeDef*)uartHandle, &protocolRxChar, 1)) {
-            // Error, we can't recover from this, we have no choice but to reset the board
-            HAL_NVIC_SystemReset();
-        }
+    // If HAL_UART_Receive_IT succeeds, return true
+    if (HAL_OK == HAL_UART_Receive_IT((UART_HandleTypeDef*)uartHandle, &protocolRxChar, 1)) {
+        numUartErrors_ = 0;
+        return true;
     }
-    return true;
+
+    // If we had an error attempt to abort the receive and re-arm the interrupt
+    HAL_UART_AbortReceive((UART_HandleTypeDef*)uartHandle);
+
+    // Attempt to arm the interrupt again, if success return true
+    if (HAL_OK == HAL_UART_Receive_IT((UART_HandleTypeDef*)uartHandle, &protocolRxChar, 1)) {
+        numUartErrors_ = 0;
+        return true;
+    }
+
+    // If we've reached the full number of errors, reset the system
+    if (++numUartErrors_ >= PROTOCOL_MAX_NUM_ERRORS_UNTIL_RESET) {
+        SOAR_ASSERT(false, "UART Error Limit Reached -- Board Resetting\n");
+    }
+
+    // Delay then try again next task cycle until the error limit is reached
+    osDelay(PROTOCOL_UART_RX_ERROR_RETRY_DELAY_MS);
+    Command cm(PROTOCOL_COMMAND, EVENT_UART_INTERRUPT_ARM_ERROR);
+    qEvtQueue->Send(cm);
+
+    return false;
+}
+
+/**
+ * @brief Receive data from ISR, currently receives by arming interrupt
+ */
+bool ProtocolTask::ReceiveDataFromISR()
+{
+    // If HAL_UART_Receive_IT succeeds, return true
+    if (HAL_OK == HAL_UART_Receive_IT((UART_HandleTypeDef*)uartHandle, &protocolRxChar, 1)) {
+        numUartErrors_ = 0;
+        return true;
+    }
+
+    // We had an error arming the interrupt, handle this in the next task cycle
+    Command cm(PROTOCOL_COMMAND, EVENT_UART_INTERRUPT_ARM_ERROR);
+    qEvtQueue->SendFromISR(cm);
+
+    return false;
 }
 
 /**
@@ -263,7 +301,7 @@ void ProtocolTask::InterruptRxData()
     }
 
     //Re-arm the interrupt
-    ReceiveData();
+    ReceiveDataFromISR();
 }
 
 /**

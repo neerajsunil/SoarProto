@@ -22,7 +22,9 @@ enum PROTOCOL_TASK_COMMANDS {
     PROTOCOL_TASK_COMMAND_NONE = 0,
     EVENT_PROTOCOL_RX_COMPLETE,
     PROTOCOL_RX_DECODED_DATA,
-    PROTOCOL_TX_REQUEST_DATA
+    PROTOCOL_TX_REQUEST_DATA,
+
+    EVENT_UART_INTERRUPT_ARM_ERROR
 };
 
 /* Macros ------------------------------------------------------------------*/
@@ -42,6 +44,10 @@ constexpr uint16_t TASK_PROTOCOL_STACK_DEPTH_WORDS = 750;        // Size of the 
 constexpr uint8_t PROTOCOL_CHECKSUM_BYTES = 2;
 constexpr uint8_t PROTOCOL_OVERHEAD_BYTES = 1 + PROTOCOL_CHECKSUM_BYTES;        // Size of the protocol overhead *PRE-COBS* (message ID + 2 byte checksum)
 constexpr uint16_t PROTOCOL_MINIMUM_MESSAGE_LENGTH = PROTOCOL_OVERHEAD_BYTES + 1;
+
+// Error Handling
+constexpr uint8_t PROTOCOL_MAX_NUM_ERRORS_UNTIL_RESET = 5;        // Number of consecutive UART errors before a system reset is triggered
+constexpr uint16_t PROTOCOL_UART_RX_ERROR_RETRY_DELAY_MS = 1;     // Delay between UART error retries
 
 /* Class ------------------------------------------------------------------*/
 class ProtocolTask : public Task
@@ -72,6 +78,7 @@ protected:
     virtual void HandleProtobufTelemetryMessage(EmbeddedProto::ReadBufferFixedSize<PROTOCOL_RX_BUFFER_SZ_BYTES>& readBuffer) = 0;
 
     bool ReceiveData();
+    bool ReceiveDataFromISR();
 
     // Helper functions
     
@@ -89,6 +96,8 @@ protected:
 
 	const UART_HandleTypeDef* uartHandle;
 	const uint16_t uartTaskCommand;
+
+    uint8_t numUartErrors_;
 };
 
 #endif    // SOAR_SYSTEM_PROTOCOL_TASK_HPP_
