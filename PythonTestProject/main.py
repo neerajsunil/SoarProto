@@ -62,6 +62,15 @@ def handle_pi_command(data_dictionary):
         pbnd.tele_rcu_obj.is_nos2_hold_enable = False
     elif command == "NOS3_RESET":
         pbnd.tele_sob_obj.is_nos3_hold_enable = False
+    elif command == "HEARTBEAT":
+        msg = ProtoCtr.ControlMessage()
+        msg.source = Core.NODE_RCU
+        msg.target = Core.NODE_DMB
+        foo = ProtoCtr.Heartbeat()
+        msg.hb.CopyFrom(foo)
+        buf = msg.SerializeToString()
+        encBuf = Codec.Encode(buf, len(buf), Core.MessageID.MSG_CONTROL)
+        SER.write(encBuf)
     else:
         ProtoParse.client.publish("TELE_PI_ERROR", json.dumps({"error": "Invalid Command"}))
         return False
@@ -228,10 +237,10 @@ def process_telemetry_message(data):
 
     if received_message.target == Core.NODE_RCU:
         message_type = received_message.WhichOneof('message')
-        #print('========')
-        #print(message_type)
-        #print(received_message)
-        #print('========')
+        print('========')
+        print(message_type)
+        print(received_message)
+        print('========')
 
         if(message_type != None):
             ProtoParse.TELE_FUNCTION_DICTIONARY[message_type](received_message)
