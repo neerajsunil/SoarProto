@@ -8,6 +8,7 @@ import CommandMessage_pb2 as ProtoCmd
 import TelemetryMessage_pb2 as ProtoTele
 import CoreProto_pb2 as Core
 import Publisher_nodered as pbnd
+import TelemetryLogger as TeleLog
 
 client = mqtt.Client()
 
@@ -133,6 +134,9 @@ def coord_parse_json_send(msg):
 def baro_parse_json_send(msg):
     dmb_jsonStr_baro = json.dumps(pbnd.tele_dmb_obj.tele_baro(msg.baro.baro_pressure, msg.baro.baro_temp))
     client.publish("TELE_DMB_BARO", dmb_jsonStr_baro)
+    dataPair = {"baro_pressure": msg.baro.baro_pressure,
+		"baro_temp": msg.baro.baro_temp}
+    TeleLog.TelemetryLogger("DmbBaroValues.txt", dataPair)
 
 def imu_parse_json_send(msg):
     accel = [msg.imu.accelx, msg.imu.accely, msg.imu.accelz]
@@ -152,14 +156,22 @@ def flash_parse_json_send(msg):
 def pressdmb_parse_json_send(msg):
     dmb_jsonStr_pressure = json.dumps(pbnd.tele_dmb_obj.tele_pressure(msg.pressdmb.upper_pv_pressure))
     client.publish("TELE_DMB_PRESSURE", dmb_jsonStr_pressure)
+    dataPair = {"upper_pv_pressure": msg.pressdmb.upper_pv_pressure}
+    TeleLog.TelemetryLogger("DmbUpperPvPressure.txt", dataPair)
 
 def presspbb_parse_json_send(msg):
     pbb_jsonStr_pressure = json.dumps(pbnd.tele_pbb_obj.tele_pressure(msg.presspbb.ib_pressure, msg.presspbb.lower_pv_pressure))
     client.publish("TELE_PBB_PRESSURE", pbb_jsonStr_pressure)
+    dataPair = {"ib_pressure": msg.presspbb.ib_pressure,
+		"lower_pv_pressure": msg.presspbb.lower_pv_pressure}
+    TeleLog.TelemetryLogger("PbbPressure.txt", dataPair)
 
 def temppbb_parse_json_send(msg):
     pbb_jsonStr_temperature = json.dumps(pbnd.tele_pbb_obj.tele_temp(msg.temppbb.ib_temperature, msg.temppbb.pv_temperature))
     client.publish("TELE_PBB_TEMP", pbb_jsonStr_temperature)
+    dataPair = {"ib_temperature": msg.temppbb.ib_temperature,
+                "pv_temperature": msg.temppbb.pv_temperature}
+    TeleLog.TelemetryLogger("PbbTemperature.txt", dataPair)
 
 def gpio_parse_json_send(msg):
     pbb_jsonStr_gpio_status = json.dumps(pbnd.tele_pbb_obj.tele_gpio_status(msg.gpio.vent_open, msg.gpio.drain_open))
@@ -172,14 +184,25 @@ def mevstate_parse_json_send(msg):
 def pressrcu_parse_json_send(msg):
     rcu_jsonStr_pressure = json.dumps(pbnd.tele_rcu_obj.tele_pressure(msg.pressrcu.pt1_pressure, msg.pressrcu.pt2_pressure, msg.pressrcu.pt3_pressure, msg.pressrcu.pt4_pressure))
     client.publish("TELE_RCU_PRESSURE", rcu_jsonStr_pressure)
+    dataPair = {"pressure_pt1": msg.pressrcu.pt1_pressure,
+                "pressure_pt2": msg.pressrcu.pt2_pressure,
+            	"pressure_pt3": msg.pressrcu.pt3_pressure,
+		"pressure_pt4": msg.pressrcu.pt4_pressure }
+    TeleLog.TelemetryLogger("RcuPressure.txt", dataPair)
 
 def temprcu_parse_json_send(msg):
     rcu_jsonStr_temp = json.dumps(pbnd.tele_rcu_obj.tele_temp(msg.temprcu.tc1_temp, msg.temprcu.tc2_temp))
     client.publish("TELE_RCU_TEMP", rcu_jsonStr_temp)
+    dataPair = {"temperature_tc1": msg.temprcu.tc1_temp,
+		"temperature_tc2": msg.temprcu.tc2_temp}
+    TeleLog.TelemetryLogger("RcuTemperature.txt", dataPair)
 
 def nos_parse_json_send(msg):
     rcu_jsonStr_nos_load_cell = json.dumps(pbnd.tele_rcu_obj.tele_nos_load_cell(msg.nos.nos1_mass, msg.nos.nos2_mass))
     client.publish("TELE_RCU_NOS", rcu_jsonStr_nos_load_cell)
+    dataPair = {"nos1_mass": msg.nos.nos1_mass,
+                "nos2_mass": msg.nos.nos2_mass}
+    TeleLog.TelemetryLogger("RcuNosMass.txt", dataPair)
 
 def relay_parse_json_send(msg):
     rcu_jsonStr_relay_status = json.dumps(pbnd.tele_rcu_obj.tele_relay_status(msg.relay.ac1_open, msg.relay.ac2_open, 
@@ -195,10 +218,15 @@ def padbox_parse_json_send(msg):
 def lr_parse_json_send(msg):
     sob_jsonStr_lr_load_cell = json.dumps(pbnd.tele_sob_obj.tele_lr_load_cell(msg.lr.rocket_mass))
     client.publish("TELE_SOB_LOAD_CELL", sob_jsonStr_lr_load_cell)
+    dataPair = {"rocket_mass": msg.lr.rocket-mass}
+    TeleLog.TelemetryLogger("RcuRocketMass.txt", dataPair)
 
 def tempsob_parse_json_send(msg):
     sob_jsonStr_temp = json.dumps(pbnd.tele_sob_obj.tele_temp(msg.tempsob.tc1_temp, msg.tempsob.tc2_temp))
     client.publish("TELE_SOB_TEMP", sob_jsonStr_temp)
+    dataPair = {"Temperature_tc1": msg.tempsob.tc1_temp,
+		"Temperature_tc2": msg.tempsob.tc2_temp}
+    TeleLog.TelemetryLogger("SobTemperature.txt", dataPair)
 
 def irtemp_parse_json_send(msg):
     sob_jsonStr_irtemp = json.dumps(pbnd.tele_sob_obj.tele_temp(msg.irtemp.ambient_temp, msg.irtemp.object_temp))

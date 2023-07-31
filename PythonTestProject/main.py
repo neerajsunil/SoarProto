@@ -293,10 +293,10 @@ def process_control_message(data):
 #def process_command_message(msg):
 
 def on_serial_message(message):
-    if len(message) < 5:
+    if  len(message) < 5:
         print("Pi error message too short")
-        ProtoParse.cliprocess_control_message
-    
+        #ProtoParse.cliprocess_control_message
+
     #print("message received")
     #decode, remove 0x00 byte
     try:
