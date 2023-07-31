@@ -59,10 +59,6 @@ STRING_TO_PBB_PROTO_COMMAND = {
 
 STRING_TO_RCU_PROTO_COMMAND = {
 	"RCU_NONE": ProtoCmd.RCUCommand.RCU_NONE,
-    "RCU_TARE_NOS1_LOAD_CELL": ProtoCmd.RCUCommand.RCU_TARE_NOS1_LOAD_CELL,
-    "RCU_TARE_NOS2_LOAD_CELL": ProtoCmd.RCUCommand.RCU_TARE_NOS2_LOAD_CELL,
-    "RCU_CAL_NOS1_LOAD_CELL": ProtoCmd.RCUCommand.RCU_CALIBRATE_NOS1_LOAD_CELL,
-    "RCU_CAL_NOS2_LOAD_CELL": ProtoCmd.RCUCommand.RCU_CALIBRATE_NOS2_LOAD_CELL,
 	"RCU_OPEN_AC1": ProtoCmd.RCUCommand.RCU_OPEN_AC1,     # sged ac
     "RCU_CLOSE_AC1": ProtoCmd.RCUCommand.RCU_CLOSE_AC1,   # shed ac
 	"RCU_OPEN_AC2": ProtoCmd.RCUCommand.RCU_OPEN_AC2,
@@ -103,7 +99,46 @@ STRING_TO_SOB_PROTO_COMMAND = {
 	"SOB_FAST_SAMPLE_IR": ProtoCmd.SOBCommand.SOB_FAST_SAMPLE_IR,
 	"SOB_TARE_LOAD_CELL": ProtoCmd.SOBCommand.SOB_TARE_LOAD_CELL,
     "SOB_CALIBRATE_LOAD_CELL": ProtoCmd.SOBCommand.SOB_CALIBRATE_LOAD_CELL,
-    "SOB_LAST": ProtoCmd.SOBCommand.SOB_LAST,
+    "SOB_LAST": ProtoCmd.SOBCommand.SOB_LAST
+}
+
+STRING_TO_PI_COMMAND = {
+    "RCU_TARE_NOS1_LOAD_CELL": "TARE_NOS1",
+    "RCU_TARE_NOS2_LOAD_CELL": "TARE_NOS2",
+    "RCU_CAL_NOS1_LOAD_CELL": "CAL_NOS1",
+    "RCU_CAL_NOS2_LOAD_CELL": "CAL_NOS2",
+    "SOB_TARE_LOAD_CELL": "TARE_NOS3",
+    "SOB_CALIBRATE_LOAD_CELL": "CAL_NOS3"
+}
+
+def tare_nos1(value):
+    pbnd.tele_rcu_obj.nos1_tare = True
+
+def tare_nos2(value):
+    pbnd.tele_rcu_obj.nos2_tare = True
+
+def cal_nos1(value):
+    pbnd.tele_rcu_obj.nos1_calibrate = True
+    pbnd.tele_rcu_obj.nos1_calibration_value = value
+
+def cal_nos2(value):
+    pbnd.tele_rcu_obj.nos2_calibrate = True
+    pbnd.tele_rcu_obj.nos2_calibration_value = value
+
+def tare_nos3(value):
+    pbnd.tele_sob_obj.nos3_tare = True
+
+def cal_nos3(value):
+    pbnd.tele_sob_obj.nos3_calibrate = True
+    pbnd.tele_sob_obj.nos3_calibration_value = value
+
+STRING_TO_PI_COMMAND_FUNCTION = {
+    "TARE_NOS1": tare_nos1,
+    "TARE_NOS2": tare_nos2,
+    "CAL_NOS1": cal_nos1,
+    "CAL_NOS2": cal_nos2,
+    "TARE_NOS3": tare_nos3,
+    "CAL_NOS3": cal_nos3,
 }
 
 #TODO remove drain and vent command from allowed commands

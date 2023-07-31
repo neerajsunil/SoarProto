@@ -6,8 +6,7 @@
 # PIP PACKAGE LIST: pip install cobs; pip install pyserial; pip install protobuf
 #
 
-#todo:  dont worry about acks, but do send nacks when a message is nonsensical
-#       Check Nacks
+#todo:  add writting load cell offset and slope to file, test
 
 
 
@@ -80,7 +79,7 @@ def populate_command_msg(data_dictionary):
 
     command = data_dictionary["command"]
 
-    #create message  
+    #create message
     msg = ProtoCmd.CommandMessage()
     msg.source = Core.NODE_RCU
     msg.source_sequence_num = sequence_number
@@ -96,11 +95,11 @@ def populate_command_msg(data_dictionary):
         if command not in ProtoParse.ALLOWED_COMMANDS_FROM_STATE[current_state]:
             ProtoParse.client.publish("TELE_PI_ERROR", json.dumps({"error": "Invalid RSC Command"}))
             return False
- 
+
         msg.dmb_command.command_enum = dmb_command
         msg.target = Core.NODE_DMB
         return msg
-    
+
     pbb_command = ProtoParse.STRING_TO_PBB_PROTO_COMMAND.get(command)
 
     if pbb_command != None:
@@ -117,7 +116,7 @@ def populate_command_msg(data_dictionary):
             msg.rcu_command.command_param = int(data_dictionary["passphrase"])
         msg.target = Core.NODE_RCU
         return msg
-	
+
 	# if rcu command is sol8a, then send also send the opposite command for the sol8b & vice versa
 
     sob_command = ProtoParse.STRING_TO_SOB_PROTO_COMMAND.get(command)
@@ -129,13 +128,13 @@ def populate_command_msg(data_dictionary):
             msg.sob_command.command_param = int(data_dictionary["passphrase"])
         msg.target = Core.NODE_SOB
         return msg
-    
-    # insert handling for control message
-    # if PING_DMB
-    # if PING_PBB
-    # if PING_SOB
-    # Send received PING ACKS to TELE_PI_ERROR :)
-    
+
+    pi_command = ProtoParse.STRING_TO_PI_COMMAND.get(command)
+
+    if pi_command != None:
+        ProtoParse.STRING_TO_PI_COMMAND_FUNCTION.get(pi_command)(int(data_dictionary["passphrase"]))
+        return False
+
     ProtoParse.client.publish("TELE_PI_ERROR", json.dumps({"error": "Invalid Command"}))
     return False
 
