@@ -96,10 +96,10 @@ class TELE_RCU:
 		self.nos2_calibrate = False
 		self.nos1_calibration_value = 0
 		self.nos2_calibration_value = 0
-		self.nos1_offset_file = "rcu_nos1_offset"
-		self.nos2_offset_file = "rcu_nos2_offset"
-		self.nos1_slope_file = "rcu_nos1_slope"
-		self.nos2_slope_file = "rcu_nos2_slope"
+		self.nos1_offset_file = "rcu_nos1_offset.txt"
+		self.nos2_offset_file = "rcu_nos2_offset.txt"
+		self.nos1_slope_file = "rcu_nos1_slope.txt"
+		self.nos2_slope_file = "rcu_nos2_slope.txt"
 
 	def tele_pressure(self, pt1_pressure, pt2_pressure, pt3_pressure, pt4_pressure):
 		return {
@@ -118,19 +118,23 @@ class TELE_RCU:
 	def tele_nos_load_cell(self, nos1_value, nos2_value):
 		if self.nos1_tare:
 			self.nos1_offset = nos1_value
+			print("NOS1_TARE:" + str(self.nos1_offset))
 			self.nos1_tare = False
 		if self.nos2_tare:
 			self.nos2_offset = nos2_value
+			print("NOS2_TARE:" + str(self.nos2_offset))
 			self.nos2_tare = False
 		if self.nos1_calibrate:
 			self.nos1_slope = (nos1_value - self.nos1_offset) / self.nos1_calibration_value
+			print("NOS1_CAL:" + str(self.nos1_slope))
 			self.nos1_calibrate = False
 		if self.nos2_calibrate:
 			self.nos2_slope = (nos2_value - self.nos2_offset) / self.nos2_calibration_value
+			print("NOS2_CAL:" + str(self.nos2_slope))
 			self.nos2_calibrate = False
 
-		nos1_mass = (nos1_value - self.nos1_offset) / self.nos1_slope
-		nos2_mass = (nos2_value - self.nos2_offset) / self.nos2_slope
+		nos1_mass = int((nos1_value - self.nos1_offset) / self.nos1_slope)
+		nos2_mass = int((nos2_value - self.nos2_offset) / self.nos2_slope)
 
 
 		nos1_hold_str = "0"
