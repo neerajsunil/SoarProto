@@ -13,7 +13,8 @@
 /**
  * @brief Constructor, sets all member variables
  */
-RepeaterTask::RepeaterTask(UART_HandleTypeDef* huart, uint16_t uartTaskCmd) : Task(TASK_REPEATER_QUEUE_DEPTH_OBJS),
+RepeaterTask::RepeaterTask(UARTDriver* uartDriver, uint16_t uartTaskCmd) : Task(TASK_REPEATER_QUEUE_DEPTH_OBJS),
+    kUart_(uartDriver),
     uartTaskCommand(uartTaskCmd)
 {
     // Setup Buffers
@@ -23,9 +24,6 @@ RepeaterTask::RepeaterTask(UART_HandleTypeDef* huart, uint16_t uartTaskCmd) : Ta
     // Setup index and flags
     protocolMsgIdx = 0;
     isProtocolMsgReady = false;
-
-    // Setup the internal variables
-    uartHandle = huart;
 }
 
 /**
@@ -60,15 +58,14 @@ void RepeaterTask::Run(void* pvParams)
  */
 bool RepeaterTask::ReceiveData()
 {
-    HAL_UART_Receive_IT((UART_HandleTypeDef*)uartHandle, &protocolRxChar, 1);
-    return true;
+    return kUart_->ReceiveIT(&protocolRxChar, this);
 }
 
 /**
  * @brief Receive data to the buffer
  * @return Whether the protocolRxBuffer is ready or not
  */
-void RepeaterTask::InterruptRxData()
+void RepeaterTask::InterruptRxData(uint8_t errors)
 {
     // If we already have an unprocessed protocol message, ignore this byte
     if (!isProtocolMsgReady) {
