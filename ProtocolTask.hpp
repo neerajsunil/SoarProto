@@ -30,7 +30,6 @@ enum PROTOCOL_TASK_COMMANDS {
 
 /* Macros ------------------------------------------------------------------*/
 constexpr uint16_t PROTOCOL_RX_BUFFER_SZ_BYTES = 256;
-constexpr uint16_t DEFAULT_PROTOCOL_UART_TX_TGT = UART_TASK_COMMAND_SEND_RADIO;
 constexpr uint16_t DEFAULT_PROTOCOL_WRITE_BUFFER_SIZE = 256;
 
 constexpr uint16_t PROTOCOL_READ_BUFFER_SIZE_CONTROL_COMMAND = 128;
@@ -79,7 +78,6 @@ protected:
     virtual void HandleProtobufTelemetryMessage(EmbeddedProto::ReadBufferFixedSize<PROTOCOL_RX_BUFFER_SZ_BYTES>& readBuffer) = 0;
 
     bool ReceiveData();
-    bool ReceiveDataFromISR();
 
     // Helper functions
     

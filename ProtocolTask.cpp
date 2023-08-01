@@ -34,9 +34,6 @@ constexpr uint8_t PROTOCOL_TASK_PERIOD = 100;
 /* Prototypes ----------------------------------------------------------------*/
 
 /* HAL Callbacks ----------------------------------------------------------------*/
-//NOTE: This code MUST be added to wherever the HALRxCpltCallback is defined
-//     else if (huart->Instance == SystemHandles::UART_Protocol->Instance)
-//         <BOARD_ID>ProtocolTask::Inst().InterruptRxData();
 
 /* Functions -----------------------------------------------------------------*/
 /**
@@ -161,50 +158,6 @@ void ProtocolTask::Run(void * pvParams)
 bool ProtocolTask::ReceiveData()
 {
     return kUart_->ReceiveIT(&protocolRxChar, this);
-//    // If HAL_UART_Receive_IT succeeds, return true
-//    if (HAL_OK == HAL_UART_Receive_IT((UART_HandleTypeDef*)uartHandle, &protocolRxChar, 1)) {
-//        numUartErrors_ = 0;
-//        return true;
-//    }
-//
-//    // If we had an error attempt to abort the receive and re-arm the interrupt
-//    HAL_UART_AbortReceive((UART_HandleTypeDef*)uartHandle);
-//
-//    // Attempt to arm the interrupt again, if success return true
-//    if (HAL_OK == HAL_UART_Receive_IT((UART_HandleTypeDef*)uartHandle, &protocolRxChar, 1)) {
-//        numUartErrors_ = 0;
-//        return true;
-//    }
-//
-//    // If we've reached the full number of errors, reset the system
-//    if (++numUartErrors_ >= PROTOCOL_MAX_NUM_ERRORS_UNTIL_RESET) {
-//        SOAR_ASSERT(false, "UART Error Limit Reached -- Board Resetting\n");
-//    }
-//
-//    // Delay then try again next task cycle until the error limit is reached
-//    osDelay(PROTOCOL_UART_RX_ERROR_RETRY_DELAY_MS);
-//    Command cm(PROTOCOL_COMMAND, EVENT_UART_INTERRUPT_ARM_ERROR);
-//    qEvtQueue->Send(cm);
-//
-//    return false;
-}
-
-/**
- * @brief Receive data from ISR, currently receives by arming interrupt
- */
-bool ProtocolTask::ReceiveDataFromISR()
-{
-//    // If HAL_UART_Receive_IT succeeds, return true
-//    if (HAL_OK == HAL_UART_Receive_IT((UART_HandleTypeDef*)uartHandle, &protocolRxChar, 1)) {
-//        numUartErrors_ = 0;
-//        return true;
-//    }
-//
-//    // We had an error arming the interrupt, handle this in the next task cycle
-//    Command cm(PROTOCOL_COMMAND, EVENT_UART_INTERRUPT_ARM_ERROR);
-//    qEvtQueue->SendFromISR(cm);
-//
-    return false;
 }
 
 /**
