@@ -42,8 +42,8 @@ constexpr uint8_t PROTOCOL_TASK_PERIOD = 100;
 /**
  * @brief Constructor, sets all member variables
  */
-ProtocolTask::ProtocolTask(Proto::Node node, UART_HandleTypeDef* huart, uint16_t uartTaskCmd) : Task(TASK_PROTOCOL_QUEUE_DEPTH_OBJS),
-	uartTaskCommand(uartTaskCmd), numUartErrors_(0)
+ProtocolTask::ProtocolTask(Proto::Node node, UARTDriver* uartDriver, uint16_t uartTaskCmd) : Task(TASK_PROTOCOL_QUEUE_DEPTH_OBJS),
+	kUart_(uartDriver), uartTaskCommand(uartTaskCmd), numUartErrors_(0)
 {
     // Setup Buffers
     protocolRxBuffer = soar_malloc(PROTOCOL_RX_BUFFER_SZ_BYTES+1);
@@ -53,9 +53,6 @@ ProtocolTask::ProtocolTask(Proto::Node node, UART_HandleTypeDef* huart, uint16_t
     protocolMsgIdx = 0;
     isProtocolMsgReady = false;
     srcNode = node;
-
-    // Setup the internal variables
-    uartHandle = huart;
 }
 
 /**
@@ -163,32 +160,33 @@ void ProtocolTask::Run(void * pvParams)
  */
 bool ProtocolTask::ReceiveData()
 {
-    // If HAL_UART_Receive_IT succeeds, return true
-    if (HAL_OK == HAL_UART_Receive_IT((UART_HandleTypeDef*)uartHandle, &protocolRxChar, 1)) {
-        numUartErrors_ = 0;
-        return true;
-    }
-
-    // If we had an error attempt to abort the receive and re-arm the interrupt
-    HAL_UART_AbortReceive((UART_HandleTypeDef*)uartHandle);
-
-    // Attempt to arm the interrupt again, if success return true
-    if (HAL_OK == HAL_UART_Receive_IT((UART_HandleTypeDef*)uartHandle, &protocolRxChar, 1)) {
-        numUartErrors_ = 0;
-        return true;
-    }
-
-    // If we've reached the full number of errors, reset the system
-    if (++numUartErrors_ >= PROTOCOL_MAX_NUM_ERRORS_UNTIL_RESET) {
-        SOAR_ASSERT(false, "UART Error Limit Reached -- Board Resetting\n");
-    }
-
-    // Delay then try again next task cycle until the error limit is reached
-    osDelay(PROTOCOL_UART_RX_ERROR_RETRY_DELAY_MS);
-    Command cm(PROTOCOL_COMMAND, EVENT_UART_INTERRUPT_ARM_ERROR);
-    qEvtQueue->Send(cm);
-
-    return false;
+    return kUart_->ReceiveIT(&protocolRxChar, this);
+//    // If HAL_UART_Receive_IT succeeds, return true
+//    if (HAL_OK == HAL_UART_Receive_IT((UART_HandleTypeDef*)uartHandle, &protocolRxChar, 1)) {
+//        numUartErrors_ = 0;
+//        return true;
+//    }
+//
+//    // If we had an error attempt to abort the receive and re-arm the interrupt
+//    HAL_UART_AbortReceive((UART_HandleTypeDef*)uartHandle);
+//
+//    // Attempt to arm the interrupt again, if success return true
+//    if (HAL_OK == HAL_UART_Receive_IT((UART_HandleTypeDef*)uartHandle, &protocolRxChar, 1)) {
+//        numUartErrors_ = 0;
+//        return true;
+//    }
+//
+//    // If we've reached the full number of errors, reset the system
+//    if (++numUartErrors_ >= PROTOCOL_MAX_NUM_ERRORS_UNTIL_RESET) {
+//        SOAR_ASSERT(false, "UART Error Limit Reached -- Board Resetting\n");
+//    }
+//
+//    // Delay then try again next task cycle until the error limit is reached
+//    osDelay(PROTOCOL_UART_RX_ERROR_RETRY_DELAY_MS);
+//    Command cm(PROTOCOL_COMMAND, EVENT_UART_INTERRUPT_ARM_ERROR);
+//    qEvtQueue->Send(cm);
+//
+//    return false;
 }
 
 /**
@@ -196,16 +194,16 @@ bool ProtocolTask::ReceiveData()
  */
 bool ProtocolTask::ReceiveDataFromISR()
 {
-    // If HAL_UART_Receive_IT succeeds, return true
-    if (HAL_OK == HAL_UART_Receive_IT((UART_HandleTypeDef*)uartHandle, &protocolRxChar, 1)) {
-        numUartErrors_ = 0;
-        return true;
-    }
-
-    // We had an error arming the interrupt, handle this in the next task cycle
-    Command cm(PROTOCOL_COMMAND, EVENT_UART_INTERRUPT_ARM_ERROR);
-    qEvtQueue->SendFromISR(cm);
-
+//    // If HAL_UART_Receive_IT succeeds, return true
+//    if (HAL_OK == HAL_UART_Receive_IT((UART_HandleTypeDef*)uartHandle, &protocolRxChar, 1)) {
+//        numUartErrors_ = 0;
+//        return true;
+//    }
+//
+//    // We had an error arming the interrupt, handle this in the next task cycle
+//    Command cm(PROTOCOL_COMMAND, EVENT_UART_INTERRUPT_ARM_ERROR);
+//    qEvtQueue->SendFromISR(cm);
+//
     return false;
 }
 
@@ -268,7 +266,7 @@ void ProtocolTask::SendNACK(Proto::MessageID msgId, Proto::Node msgSource)
  * @brief Receive data to the buffer
  * @return Whether the protocolRxBuffer is ready or not
  */
-void ProtocolTask::InterruptRxData()
+void ProtocolTask::InterruptRxData(uint8_t errors)
 {
     // If we already have an unprocessed protocol message, ignore this byte
     if (!isProtocolMsgReady) {
@@ -300,8 +298,8 @@ void ProtocolTask::InterruptRxData()
         }
     }
 
-    //Re-arm the interrupt
-    ReceiveDataFromISR();
+    // Re-arm the interrupt
+    ReceiveData();
 }
 
 /**
