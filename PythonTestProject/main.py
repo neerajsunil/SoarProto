@@ -132,7 +132,7 @@ def populate_command_msg(data_dictionary):
     pi_command = ProtoParse.STRING_TO_PI_COMMAND.get(command)
 
     if pi_command != None:
-        ProtoParse.STRING_TO_PI_COMMAND_FUNCTION.get(pi_command)(int(data_dictionary["passphrase"]))
+        ProtoParse.STRING_TO_PI_COMMAND_FUNCTION.get(pi_command)(float(data_dictionary["passphrase"]))
         return False
 
     ProtoParse.client.publish("TELE_PI_ERROR", json.dumps({"error": "Invalid Command"}))
@@ -236,10 +236,10 @@ def process_telemetry_message(data):
 
     if received_message.target == Core.NODE_RCU:
         message_type = received_message.WhichOneof('message')
-        print('========')
-        print(message_type)
-        print(received_message)
-        print('========')
+        #print('========')
+        #print(message_type)
+        #print(received_message)
+        #print('========')
 
         if(message_type != None):
             ProtoParse.TELE_FUNCTION_DICTIONARY[message_type](received_message)

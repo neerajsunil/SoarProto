@@ -97,9 +97,7 @@ STRING_TO_SOB_PROTO_COMMAND = {
 	"SOB_NONE": ProtoCmd.SOBCommand.SOB_NONE,
 	"SOB_SLOW_SAMPLE_IR": ProtoCmd.SOBCommand.SOB_SLOW_SAMPLE_IR,
 	"SOB_FAST_SAMPLE_IR": ProtoCmd.SOBCommand.SOB_FAST_SAMPLE_IR,
-	"SOB_TARE_LOAD_CELL": ProtoCmd.SOBCommand.SOB_TARE_LOAD_CELL,
-    "SOB_CALIBRATE_LOAD_CELL": ProtoCmd.SOBCommand.SOB_CALIBRATE_LOAD_CELL,
-    "SOB_LAST": ProtoCmd.SOBCommand.SOB_LAST
+	"SOB_LAST": ProtoCmd.SOBCommand.SOB_LAST
 }
 
 STRING_TO_PI_COMMAND = {
@@ -253,7 +251,7 @@ def padbox_parse_json_send(msg):
 def lr_parse_json_send(msg):
     sob_jsonStr_lr_load_cell = json.dumps(pbnd.tele_sob_obj.tele_lr_load_cell(msg.lr.rocket_mass))
     client.publish("TELE_SOB_LOAD_CELL", sob_jsonStr_lr_load_cell)
-    dataPair = {"rocket_mass": msg.lr.rocket-mass}
+    dataPair = {"rocket_mass": msg.lr.rocket_mass}
     TeleLog.TelemetryLogger("RcuRocketMass.txt", dataPair)
 
 def tempsob_parse_json_send(msg):
