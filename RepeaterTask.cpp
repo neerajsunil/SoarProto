@@ -84,7 +84,7 @@ void RepeaterTask::InterruptRxData()
                 protocolRxBuffer[protocolMsgIdx++] = '\0';
                 isProtocolMsgReady = true;
 
-                // Notify the protocol task
+                // Notify the repeater task
                 Command cm(PROTOCOL_COMMAND, REPEATER_TASK_COMMANDS::EVENT_REPEATER_RX_COMPLETE);
                 bool res = qEvtQueue->SendFromISR(cm);
 
