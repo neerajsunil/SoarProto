@@ -64,7 +64,7 @@ protected:
 
 inline void RepeaterTask::SendData(uint8_t* data, uint16_t size)
 {
-    Command cm;
+    Command cm(DATA_COMMAND, uartTaskCommand);
     cm.CopyDataToCommand(data, size);
 
     // Send it to the UART task using the task's registered uartTaskCommand

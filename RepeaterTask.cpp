@@ -85,7 +85,7 @@ void RepeaterTask::InterruptRxData()
                 isProtocolMsgReady = true;
 
                 // Notify the protocol task
-                Command cm(PROTOCOL_COMMAND, EVENT_PROTOCOL_RX_COMPLETE);
+                Command cm(PROTOCOL_COMMAND, REPEATER_TASK_COMMANDS::EVENT_REPEATER_RX_COMPLETE);
                 bool res = qEvtQueue->SendFromISR(cm);
 
                 // If we failed to send the event, we should reset the buffer, that way ProtocolTask doesn't stall
