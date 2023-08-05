@@ -233,7 +233,7 @@ class TELE_SOB:
 			TeleLog.LoadCellLogger(self.nos3_decimals_file, self.nos3_decimals)
 			print("NOS3_DEC:" + str(self.nos3_decimals))
 			self.nos3_calibrate = False
-		print(self.nos3_decimals)
+		print("rocket_mass add values: " + str(rocket_value))
 		rocket_mass = round((rocket_value - self.nos3_offset) / self.nos3_slope, self.nos3_decimals)
 
 		nos3_hold_str = "0"

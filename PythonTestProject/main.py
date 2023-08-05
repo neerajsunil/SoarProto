@@ -17,6 +17,7 @@ import TelemetryMessage_pb2 as ProtoTele
 import CoreProto_pb2 as Core
 import paho.mqtt.client as mqtt
 import Protobuf_parser as ProtoParse
+import TelemetryLogger as TeleLog
 import Publisher_nodered as pbnd
 import google.protobuf.message as message
 from cobs import cobs   # pip install cobs
@@ -47,8 +48,7 @@ nos2_hold_mass = 0
 
 def handle_pi_command(data_dictionary):
     global nos1_hold_mass, nos2_hold_mass
-    command = data_dictionary["command"]
- 
+    command = data_dictionary["command"] 
     if command == "NOS1_HOLD":
         pbnd.tele_rcu_obj.is_nos1_hold_enable = True
     elif command == "NOS2_HOLD":
@@ -70,6 +70,8 @@ def handle_pi_command(data_dictionary):
         buf = msg.SerializeToString()
         encBuf = Codec.Encode(buf, len(buf), Core.MessageID.MSG_CONTROL)
         SER.write(encBuf)
+    elif command == "DELETE_TELEM_LOGS":
+        TeleLog.ClearLogs();
     else:
         ProtoParse.client.publish("TELE_PI_ERROR", json.dumps({"error": "Invalid Command"}))
         return False
@@ -228,7 +230,7 @@ def process_telemetry_message(data):
     received_message = ProtoTele.TelemetryMessage()
     try:
         received_message.ParseFromString(data)
-    except message.Decoprocess_control_messagedeError: 
+    except message.Decoprocess_control_messagedeError:
         print("cannot decode telemetry message")
         return
 

@@ -28,7 +28,10 @@ def TelemetryLogger(filename, dataPair):
 def ClearLogs():
     if os.path.exists(TelemetryLogsPath) is False:
         return
-    os.rmdir(TelemetryLogsPath)
+    if len(TelemetryLogsPath) == 0:
+        return
+    for f in os.listdir(TelemetryLogsPath):
+        os.remove(os.path.join(TelemetryLogsPath, f))
 
 def LoadCellLogger(filename, value):
     if os.path.exists(loadCellLogspath) is False:
@@ -52,7 +55,7 @@ def LoadCellLogReader(filename, default):
 
     value = logFile.read()
 
-    if value is "":
+    if value == "":
         return default
 
     logFile.close()
