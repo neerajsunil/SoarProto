@@ -37,7 +37,6 @@ PBB_SEQ_NUM = 20
 SOB_SEQ_NUM = 30
 
 # Setup serial port
-# 
 SER = serial.Serial(port=EXAMPLE_COM_PORT, baudrate=115200, bytesize=8, parity=serial.PARITY_NONE, timeout=None, stopbits=serial.STOPBITS_ONE)
 
 # Globals
@@ -112,6 +111,12 @@ def populate_command_msg(data_dictionary):
     rcu_command = ProtoParse.STRING_TO_RCU_PROTO_COMMAND.get(command)
 
     if rcu_command != None:
+        print(rcu_command)
+        if rcu_command == ProtoCmd.RCUCommand.RCU_IGNITE_PAD_BOX1 or rcu_command == ProtoCmd.RCUCommand.RCU_IGNITE_PAD_BOX2:
+            if current_state != "RS_LAUNCH" and current_state != "RS_ARM" and current_state != "RS_TEST":
+                ProtoParse.client.publish("TELE_PI_ERROR", json.dumps({"error": "Cant ignite on: " + str(current_state)}))
+                return False
+
         msg.rcu_command.command_enum = rcu_command
         if rcu_command == ProtoCmd.RCUCommand.RCU_CALIBRATE_NOS1_LOAD_CELL or rcu_command == ProtoCmd.RCUCommand.RCU_CALIBRATE_NOS2_LOAD_CELL:
             # for now, sending calibration known mass as passphrase
@@ -260,7 +265,7 @@ def process_control_message(data):
         print("cannot decode control message")
         return
 
-    print(received_message)
+    #print(received_message)
 
     if received_message.target == Core.NODE_RCU:
         message_type = received_message.WhichOneof('message')
@@ -288,8 +293,8 @@ def process_control_message(data):
             print('oh hey, we ack: ', received_message.source)
         elif message_type == 'nack':
             #add resend of message
-            print('nack received, this is bad')
-    
+            x = 0
+            #print('nack received, this is bad')
 # placeholder in case the pi ever receives a command message
 #def process_command_message(msg):
 
