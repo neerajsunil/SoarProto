@@ -1,10 +1,15 @@
 import os
 import time
 
+enable_log = False
+
 loadCellLogspath = "/home/soar/Desktop/SoarProtoLocal/PythonTestProject/LoadcellLogs"
 TelemetryLogsPath = "/home/soar/Desktop/SoarProtoLocal/PythonTestProject/TeleLogs"
 
 def TelemetryLogger(filename, dataPair):
+    if enable_log is False:
+        return
+
     if os.path.exists(TelemetryLogsPath) is False:
         os.makedirs(TelemetryLogsPath)
 

@@ -1,30 +1,31 @@
-#Publisher_nodered.py
+#Telemetry_Objects.py
 
 import os
-import time
-import json
 import paho.mqtt.client as mqtt
-import ControlMessage_pb2 as ProtoCtl
-import CommandMessage_pb2 as ProtoCmd
-import TelemetryMessage_pb2 as ProtoTele
-import CoreProto_pb2 as Core
+import lib.ControlMessage_pb2 as ProtoCtl
+import lib.CommandMessage_pb2 as ProtoCmd
+import lib.TelemetryMessage_pb2 as ProtoTele
+import lib.CoreProto_pb2 as Core
 import TelemetryLogger as TeleLog
 
 class TELE_DMB:
+	def __init__(self):
+		current_state = "RS_ABORT"
+
 	def tele_gps(self, lat_minutes, lat_degrees, long_minutes, long_degrees, antenna_alt, antenna_unit, geoid_altitude, geoid_unit, total_altitude, total_unit, time):
 	    return {
 	        "lat": str(lat_minutes) + "." + str(lat_degrees),
 	        "lon": str(long_minutes) + "." + str(long_degrees),
-		"ant_altitude": str(antenna_alt),
-		"ant_unit": str(antenna_unit),
-		"geoid_altitude": str(geoid_altitude),
-		"geoid_unit": str(geoid_unit),
+		    "ant_altitude": str(antenna_alt),
+		    "ant_unit": str(antenna_unit),
+		    "geoid_altitude": str(geoid_altitude),
+		    "geoid_unit": str(geoid_unit),
 	        "total_altitude": str(total_altitude),
-		"total_unit": str(total_unit),
-		"time": str(time),
-		"name": "Ouroboros",
-		"icon": "rocket",
-		"color": "#000"
+		    "total_unit": str(total_unit),
+		    "time": str(time),
+		    "name": "Ouroboros",
+		    "icon": "rocket",
+		    "color": "#000"
 	    }
 	
 	def tele_baro(self, baro_pressure, baro_temp):
@@ -72,8 +73,8 @@ class TELE_PBB:
 	
 	def tele_gpio_status(self, vent_open, drain_open):
 	    return {
-		"vent_open": vent_open,
-		"drain_open": drain_open
+		    "vent_open": vent_open,
+		    "drain_open": drain_open
 	    }
 	
 	def tele_mevstate(self, mev_open):
@@ -110,10 +111,10 @@ class TELE_RCU:
 
 	def tele_pressure(self, pt1_pressure, pt2_pressure, pt3_pressure, pt4_pressure):
 		return {
-		"pt1_pressure": str(pt1_pressure),
-		"pt2_pressure": str(pt2_pressure),
-		"pt3_pressure": str(pt3_pressure),
-		"pt4_pressure": str(pt4_pressure)
+		    "pt1_pressure": str(pt1_pressure),
+		    "pt2_pressure": str(pt2_pressure),
+		    "pt3_pressure": str(pt3_pressure),
+		    "pt4_pressure": str(pt4_pressure)
 		}
 
 	def tele_temp(self, tc1_temp, tc2_temp):
@@ -176,7 +177,7 @@ class TELE_RCU:
 	        "nos2_mass": str(nos2_mass),
 			"nos1_hold": nos1_hold_str,
 			"nos2_hold": nos2_hold_str
-		    }
+		}
 
 	def tele_relay_status(self, ac1_open, ac2_open, pbv1_open, pbv2_open, pbv3_open, sol1_open, sol2_open, sol3_open, sol4_open, sol5_open, sol6_open, sol7_open, sol8a_open, sol8b_open):
 	    return {
@@ -246,18 +247,18 @@ class TELE_SOB:
 			print(nos3_hold_str)
 
 		return {
-		"rocket_mass": str(rocket_mass),
-		"rocket_hold": nos3_hold_str
+		    "rocket_mass": str(rocket_mass),
+		    "rocket_hold": nos3_hold_str
 		}
 	def tele_temp(self, tc1_temp, tc2_temp):
 		return {
-		"tc1_temp": str(tc1_temp),
-		"tc2_temp": str(tc2_temp)
+		    "tc1_temp": str(tc1_temp),
+		    "tc2_temp": str(tc2_temp)
 		}
 	def tele_irtemp(self, ambient_temp, object_temp):
 		return {
-		"ambient_temp": str(ambient_temp),
-		"object_temp": str(object_temp)
+		    "ambient_temp": str(ambient_temp),
+		    "object_temp": str(object_temp)
 		}
 
 	
