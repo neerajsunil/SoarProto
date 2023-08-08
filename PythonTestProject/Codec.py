@@ -56,11 +56,11 @@ class Codec:
     def Decode(buf, length):
 
         #print(buf)
-        #print(len(buf))
+        #print(f'my buf len: {len(buf)}')
         # Decode the buffer
         decodedBuf = cobs.decode(buf)
 
-        #print(len(decodedBuf))
+        #print('my len is ' + f'{len(decodedBuf)}')
 
         # Verify the checksum (untested)
         bufChksm = decodedBuf[-2:]

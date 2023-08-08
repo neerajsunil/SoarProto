@@ -2,15 +2,16 @@
 
 import os
 import paho.mqtt.client as mqtt
-import lib.ControlMessage_pb2 as ProtoCtl
-import lib.CommandMessage_pb2 as ProtoCmd
-import lib.TelemetryMessage_pb2 as ProtoTele
-import lib.CoreProto_pb2 as Core
+import SoarLib.ControlMessage_pb2 as ProtoCtl
+import SoarLib.CommandMessage_pb2 as ProtoCmd
+import SoarLib.TelemetryMessage_pb2 as ProtoTele
+import SoarLib.CoreProto_pb2 as Core
+import Protobuf_parser as ProtoParse
 import TelemetryLogger as TeleLog
 
 class TELE_DMB:
 	def __init__(self):
-		current_state = "RS_ABORT"
+		self.current_state = "RS_ABORT"
 
 	def tele_gps(self, lat_minutes, lat_degrees, long_minutes, long_degrees, antenna_alt, antenna_unit, geoid_altitude, geoid_unit, total_altitude, total_unit, time):
 	    return {
@@ -42,8 +43,8 @@ class TELE_DMB:
 	    }
 	
 	def tele_battery(self, power_src, bat_volt):
-	    return {
-	        "power_src": str(power_src),
+		return {
+	        "power_src": str(ProtoParse.PROTOBUF_TO_POWER_SOURCE.get(power_src)),
 	        "bat_volt": str(bat_volt)
 	    }
 	
@@ -55,24 +56,24 @@ class TELE_DMB:
 
 	def tele_pressure(self, upper_pv_pressure):
 	    return {
-	        "upper_pv_pressure": str(upper_pv_pressure)
+	        "upper_pv_pressure": str(int(upper_pv_pressure/1000))
 	    }
 
 class TELE_PBB:
 	def tele_pressure(self, ib_pressure, lower_pv_pressure):
 		return {
-			"ib_pressure": str(ib_pressure),
-			"lower_pv_pressure": str(lower_pv_pressure)
+			"ib_pressure": str(int(ib_pressure/1000)),
+			"lower_pv_pressure": str(int(lower_pv_pressure/1000))
 		}
 	
 	def tele_temp(self, ib_temperature, pv_temperature):
 	    return {
-	        "ib_temperature": str(ib_temperature),
-	        "pv_temperature": str(pv_temperature)
+	        "ib_temperature": str(int(ib_temperature/100)),
+	        "pv_temperature": str(int(pv_temperature/100))
 	    }
 	
 	def tele_gpio_status(self, vent_open, drain_open):
-	    return {
+		return {
 		    "vent_open": vent_open,
 		    "drain_open": drain_open
 	    }
@@ -119,8 +120,8 @@ class TELE_RCU:
 
 	def tele_temp(self, tc1_temp, tc2_temp):
 	    return {
-	        "tc1_temp": str(tc1_temp),
-	        "tc2_temp": str(tc2_temp)
+	        "tc1_temp": str(int(tc1_temp/100)),
+	        "tc2_temp": str(int(tc2_temp/100))
 	    }
 
 	def tele_nos_load_cell(self, nos1_value, nos2_value):
@@ -252,13 +253,13 @@ class TELE_SOB:
 		}
 	def tele_temp(self, tc1_temp, tc2_temp):
 		return {
-		    "tc1_temp": str(tc1_temp),
-		    "tc2_temp": str(tc2_temp)
+		    "tc1_temp": str(int(tc1_temp/100)),
+		    "tc2_temp": str(int(tc2_temp/100))
 		}
 	def tele_irtemp(self, ambient_temp, object_temp):
 		return {
-		    "ambient_temp": str(ambient_temp),
-		    "object_temp": str(object_temp)
+		    "ambient_temp": str(int(ambient_temp/100)),
+		    "object_temp": str(int(object_temp/100))
 		}
 
 	

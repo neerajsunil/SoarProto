@@ -1,5 +1,7 @@
 import paho.mqtt.client as mqtt
 import Message_parser as MePa
+import SoarLib.CoreProto_pb2 as ProtoCore
+import Telemetry_Objects as TelO
 import json
 
 MQTT_BROKER = '127.0.0.1'
@@ -19,7 +21,7 @@ def soar_publish(topic, msg):
 def handle_pi_command(data_dictionary):
     command = data_dictionary["command"] 
     if command == "HEARTBEAT":
-        msg = MePa.send_heartbeat_msg()
+        msg = MePa.send_heartbeat_msg(ProtoCore.NODE_DMB)
     elif command == "NOS1_HOLD":
         TelO.tele_rcu_obj.is_nos1_hold_enable = True
     elif command == "NOS2_HOLD":
@@ -42,7 +44,7 @@ def handle_pi_command(data_dictionary):
 
 
 def on_mqtt_message(client, userdata, message):
-    print("----------------------------------------------------received message:\n ",str(message.payload.decode("utf-8")))
+    #print("----------------------------------------------------received message:\n ",str(message.payload.decode("utf-8")))
     data_dictionary = json.loads(message.payload.decode("utf-8"))
 
     if message.topic == "RCU/Commands":

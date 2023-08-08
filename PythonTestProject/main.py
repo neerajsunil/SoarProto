@@ -14,7 +14,7 @@ import Serial_handler as SeHan
 
 if __name__ == '__main__':
     #serial port needs to be initialized first to avoid race conditions to an uninitialized serial port
-    SeHan.init_serial_port(sys.argv[1])
+    SeHan.init_serial_port(sys.argv[1], sys.argv[2])
     EtHan.init_mqtt()
 
     while True:
