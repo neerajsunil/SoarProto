@@ -199,20 +199,20 @@ void ProtocolTask::SendData(uint8_t* data, uint16_t size, uint8_t msgId)
  */
 void ProtocolTask::SendNACK(Proto::MessageID msgId, Proto::Node msgSource)
 {
-    Proto::ControlMessage msg;
-    msg.set_source(srcNode);
-    msg.set_target(Proto::Node::NODE_RCU);
-    msg.set_message_id(Proto::MessageID::MSG_CONTROL);
-    Proto::AckNack nack;
-    nack.set_acking_msg_source(msgSource);
-    nack.set_acking_msg_id(msgId);
-    msg.set_nack(nack);
-
-    EmbeddedProto::WriteBufferFixedSize<DEFAULT_PROTOCOL_WRITE_BUFFER_SIZE> writeBuffer;
-    msg.serialize(writeBuffer);
-
-    // Send the control message
-    SendData(writeBuffer.get_data(), writeBuffer.get_size(), (uint8_t)Proto::MessageID::MSG_CONTROL);
+//    Proto::ControlMessage msg;
+//    msg.set_source(srcNode);
+//    msg.set_target(Proto::Node::NODE_RCU);
+//    msg.set_message_id(Proto::MessageID::MSG_CONTROL);
+//    Proto::AckNack nack;
+//    nack.set_acking_msg_source(msgSource);
+//    nack.set_acking_msg_id(msgId);
+//    msg.set_nack(nack);
+//
+//    EmbeddedProto::WriteBufferFixedSize<DEFAULT_PROTOCOL_WRITE_BUFFER_SIZE> writeBuffer;
+//    msg.serialize(writeBuffer);
+//
+//    // Send the control message
+//    SendData(writeBuffer.get_data(), writeBuffer.get_size(), (uint8_t)Proto::MessageID::MSG_CONTROL);
 }
 
 /**
