@@ -29,10 +29,10 @@ constexpr uint16_t TASK_REPEATER_STACK_DEPTH_WORDS = 300;        // Size of the 
 
 
 /* Class ------------------------------------------------------------------*/
-class RepeaterTask : public Task
+class RepeaterTask : public Task, public UARTReceiverBase
 {
 public:
-    RepeaterTask(UART_HandleTypeDef* huart, uint16_t uartTaskCmd);
+    RepeaterTask(UARTDriver* uartDriver, uint16_t uartTaskCmd);
 
     virtual void InitTask() = 0;
 
@@ -44,7 +44,7 @@ public:
     void SendProtobufMessage(EmbeddedProto::WriteBufferFixedSize<DEFAULT_PROTOCOL_WRITE_BUFFER_SIZE>& writeBuffer, Proto::MessageID msgId);
 
     //Functions exposed to HAL callbacks
-    void InterruptRxData();
+    void InterruptRxData(uint8_t errors);
 
 protected:
     void Run(void* pvParams);    // Main run code
@@ -58,13 +58,14 @@ protected:
 
     uint8_t protocolRxChar; // Character received from UART Interrupt
 
-    const UART_HandleTypeDef* uartHandle;
+    UARTDriver* const kUart_;
+
     const uint16_t uartTaskCommand;
 };
 
 inline void RepeaterTask::SendData(uint8_t* data, uint16_t size)
 {
-    Command cm;
+    Command cm(DATA_COMMAND, uartTaskCommand);
     cm.CopyDataToCommand(data, size);
 
     // Send it to the UART task using the task's registered uartTaskCommand

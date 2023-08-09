@@ -34,16 +34,13 @@ constexpr uint8_t PROTOCOL_TASK_PERIOD = 100;
 /* Prototypes ----------------------------------------------------------------*/
 
 /* HAL Callbacks ----------------------------------------------------------------*/
-//NOTE: This code MUST be added to wherever the HALRxCpltCallback is defined
-//     else if (huart->Instance == SystemHandles::UART_Protocol->Instance)
-//         <BOARD_ID>ProtocolTask::Inst().InterruptRxData();
 
 /* Functions -----------------------------------------------------------------*/
 /**
  * @brief Constructor, sets all member variables
  */
-ProtocolTask::ProtocolTask(Proto::Node node, UART_HandleTypeDef* huart, uint16_t uartTaskCmd) : Task(TASK_PROTOCOL_QUEUE_DEPTH_OBJS),
-	uartTaskCommand(uartTaskCmd)
+ProtocolTask::ProtocolTask(Proto::Node node, UARTDriver* uartDriver, uint16_t uartTaskCmd) : Task(TASK_PROTOCOL_QUEUE_DEPTH_OBJS),
+	kUart_(uartDriver), uartTaskCommand(uartTaskCmd), numUartErrors_(0)
 {
     // Setup Buffers
     protocolRxBuffer = soar_malloc(PROTOCOL_RX_BUFFER_SZ_BYTES+1);
@@ -53,9 +50,6 @@ ProtocolTask::ProtocolTask(Proto::Node node, UART_HandleTypeDef* huart, uint16_t
     protocolMsgIdx = 0;
     isProtocolMsgReady = false;
     srcNode = node;
-
-    // Setup the internal variables
-    uartHandle = huart;
 }
 
 /**
@@ -144,6 +138,11 @@ void ProtocolTask::Run(void * pvParams)
                 UARTTask::Inst().SendCommandReference(protoTx);
                 break;
             }
+            case EVENT_UART_INTERRUPT_ARM_ERROR: {
+                // Attempt to receive data again
+                ReceiveData();
+                break;
+            }
             default:
                 break;
             }
@@ -158,8 +157,7 @@ void ProtocolTask::Run(void * pvParams)
  */
 bool ProtocolTask::ReceiveData()
 {
-    HAL_UART_Receive_IT((UART_HandleTypeDef*)uartHandle, &protocolRxChar, 1);
-    return true;
+    return kUart_->ReceiveIT(&protocolRxChar, this);
 }
 
 /**
@@ -201,27 +199,27 @@ void ProtocolTask::SendData(uint8_t* data, uint16_t size, uint8_t msgId)
  */
 void ProtocolTask::SendNACK(Proto::MessageID msgId, Proto::Node msgSource)
 {
-    Proto::ControlMessage msg;
-    msg.set_source(srcNode);
-    msg.set_target(Proto::Node::NODE_RCU);
-    msg.set_message_id(Proto::MessageID::MSG_CONTROL);
-    Proto::AckNack nack;
-    nack.set_acking_msg_source(msgSource);
-    nack.set_acking_msg_id(msgId);
-    msg.set_nack(nack);
-
-    EmbeddedProto::WriteBufferFixedSize<DEFAULT_PROTOCOL_WRITE_BUFFER_SIZE> writeBuffer;
-    msg.serialize(writeBuffer);
-
-    // Send the control message
-    SendData(writeBuffer.get_data(), writeBuffer.get_size(), (uint8_t)Proto::MessageID::MSG_CONTROL);
+//    Proto::ControlMessage msg;
+//    msg.set_source(srcNode);
+//    msg.set_target(Proto::Node::NODE_RCU);
+//    msg.set_message_id(Proto::MessageID::MSG_CONTROL);
+//    Proto::AckNack nack;
+//    nack.set_acking_msg_source(msgSource);
+//    nack.set_acking_msg_id(msgId);
+//    msg.set_nack(nack);
+//
+//    EmbeddedProto::WriteBufferFixedSize<DEFAULT_PROTOCOL_WRITE_BUFFER_SIZE> writeBuffer;
+//    msg.serialize(writeBuffer);
+//
+//    // Send the control message
+//    SendData(writeBuffer.get_data(), writeBuffer.get_size(), (uint8_t)Proto::MessageID::MSG_CONTROL);
 }
 
 /**
  * @brief Receive data to the buffer
  * @return Whether the protocolRxBuffer is ready or not
  */
-void ProtocolTask::InterruptRxData()
+void ProtocolTask::InterruptRxData(uint8_t errors)
 {
     // If we already have an unprocessed protocol message, ignore this byte
     if (!isProtocolMsgReady) {
@@ -253,7 +251,7 @@ void ProtocolTask::InterruptRxData()
         }
     }
 
-    //Re-arm the interrupt
+    // Re-arm the interrupt
     ReceiveData();
 }
 
