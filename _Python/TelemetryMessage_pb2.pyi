@@ -266,3 +266,17 @@ class TelemetryMessage(_message.Message):
     temprcu: RCUTemp
     tempsob: SOBTemp
     def __init__(self, source: _Optional[_Union[_CoreProto_pb2.Node, str]] = ..., target: _Optional[_Union[_CoreProto_pb2.Node, str]] = ..., message_id: _Optional[int] = ..., coord: _Optional[_Union[GPS, _Mapping]] = ..., baro: _Optional[_Union[Baro, _Mapping]] = ..., imu: _Optional[_Union[IMU, _Mapping]] = ..., bat: _Optional[_Union[Battery, _Mapping]] = ..., flashInfo: _Optional[_Union[Flash, _Mapping]] = ..., pressdmb: _Optional[_Union[DMBPressure, _Mapping]] = ..., presspbb: _Optional[_Union[PBBPressure, _Mapping]] = ..., temppbb: _Optional[_Union[PBBTemp, _Mapping]] = ..., gpio: _Optional[_Union[CombustionControlStatus, _Mapping]] = ..., pressrcu: _Optional[_Union[RCUPressure, _Mapping]] = ..., temprcu: _Optional[_Union[RCUTemp, _Mapping]] = ..., nos: _Optional[_Union[NOSLoadCell, _Mapping]] = ..., relay: _Optional[_Union[RelayStatus, _Mapping]] = ..., padbox: _Optional[_Union[PadBoxStatus, _Mapping]] = ..., lr: _Optional[_Union[LRLoadCell, _Mapping]] = ..., tempsob: _Optional[_Union[SOBTemp, _Mapping]] = ..., irtemp: _Optional[_Union[IRTemperature, _Mapping]] = ..., mevstate: _Optional[_Union[MEVState, _Mapping]] = ...) -> None: ...
+
+class VanePosition(_message.Message):
+    __slots__ = ["vane_1", "vane_2", "vane_3", "vane_4", "vane_profile"]
+    VANE_1_FIELD_NUMBER: _ClassVar[int]
+    VANE_2_FIELD_NUMBER: _ClassVar[int]
+    VANE_3_FIELD_NUMBER: _ClassVar[int]
+    VANE_4_FIELD_NUMBER: _ClassVar[int]
+    VANE_PROFILE_FIELD_NUMBER: _ClassVar[int]
+    vane_1: int
+    vane_2: int
+    vane_3: int
+    vane_4: int
+    vane_profile: int
+    def __init__(self, vane_profile: _Optional[int] = ..., vane_1: _Optional[int] = ..., vane_2: _Optional[int] = ..., vane_3: _Optional[int] = ..., vane_4: _Optional[int] = ...) -> None: ...

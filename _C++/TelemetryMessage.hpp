@@ -5013,6 +5013,320 @@ class SOBTemp final: public ::EmbeddedProto::MessageInterface
 
 };
 
+class VanePosition final: public ::EmbeddedProto::MessageInterface
+{
+  public:
+    VanePosition() = default;
+    VanePosition(const VanePosition& rhs )
+    {
+      set_vane_profile(rhs.get_vane_profile());
+      set_vane_1(rhs.get_vane_1());
+      set_vane_2(rhs.get_vane_2());
+      set_vane_3(rhs.get_vane_3());
+      set_vane_4(rhs.get_vane_4());
+    }
+
+    VanePosition(const VanePosition&& rhs ) noexcept
+    {
+      set_vane_profile(rhs.get_vane_profile());
+      set_vane_1(rhs.get_vane_1());
+      set_vane_2(rhs.get_vane_2());
+      set_vane_3(rhs.get_vane_3());
+      set_vane_4(rhs.get_vane_4());
+    }
+
+    ~VanePosition() override = default;
+
+    enum class FieldNumber : uint32_t
+    {
+      NOT_SET = 0,
+      VANE_PROFILE = 1,
+      VANE_1 = 2,
+      VANE_2 = 3,
+      VANE_3 = 4,
+      VANE_4 = 5
+    };
+
+    VanePosition& operator=(const VanePosition& rhs)
+    {
+      set_vane_profile(rhs.get_vane_profile());
+      set_vane_1(rhs.get_vane_1());
+      set_vane_2(rhs.get_vane_2());
+      set_vane_3(rhs.get_vane_3());
+      set_vane_4(rhs.get_vane_4());
+      return *this;
+    }
+
+    VanePosition& operator=(const VanePosition&& rhs) noexcept
+    {
+      set_vane_profile(rhs.get_vane_profile());
+      set_vane_1(rhs.get_vane_1());
+      set_vane_2(rhs.get_vane_2());
+      set_vane_3(rhs.get_vane_3());
+      set_vane_4(rhs.get_vane_4());
+      return *this;
+    }
+
+    static constexpr char const* VANE_PROFILE_NAME = "vane_profile";
+    inline void clear_vane_profile() { vane_profile_.clear(); }
+    inline void set_vane_profile(const int32_t& value) { vane_profile_ = value; }
+    inline void set_vane_profile(const int32_t&& value) { vane_profile_ = value; }
+    inline int32_t& mutable_vane_profile() { return vane_profile_.get(); }
+    inline const int32_t& get_vane_profile() const { return vane_profile_.get(); }
+    inline int32_t vane_profile() const { return vane_profile_.get(); }
+
+    static constexpr char const* VANE_1_NAME = "vane_1";
+    inline void clear_vane_1() { vane_1_.clear(); }
+    inline void set_vane_1(const int32_t& value) { vane_1_ = value; }
+    inline void set_vane_1(const int32_t&& value) { vane_1_ = value; }
+    inline int32_t& mutable_vane_1() { return vane_1_.get(); }
+    inline const int32_t& get_vane_1() const { return vane_1_.get(); }
+    inline int32_t vane_1() const { return vane_1_.get(); }
+
+    static constexpr char const* VANE_2_NAME = "vane_2";
+    inline void clear_vane_2() { vane_2_.clear(); }
+    inline void set_vane_2(const int32_t& value) { vane_2_ = value; }
+    inline void set_vane_2(const int32_t&& value) { vane_2_ = value; }
+    inline int32_t& mutable_vane_2() { return vane_2_.get(); }
+    inline const int32_t& get_vane_2() const { return vane_2_.get(); }
+    inline int32_t vane_2() const { return vane_2_.get(); }
+
+    static constexpr char const* VANE_3_NAME = "vane_3";
+    inline void clear_vane_3() { vane_3_.clear(); }
+    inline void set_vane_3(const int32_t& value) { vane_3_ = value; }
+    inline void set_vane_3(const int32_t&& value) { vane_3_ = value; }
+    inline int32_t& mutable_vane_3() { return vane_3_.get(); }
+    inline const int32_t& get_vane_3() const { return vane_3_.get(); }
+    inline int32_t vane_3() const { return vane_3_.get(); }
+
+    static constexpr char const* VANE_4_NAME = "vane_4";
+    inline void clear_vane_4() { vane_4_.clear(); }
+    inline void set_vane_4(const int32_t& value) { vane_4_ = value; }
+    inline void set_vane_4(const int32_t&& value) { vane_4_ = value; }
+    inline int32_t& mutable_vane_4() { return vane_4_.get(); }
+    inline const int32_t& get_vane_4() const { return vane_4_.get(); }
+    inline int32_t vane_4() const { return vane_4_.get(); }
+
+
+    ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+
+      if((0 != vane_profile_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = vane_profile_.serialize_with_id(static_cast<uint32_t>(FieldNumber::VANE_PROFILE), buffer, false);
+      }
+
+      if((0 != vane_1_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = vane_1_.serialize_with_id(static_cast<uint32_t>(FieldNumber::VANE_1), buffer, false);
+      }
+
+      if((0 != vane_2_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = vane_2_.serialize_with_id(static_cast<uint32_t>(FieldNumber::VANE_2), buffer, false);
+      }
+
+      if((0 != vane_3_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = vane_3_.serialize_with_id(static_cast<uint32_t>(FieldNumber::VANE_3), buffer, false);
+      }
+
+      if((0 != vane_4_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = vane_4_.serialize_with_id(static_cast<uint32_t>(FieldNumber::VANE_4), buffer, false);
+      }
+
+      return return_value;
+    };
+
+    ::EmbeddedProto::Error deserialize(::EmbeddedProto::ReadBufferInterface& buffer) override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+      ::EmbeddedProto::WireFormatter::WireType wire_type = ::EmbeddedProto::WireFormatter::WireType::VARINT;
+      uint32_t id_number = 0;
+      FieldNumber id_tag = FieldNumber::NOT_SET;
+
+      ::EmbeddedProto::Error tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+      while((::EmbeddedProto::Error::NO_ERRORS == return_value) && (::EmbeddedProto::Error::NO_ERRORS == tag_value))
+      {
+        id_tag = static_cast<FieldNumber>(id_number);
+        switch(id_tag)
+        {
+          case FieldNumber::VANE_PROFILE:
+            return_value = vane_profile_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case FieldNumber::VANE_1:
+            return_value = vane_1_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case FieldNumber::VANE_2:
+            return_value = vane_2_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case FieldNumber::VANE_3:
+            return_value = vane_3_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case FieldNumber::VANE_4:
+            return_value = vane_4_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case FieldNumber::NOT_SET:
+            return_value = ::EmbeddedProto::Error::INVALID_FIELD_ID;
+            break;
+
+          default:
+            return_value = skip_unknown_field(buffer, wire_type);
+            break;
+        }
+
+        if(::EmbeddedProto::Error::NO_ERRORS == return_value)
+        {
+          // Read the next tag.
+          tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+        }
+      }
+
+      // When an error was detect while reading the tag but no other errors where found, set it in the return value.
+      if((::EmbeddedProto::Error::NO_ERRORS == return_value)
+         && (::EmbeddedProto::Error::NO_ERRORS != tag_value)
+         && (::EmbeddedProto::Error::END_OF_BUFFER != tag_value)) // The end of the buffer is not an array in this case.
+      {
+        return_value = tag_value;
+      }
+
+      return return_value;
+    };
+
+    void clear() override
+    {
+      clear_vane_profile();
+      clear_vane_1();
+      clear_vane_2();
+      clear_vane_3();
+      clear_vane_4();
+
+    }
+
+    static char const* field_number_to_name(const FieldNumber fieldNumber)
+    {
+      char const* name = nullptr;
+      switch(fieldNumber)
+      {
+        case FieldNumber::VANE_PROFILE:
+          name = VANE_PROFILE_NAME;
+          break;
+        case FieldNumber::VANE_1:
+          name = VANE_1_NAME;
+          break;
+        case FieldNumber::VANE_2:
+          name = VANE_2_NAME;
+          break;
+        case FieldNumber::VANE_3:
+          name = VANE_3_NAME;
+          break;
+        case FieldNumber::VANE_4:
+          name = VANE_4_NAME;
+          break;
+        default:
+          name = "Invalid FieldNumber";
+          break;
+      }
+      return name;
+    }
+
+#ifdef MSG_TO_STRING
+
+    ::EmbeddedProto::string_view to_string(::EmbeddedProto::string_view& str) const
+    {
+      return this->to_string(str, 0, nullptr, true);
+    }
+
+    ::EmbeddedProto::string_view to_string(::EmbeddedProto::string_view& str, const uint32_t indent_level, char const* name, const bool first_field) const override
+    {
+      ::EmbeddedProto::string_view left_chars = str;
+      int32_t n_chars_used = 0;
+
+      if(!first_field)
+      {
+        // Add a comma behind the previous field.
+        n_chars_used = snprintf(left_chars.data, left_chars.size, ",\n");
+        if(0 < n_chars_used)
+        {
+          // Update the character pointer and characters left in the array.
+          left_chars.data += n_chars_used;
+          left_chars.size -= n_chars_used;
+        }
+      }
+
+      if(nullptr != name)
+      {
+        if( 0 == indent_level)
+        {
+          n_chars_used = snprintf(left_chars.data, left_chars.size, "\"%s\": {\n", name);
+        }
+        else
+        {
+          n_chars_used = snprintf(left_chars.data, left_chars.size, "%*s\"%s\": {\n", indent_level, " ", name);
+        }
+      }
+      else
+      {
+        if( 0 == indent_level)
+        {
+          n_chars_used = snprintf(left_chars.data, left_chars.size, "{\n");
+        }
+        else
+        {
+          n_chars_used = snprintf(left_chars.data, left_chars.size, "%*s{\n", indent_level, " ");
+        }
+      }
+      
+      if(0 < n_chars_used)
+      {
+        left_chars.data += n_chars_used;
+        left_chars.size -= n_chars_used;
+      }
+
+      left_chars = vane_profile_.to_string(left_chars, indent_level + 2, VANE_PROFILE_NAME, true);
+      left_chars = vane_1_.to_string(left_chars, indent_level + 2, VANE_1_NAME, false);
+      left_chars = vane_2_.to_string(left_chars, indent_level + 2, VANE_2_NAME, false);
+      left_chars = vane_3_.to_string(left_chars, indent_level + 2, VANE_3_NAME, false);
+      left_chars = vane_4_.to_string(left_chars, indent_level + 2, VANE_4_NAME, false);
+  
+      if( 0 == indent_level) 
+      {
+        n_chars_used = snprintf(left_chars.data, left_chars.size, "\n}");
+      }
+      else 
+      {
+        n_chars_used = snprintf(left_chars.data, left_chars.size, "\n%*s}", indent_level, " ");
+      }
+
+      if(0 < n_chars_used)
+      {
+        left_chars.data += n_chars_used;
+        left_chars.size -= n_chars_used;
+      }
+
+      return left_chars;
+    }
+
+#endif // End of MSG_TO_STRING
+
+  private:
+
+
+      EmbeddedProto::int32 vane_profile_ = 0;
+      EmbeddedProto::int32 vane_1_ = 0;
+      EmbeddedProto::int32 vane_2_ = 0;
+      EmbeddedProto::int32 vane_3_ = 0;
+      EmbeddedProto::int32 vane_4_ = 0;
+
+};
+
 class GPS final: public ::EmbeddedProto::MessageInterface
 {
   public:

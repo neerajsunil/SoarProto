@@ -181,3 +181,16 @@ message IRTemperature {
     int32 ambient_temp = 1;
     int32 object_temp = 2;
 }
+
+/* TVC Messages ---------------------------------------------------------------- */
+
+message VanePosition {
+    // Vane profile number (0 = no profile, 1 = profile 1, 2 = profile 2, etc.)
+    int32 vane_profile = 1; 
+
+    // Vane position in degrees
+    int32 vane_1 = 2;
+    int32 vane_2 = 3;
+    int32 vane_3 = 4;
+    int32 vane_4 = 5;
+}

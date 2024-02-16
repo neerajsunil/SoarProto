@@ -7,24 +7,20 @@ from typing import ClassVar as _ClassVar, Mapping as _Mapping, Optional as _Opti
 DESCRIPTOR: _descriptor.FileDescriptor
 
 class CommandMessage(_message.Message):
-    __slots__ = ["dmb_command", "message_id", "pbb_command", "rcu_command", "sob_command", "source", "source_sequence_num", "target"]
+    __slots__ = ["dmb_command", "message_id", "source", "source_sequence_num", "target", "tvc_command"]
     DMB_COMMAND_FIELD_NUMBER: _ClassVar[int]
     MESSAGE_ID_FIELD_NUMBER: _ClassVar[int]
-    PBB_COMMAND_FIELD_NUMBER: _ClassVar[int]
-    RCU_COMMAND_FIELD_NUMBER: _ClassVar[int]
-    SOB_COMMAND_FIELD_NUMBER: _ClassVar[int]
     SOURCE_FIELD_NUMBER: _ClassVar[int]
     SOURCE_SEQUENCE_NUM_FIELD_NUMBER: _ClassVar[int]
     TARGET_FIELD_NUMBER: _ClassVar[int]
+    TVC_COMMAND_FIELD_NUMBER: _ClassVar[int]
     dmb_command: DMBCommand
     message_id: _CoreProto_pb2.MessageID
-    pbb_command: PBBCommand
-    rcu_command: RCUCommand
-    sob_command: SOBCommand
     source: _CoreProto_pb2.Node
     source_sequence_num: int
     target: _CoreProto_pb2.Node
-    def __init__(self, source: _Optional[_Union[_CoreProto_pb2.Node, str]] = ..., target: _Optional[_Union[_CoreProto_pb2.Node, str]] = ..., message_id: _Optional[_Union[_CoreProto_pb2.MessageID, str]] = ..., source_sequence_num: _Optional[int] = ..., dmb_command: _Optional[_Union[DMBCommand, _Mapping]] = ..., pbb_command: _Optional[_Union[PBBCommand, _Mapping]] = ..., rcu_command: _Optional[_Union[RCUCommand, _Mapping]] = ..., sob_command: _Optional[_Union[SOBCommand, _Mapping]] = ...) -> None: ...
+    tvc_command: TVCCommand
+    def __init__(self, source: _Optional[_Union[_CoreProto_pb2.Node, str]] = ..., target: _Optional[_Union[_CoreProto_pb2.Node, str]] = ..., message_id: _Optional[_Union[_CoreProto_pb2.MessageID, str]] = ..., source_sequence_num: _Optional[int] = ..., dmb_command: _Optional[_Union[DMBCommand, _Mapping]] = ..., tvc_command: _Optional[_Union[TVCCommand, _Mapping]] = ...) -> None: ...
 
 class DMBCommand(_message.Message):
     __slots__ = ["command_enum"]
@@ -134,3 +130,23 @@ class SOBCommand(_message.Message):
     command_enum: SOBCommand.Command
     command_param: int
     def __init__(self, command_enum: _Optional[_Union[SOBCommand.Command, str]] = ..., command_param: _Optional[int] = ...) -> None: ...
+
+class TVCCommand(_message.Message):
+    __slots__ = ["command_enum", "vane_1", "vane_2", "vane_3", "vane_4"]
+    class Command(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+        __slots__ = []
+    COMMAND_ENUM_FIELD_NUMBER: _ClassVar[int]
+    TVC_FIRST_INVALID: TVCCommand.Command
+    TVC_MANUAL_VANE: TVCCommand.Command
+    TVC_VANE_PROFILE: TVCCommand.Command
+    TVC_VANE_REQUEST_POS: TVCCommand.Command
+    VANE_1_FIELD_NUMBER: _ClassVar[int]
+    VANE_2_FIELD_NUMBER: _ClassVar[int]
+    VANE_3_FIELD_NUMBER: _ClassVar[int]
+    VANE_4_FIELD_NUMBER: _ClassVar[int]
+    command_enum: TVCCommand.Command
+    vane_1: int
+    vane_2: int
+    vane_3: int
+    vane_4: int
+    def __init__(self, command_enum: _Optional[_Union[TVCCommand.Command, str]] = ..., vane_1: _Optional[int] = ..., vane_2: _Optional[int] = ..., vane_3: _Optional[int] = ..., vane_4: _Optional[int] = ...) -> None: ...

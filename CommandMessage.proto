@@ -34,11 +34,29 @@ message CommandMessage {
     oneof message {
         // Command Messages
         DMBCommand dmb_command = 5;
-        PBBCommand pbb_command = 6;
-        RCUCommand rcu_command = 7;
-        SOBCommand sob_command = 8;
+        TVCCommand tvc_command = 6;
     }
 
+}
+
+message TVCCommand {
+    enum Command {
+        TVC_FIRST_INVALID = 0;
+
+        TVC_VANE_PROFILE = 1; // Run preset vane profile
+        TVC_MANUAL_VANE = 2; // Set vane angle manually
+
+        TVC_VANE_REQUEST_POS = 3; // Request current vane position
+    }
+
+    Command command_enum = 1;
+    
+    // Vane angle, if command_enum is TVC_MANUAL_VANE
+    // use vane_1 for VANE_PROFILE if command_enum is TVC_VANE_PROFILE
+    int32 vane_1 = 2;
+    int32 vane_2 = 3;
+    int32 vane_3 = 4;
+    int32 vane_4 = 5;
 }
 
 message DMBCommand {

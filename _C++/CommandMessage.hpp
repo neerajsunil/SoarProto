@@ -998,6 +998,327 @@ class SOBCommand final: public ::EmbeddedProto::MessageInterface
 
 };
 
+class TVCCommand final: public ::EmbeddedProto::MessageInterface
+{
+  public:
+    TVCCommand() = default;
+    TVCCommand(const TVCCommand& rhs )
+    {
+      set_command_enum(rhs.get_command_enum());
+      set_vane_1(rhs.get_vane_1());
+      set_vane_2(rhs.get_vane_2());
+      set_vane_3(rhs.get_vane_3());
+      set_vane_4(rhs.get_vane_4());
+    }
+
+    TVCCommand(const TVCCommand&& rhs ) noexcept
+    {
+      set_command_enum(rhs.get_command_enum());
+      set_vane_1(rhs.get_vane_1());
+      set_vane_2(rhs.get_vane_2());
+      set_vane_3(rhs.get_vane_3());
+      set_vane_4(rhs.get_vane_4());
+    }
+
+    ~TVCCommand() override = default;
+
+    enum class Command : uint32_t
+    {
+      TVC_FIRST_INVALID = 0,
+      TVC_VANE_PROFILE = 1,
+      TVC_MANUAL_VANE = 2,
+      TVC_VANE_REQUEST_POS = 3
+    };
+
+    enum class FieldNumber : uint32_t
+    {
+      NOT_SET = 0,
+      COMMAND_ENUM = 1,
+      VANE_1 = 2,
+      VANE_2 = 3,
+      VANE_3 = 4,
+      VANE_4 = 5
+    };
+
+    TVCCommand& operator=(const TVCCommand& rhs)
+    {
+      set_command_enum(rhs.get_command_enum());
+      set_vane_1(rhs.get_vane_1());
+      set_vane_2(rhs.get_vane_2());
+      set_vane_3(rhs.get_vane_3());
+      set_vane_4(rhs.get_vane_4());
+      return *this;
+    }
+
+    TVCCommand& operator=(const TVCCommand&& rhs) noexcept
+    {
+      set_command_enum(rhs.get_command_enum());
+      set_vane_1(rhs.get_vane_1());
+      set_vane_2(rhs.get_vane_2());
+      set_vane_3(rhs.get_vane_3());
+      set_vane_4(rhs.get_vane_4());
+      return *this;
+    }
+
+    static constexpr char const* COMMAND_ENUM_NAME = "command_enum";
+    inline void clear_command_enum() { command_enum_.clear(); }
+    inline void set_command_enum(const Command& value) { command_enum_ = value; }
+    inline void set_command_enum(const Command&& value) { command_enum_ = value; }
+    inline const Command& get_command_enum() const { return command_enum_.get(); }
+    inline Command command_enum() const { return command_enum_.get(); }
+
+    static constexpr char const* VANE_1_NAME = "vane_1";
+    inline void clear_vane_1() { vane_1_.clear(); }
+    inline void set_vane_1(const int32_t& value) { vane_1_ = value; }
+    inline void set_vane_1(const int32_t&& value) { vane_1_ = value; }
+    inline int32_t& mutable_vane_1() { return vane_1_.get(); }
+    inline const int32_t& get_vane_1() const { return vane_1_.get(); }
+    inline int32_t vane_1() const { return vane_1_.get(); }
+
+    static constexpr char const* VANE_2_NAME = "vane_2";
+    inline void clear_vane_2() { vane_2_.clear(); }
+    inline void set_vane_2(const int32_t& value) { vane_2_ = value; }
+    inline void set_vane_2(const int32_t&& value) { vane_2_ = value; }
+    inline int32_t& mutable_vane_2() { return vane_2_.get(); }
+    inline const int32_t& get_vane_2() const { return vane_2_.get(); }
+    inline int32_t vane_2() const { return vane_2_.get(); }
+
+    static constexpr char const* VANE_3_NAME = "vane_3";
+    inline void clear_vane_3() { vane_3_.clear(); }
+    inline void set_vane_3(const int32_t& value) { vane_3_ = value; }
+    inline void set_vane_3(const int32_t&& value) { vane_3_ = value; }
+    inline int32_t& mutable_vane_3() { return vane_3_.get(); }
+    inline const int32_t& get_vane_3() const { return vane_3_.get(); }
+    inline int32_t vane_3() const { return vane_3_.get(); }
+
+    static constexpr char const* VANE_4_NAME = "vane_4";
+    inline void clear_vane_4() { vane_4_.clear(); }
+    inline void set_vane_4(const int32_t& value) { vane_4_ = value; }
+    inline void set_vane_4(const int32_t&& value) { vane_4_ = value; }
+    inline int32_t& mutable_vane_4() { return vane_4_.get(); }
+    inline const int32_t& get_vane_4() const { return vane_4_.get(); }
+    inline int32_t vane_4() const { return vane_4_.get(); }
+
+
+    ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+
+      if((static_cast<Command>(0) != command_enum_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = command_enum_.serialize_with_id(static_cast<uint32_t>(FieldNumber::COMMAND_ENUM), buffer, false);
+      }
+
+      if((0 != vane_1_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = vane_1_.serialize_with_id(static_cast<uint32_t>(FieldNumber::VANE_1), buffer, false);
+      }
+
+      if((0 != vane_2_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = vane_2_.serialize_with_id(static_cast<uint32_t>(FieldNumber::VANE_2), buffer, false);
+      }
+
+      if((0 != vane_3_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = vane_3_.serialize_with_id(static_cast<uint32_t>(FieldNumber::VANE_3), buffer, false);
+      }
+
+      if((0 != vane_4_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = vane_4_.serialize_with_id(static_cast<uint32_t>(FieldNumber::VANE_4), buffer, false);
+      }
+
+      return return_value;
+    };
+
+    ::EmbeddedProto::Error deserialize(::EmbeddedProto::ReadBufferInterface& buffer) override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+      ::EmbeddedProto::WireFormatter::WireType wire_type = ::EmbeddedProto::WireFormatter::WireType::VARINT;
+      uint32_t id_number = 0;
+      FieldNumber id_tag = FieldNumber::NOT_SET;
+
+      ::EmbeddedProto::Error tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+      while((::EmbeddedProto::Error::NO_ERRORS == return_value) && (::EmbeddedProto::Error::NO_ERRORS == tag_value))
+      {
+        id_tag = static_cast<FieldNumber>(id_number);
+        switch(id_tag)
+        {
+          case FieldNumber::COMMAND_ENUM:
+            return_value = command_enum_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case FieldNumber::VANE_1:
+            return_value = vane_1_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case FieldNumber::VANE_2:
+            return_value = vane_2_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case FieldNumber::VANE_3:
+            return_value = vane_3_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case FieldNumber::VANE_4:
+            return_value = vane_4_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case FieldNumber::NOT_SET:
+            return_value = ::EmbeddedProto::Error::INVALID_FIELD_ID;
+            break;
+
+          default:
+            return_value = skip_unknown_field(buffer, wire_type);
+            break;
+        }
+
+        if(::EmbeddedProto::Error::NO_ERRORS == return_value)
+        {
+          // Read the next tag.
+          tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+        }
+      }
+
+      // When an error was detect while reading the tag but no other errors where found, set it in the return value.
+      if((::EmbeddedProto::Error::NO_ERRORS == return_value)
+         && (::EmbeddedProto::Error::NO_ERRORS != tag_value)
+         && (::EmbeddedProto::Error::END_OF_BUFFER != tag_value)) // The end of the buffer is not an array in this case.
+      {
+        return_value = tag_value;
+      }
+
+      return return_value;
+    };
+
+    void clear() override
+    {
+      clear_command_enum();
+      clear_vane_1();
+      clear_vane_2();
+      clear_vane_3();
+      clear_vane_4();
+
+    }
+
+    static char const* field_number_to_name(const FieldNumber fieldNumber)
+    {
+      char const* name = nullptr;
+      switch(fieldNumber)
+      {
+        case FieldNumber::COMMAND_ENUM:
+          name = COMMAND_ENUM_NAME;
+          break;
+        case FieldNumber::VANE_1:
+          name = VANE_1_NAME;
+          break;
+        case FieldNumber::VANE_2:
+          name = VANE_2_NAME;
+          break;
+        case FieldNumber::VANE_3:
+          name = VANE_3_NAME;
+          break;
+        case FieldNumber::VANE_4:
+          name = VANE_4_NAME;
+          break;
+        default:
+          name = "Invalid FieldNumber";
+          break;
+      }
+      return name;
+    }
+
+#ifdef MSG_TO_STRING
+
+    ::EmbeddedProto::string_view to_string(::EmbeddedProto::string_view& str) const
+    {
+      return this->to_string(str, 0, nullptr, true);
+    }
+
+    ::EmbeddedProto::string_view to_string(::EmbeddedProto::string_view& str, const uint32_t indent_level, char const* name, const bool first_field) const override
+    {
+      ::EmbeddedProto::string_view left_chars = str;
+      int32_t n_chars_used = 0;
+
+      if(!first_field)
+      {
+        // Add a comma behind the previous field.
+        n_chars_used = snprintf(left_chars.data, left_chars.size, ",\n");
+        if(0 < n_chars_used)
+        {
+          // Update the character pointer and characters left in the array.
+          left_chars.data += n_chars_used;
+          left_chars.size -= n_chars_used;
+        }
+      }
+
+      if(nullptr != name)
+      {
+        if( 0 == indent_level)
+        {
+          n_chars_used = snprintf(left_chars.data, left_chars.size, "\"%s\": {\n", name);
+        }
+        else
+        {
+          n_chars_used = snprintf(left_chars.data, left_chars.size, "%*s\"%s\": {\n", indent_level, " ", name);
+        }
+      }
+      else
+      {
+        if( 0 == indent_level)
+        {
+          n_chars_used = snprintf(left_chars.data, left_chars.size, "{\n");
+        }
+        else
+        {
+          n_chars_used = snprintf(left_chars.data, left_chars.size, "%*s{\n", indent_level, " ");
+        }
+      }
+      
+      if(0 < n_chars_used)
+      {
+        left_chars.data += n_chars_used;
+        left_chars.size -= n_chars_used;
+      }
+
+      left_chars = command_enum_.to_string(left_chars, indent_level + 2, COMMAND_ENUM_NAME, true);
+      left_chars = vane_1_.to_string(left_chars, indent_level + 2, VANE_1_NAME, false);
+      left_chars = vane_2_.to_string(left_chars, indent_level + 2, VANE_2_NAME, false);
+      left_chars = vane_3_.to_string(left_chars, indent_level + 2, VANE_3_NAME, false);
+      left_chars = vane_4_.to_string(left_chars, indent_level + 2, VANE_4_NAME, false);
+  
+      if( 0 == indent_level) 
+      {
+        n_chars_used = snprintf(left_chars.data, left_chars.size, "\n}");
+      }
+      else 
+      {
+        n_chars_used = snprintf(left_chars.data, left_chars.size, "\n%*s}", indent_level, " ");
+      }
+
+      if(0 < n_chars_used)
+      {
+        left_chars.data += n_chars_used;
+        left_chars.size -= n_chars_used;
+      }
+
+      return left_chars;
+    }
+
+#endif // End of MSG_TO_STRING
+
+  private:
+
+
+      EmbeddedProto::enumeration<Command> command_enum_ = static_cast<Command>(0);
+      EmbeddedProto::int32 vane_1_ = 0;
+      EmbeddedProto::int32 vane_2_ = 0;
+      EmbeddedProto::int32 vane_3_ = 0;
+      EmbeddedProto::int32 vane_4_ = 0;
+
+};
+
 class CommandMessage final: public ::EmbeddedProto::MessageInterface
 {
   public:
@@ -1020,16 +1341,8 @@ class CommandMessage final: public ::EmbeddedProto::MessageInterface
           set_dmb_command(rhs.get_dmb_command());
           break;
 
-        case FieldNumber::PBB_COMMAND:
-          set_pbb_command(rhs.get_pbb_command());
-          break;
-
-        case FieldNumber::RCU_COMMAND:
-          set_rcu_command(rhs.get_rcu_command());
-          break;
-
-        case FieldNumber::SOB_COMMAND:
-          set_sob_command(rhs.get_sob_command());
+        case FieldNumber::TVC_COMMAND:
+          set_tvc_command(rhs.get_tvc_command());
           break;
 
         default:
@@ -1056,16 +1369,8 @@ class CommandMessage final: public ::EmbeddedProto::MessageInterface
           set_dmb_command(rhs.get_dmb_command());
           break;
 
-        case FieldNumber::PBB_COMMAND:
-          set_pbb_command(rhs.get_pbb_command());
-          break;
-
-        case FieldNumber::RCU_COMMAND:
-          set_rcu_command(rhs.get_rcu_command());
-          break;
-
-        case FieldNumber::SOB_COMMAND:
-          set_sob_command(rhs.get_sob_command());
+        case FieldNumber::TVC_COMMAND:
+          set_tvc_command(rhs.get_tvc_command());
           break;
 
         default:
@@ -1084,9 +1389,7 @@ class CommandMessage final: public ::EmbeddedProto::MessageInterface
       MESSAGE_ID = 3,
       SOURCE_SEQUENCE_NUM = 4,
       DMB_COMMAND = 5,
-      PBB_COMMAND = 6,
-      RCU_COMMAND = 7,
-      SOB_COMMAND = 8
+      TVC_COMMAND = 6
     };
 
     CommandMessage& operator=(const CommandMessage& rhs)
@@ -1107,16 +1410,8 @@ class CommandMessage final: public ::EmbeddedProto::MessageInterface
           set_dmb_command(rhs.get_dmb_command());
           break;
 
-        case FieldNumber::PBB_COMMAND:
-          set_pbb_command(rhs.get_pbb_command());
-          break;
-
-        case FieldNumber::RCU_COMMAND:
-          set_rcu_command(rhs.get_rcu_command());
-          break;
-
-        case FieldNumber::SOB_COMMAND:
-          set_sob_command(rhs.get_sob_command());
+        case FieldNumber::TVC_COMMAND:
+          set_tvc_command(rhs.get_tvc_command());
           break;
 
         default:
@@ -1144,16 +1439,8 @@ class CommandMessage final: public ::EmbeddedProto::MessageInterface
           set_dmb_command(rhs.get_dmb_command());
           break;
 
-        case FieldNumber::PBB_COMMAND:
-          set_pbb_command(rhs.get_pbb_command());
-          break;
-
-        case FieldNumber::RCU_COMMAND:
-          set_rcu_command(rhs.get_rcu_command());
-          break;
-
-        case FieldNumber::SOB_COMMAND:
-          set_sob_command(rhs.get_sob_command());
+        case FieldNumber::TVC_COMMAND:
+          set_tvc_command(rhs.get_tvc_command());
           break;
 
         default:
@@ -1234,125 +1521,45 @@ class CommandMessage final: public ::EmbeddedProto::MessageInterface
     inline const DMBCommand& get_dmb_command() const { return message_.dmb_command_; }
     inline const DMBCommand& dmb_command() const { return message_.dmb_command_; }
 
-    static constexpr char const* PBB_COMMAND_NAME = "pbb_command";
-    inline bool has_pbb_command() const
+    static constexpr char const* TVC_COMMAND_NAME = "tvc_command";
+    inline bool has_tvc_command() const
     {
-      return FieldNumber::PBB_COMMAND == which_message_;
+      return FieldNumber::TVC_COMMAND == which_message_;
     }
-    inline void clear_pbb_command()
+    inline void clear_tvc_command()
     {
-      if(FieldNumber::PBB_COMMAND == which_message_)
+      if(FieldNumber::TVC_COMMAND == which_message_)
       {
         which_message_ = FieldNumber::NOT_SET;
-        message_.pbb_command_.~PBBCommand();
+        message_.tvc_command_.~TVCCommand();
       }
     }
-    inline void set_pbb_command(const PBBCommand& value)
+    inline void set_tvc_command(const TVCCommand& value)
     {
-      if(FieldNumber::PBB_COMMAND != which_message_)
+      if(FieldNumber::TVC_COMMAND != which_message_)
       {
-        init_message(FieldNumber::PBB_COMMAND);
+        init_message(FieldNumber::TVC_COMMAND);
       }
-      message_.pbb_command_ = value;
+      message_.tvc_command_ = value;
     }
-    inline void set_pbb_command(const PBBCommand&& value)
+    inline void set_tvc_command(const TVCCommand&& value)
     {
-      if(FieldNumber::PBB_COMMAND != which_message_)
+      if(FieldNumber::TVC_COMMAND != which_message_)
       {
-        init_message(FieldNumber::PBB_COMMAND);
+        init_message(FieldNumber::TVC_COMMAND);
       }
-      message_.pbb_command_ = value;
+      message_.tvc_command_ = value;
     }
-    inline PBBCommand& mutable_pbb_command()
+    inline TVCCommand& mutable_tvc_command()
     {
-      if(FieldNumber::PBB_COMMAND != which_message_)
+      if(FieldNumber::TVC_COMMAND != which_message_)
       {
-        init_message(FieldNumber::PBB_COMMAND);
+        init_message(FieldNumber::TVC_COMMAND);
       }
-      return message_.pbb_command_;
+      return message_.tvc_command_;
     }
-    inline const PBBCommand& get_pbb_command() const { return message_.pbb_command_; }
-    inline const PBBCommand& pbb_command() const { return message_.pbb_command_; }
-
-    static constexpr char const* RCU_COMMAND_NAME = "rcu_command";
-    inline bool has_rcu_command() const
-    {
-      return FieldNumber::RCU_COMMAND == which_message_;
-    }
-    inline void clear_rcu_command()
-    {
-      if(FieldNumber::RCU_COMMAND == which_message_)
-      {
-        which_message_ = FieldNumber::NOT_SET;
-        message_.rcu_command_.~RCUCommand();
-      }
-    }
-    inline void set_rcu_command(const RCUCommand& value)
-    {
-      if(FieldNumber::RCU_COMMAND != which_message_)
-      {
-        init_message(FieldNumber::RCU_COMMAND);
-      }
-      message_.rcu_command_ = value;
-    }
-    inline void set_rcu_command(const RCUCommand&& value)
-    {
-      if(FieldNumber::RCU_COMMAND != which_message_)
-      {
-        init_message(FieldNumber::RCU_COMMAND);
-      }
-      message_.rcu_command_ = value;
-    }
-    inline RCUCommand& mutable_rcu_command()
-    {
-      if(FieldNumber::RCU_COMMAND != which_message_)
-      {
-        init_message(FieldNumber::RCU_COMMAND);
-      }
-      return message_.rcu_command_;
-    }
-    inline const RCUCommand& get_rcu_command() const { return message_.rcu_command_; }
-    inline const RCUCommand& rcu_command() const { return message_.rcu_command_; }
-
-    static constexpr char const* SOB_COMMAND_NAME = "sob_command";
-    inline bool has_sob_command() const
-    {
-      return FieldNumber::SOB_COMMAND == which_message_;
-    }
-    inline void clear_sob_command()
-    {
-      if(FieldNumber::SOB_COMMAND == which_message_)
-      {
-        which_message_ = FieldNumber::NOT_SET;
-        message_.sob_command_.~SOBCommand();
-      }
-    }
-    inline void set_sob_command(const SOBCommand& value)
-    {
-      if(FieldNumber::SOB_COMMAND != which_message_)
-      {
-        init_message(FieldNumber::SOB_COMMAND);
-      }
-      message_.sob_command_ = value;
-    }
-    inline void set_sob_command(const SOBCommand&& value)
-    {
-      if(FieldNumber::SOB_COMMAND != which_message_)
-      {
-        init_message(FieldNumber::SOB_COMMAND);
-      }
-      message_.sob_command_ = value;
-    }
-    inline SOBCommand& mutable_sob_command()
-    {
-      if(FieldNumber::SOB_COMMAND != which_message_)
-      {
-        init_message(FieldNumber::SOB_COMMAND);
-      }
-      return message_.sob_command_;
-    }
-    inline const SOBCommand& get_sob_command() const { return message_.sob_command_; }
-    inline const SOBCommand& sob_command() const { return message_.sob_command_; }
+    inline const TVCCommand& get_tvc_command() const { return message_.tvc_command_; }
+    inline const TVCCommand& tvc_command() const { return message_.tvc_command_; }
 
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
@@ -1388,24 +1595,10 @@ class CommandMessage final: public ::EmbeddedProto::MessageInterface
           }
           break;
 
-        case FieldNumber::PBB_COMMAND:
-          if(has_pbb_command() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+        case FieldNumber::TVC_COMMAND:
+          if(has_tvc_command() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
           {
-            return_value = message_.pbb_command_.serialize_with_id(static_cast<uint32_t>(FieldNumber::PBB_COMMAND), buffer, true);
-          }
-          break;
-
-        case FieldNumber::RCU_COMMAND:
-          if(has_rcu_command() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
-          {
-            return_value = message_.rcu_command_.serialize_with_id(static_cast<uint32_t>(FieldNumber::RCU_COMMAND), buffer, true);
-          }
-          break;
-
-        case FieldNumber::SOB_COMMAND:
-          if(has_sob_command() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
-          {
-            return_value = message_.sob_command_.serialize_with_id(static_cast<uint32_t>(FieldNumber::SOB_COMMAND), buffer, true);
+            return_value = message_.tvc_command_.serialize_with_id(static_cast<uint32_t>(FieldNumber::TVC_COMMAND), buffer, true);
           }
           break;
 
@@ -1446,9 +1639,7 @@ class CommandMessage final: public ::EmbeddedProto::MessageInterface
             break;
 
           case FieldNumber::DMB_COMMAND:
-          case FieldNumber::PBB_COMMAND:
-          case FieldNumber::RCU_COMMAND:
-          case FieldNumber::SOB_COMMAND:
+          case FieldNumber::TVC_COMMAND:
             return_value = deserialize_message(id_tag, buffer, wire_type);
             break;
 
@@ -1509,14 +1700,8 @@ class CommandMessage final: public ::EmbeddedProto::MessageInterface
         case FieldNumber::DMB_COMMAND:
           name = DMB_COMMAND_NAME;
           break;
-        case FieldNumber::PBB_COMMAND:
-          name = PBB_COMMAND_NAME;
-          break;
-        case FieldNumber::RCU_COMMAND:
-          name = RCU_COMMAND_NAME;
-          break;
-        case FieldNumber::SOB_COMMAND:
-          name = SOB_COMMAND_NAME;
+        case FieldNumber::TVC_COMMAND:
+          name = TVC_COMMAND_NAME;
           break;
         default:
           name = "Invalid FieldNumber";
@@ -1618,9 +1803,7 @@ class CommandMessage final: public ::EmbeddedProto::MessageInterface
         message() {}
         ~message() {}
         DMBCommand dmb_command_;
-        PBBCommand pbb_command_;
-        RCUCommand rcu_command_;
-        SOBCommand sob_command_;
+        TVCCommand tvc_command_;
       };
       message message_;
 
@@ -1639,16 +1822,8 @@ class CommandMessage final: public ::EmbeddedProto::MessageInterface
             new(&message_.dmb_command_) DMBCommand;
             break;
 
-          case FieldNumber::PBB_COMMAND:
-            new(&message_.pbb_command_) PBBCommand;
-            break;
-
-          case FieldNumber::RCU_COMMAND:
-            new(&message_.rcu_command_) RCUCommand;
-            break;
-
-          case FieldNumber::SOB_COMMAND:
-            new(&message_.sob_command_) SOBCommand;
+          case FieldNumber::TVC_COMMAND:
+            new(&message_.tvc_command_) TVCCommand;
             break;
 
           default:
@@ -1665,14 +1840,8 @@ class CommandMessage final: public ::EmbeddedProto::MessageInterface
           case FieldNumber::DMB_COMMAND:
             ::EmbeddedProto::destroy_at(&message_.dmb_command_);
             break;
-          case FieldNumber::PBB_COMMAND:
-            ::EmbeddedProto::destroy_at(&message_.pbb_command_);
-            break;
-          case FieldNumber::RCU_COMMAND:
-            ::EmbeddedProto::destroy_at(&message_.rcu_command_);
-            break;
-          case FieldNumber::SOB_COMMAND:
-            ::EmbeddedProto::destroy_at(&message_.sob_command_);
+          case FieldNumber::TVC_COMMAND:
+            ::EmbeddedProto::destroy_at(&message_.tvc_command_);
             break;
           default:
             break;
@@ -1696,14 +1865,8 @@ class CommandMessage final: public ::EmbeddedProto::MessageInterface
           case FieldNumber::DMB_COMMAND:
             return_value = message_.dmb_command_.deserialize_check_type(buffer, wire_type);
             break;
-          case FieldNumber::PBB_COMMAND:
-            return_value = message_.pbb_command_.deserialize_check_type(buffer, wire_type);
-            break;
-          case FieldNumber::RCU_COMMAND:
-            return_value = message_.rcu_command_.deserialize_check_type(buffer, wire_type);
-            break;
-          case FieldNumber::SOB_COMMAND:
-            return_value = message_.sob_command_.deserialize_check_type(buffer, wire_type);
+          case FieldNumber::TVC_COMMAND:
+            return_value = message_.tvc_command_.deserialize_check_type(buffer, wire_type);
             break;
           default:
             break;
@@ -1726,14 +1889,8 @@ class CommandMessage final: public ::EmbeddedProto::MessageInterface
           case FieldNumber::DMB_COMMAND:
             left_chars = message_.dmb_command_.to_string(left_chars, indent_level, DMB_COMMAND_NAME, first_field);
             break;
-          case FieldNumber::PBB_COMMAND:
-            left_chars = message_.pbb_command_.to_string(left_chars, indent_level, PBB_COMMAND_NAME, first_field);
-            break;
-          case FieldNumber::RCU_COMMAND:
-            left_chars = message_.rcu_command_.to_string(left_chars, indent_level, RCU_COMMAND_NAME, first_field);
-            break;
-          case FieldNumber::SOB_COMMAND:
-            left_chars = message_.sob_command_.to_string(left_chars, indent_level, SOB_COMMAND_NAME, first_field);
+          case FieldNumber::TVC_COMMAND:
+            left_chars = message_.tvc_command_.to_string(left_chars, indent_level, TVC_COMMAND_NAME, first_field);
             break;
           default:
             break;
