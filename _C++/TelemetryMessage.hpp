@@ -5710,52 +5710,12 @@ class TelemetryMessage final: public ::EmbeddedProto::MessageInterface
           set_pressdmb(rhs.get_pressdmb());
           break;
 
-        case FieldNumber::PRESSPBB:
-          set_presspbb(rhs.get_presspbb());
-          break;
-
-        case FieldNumber::TEMPPBB:
-          set_temppbb(rhs.get_temppbb());
+        case FieldNumber::VANES:
+          set_vanes(rhs.get_vanes());
           break;
 
         case FieldNumber::GPIO:
           set_gpio(rhs.get_gpio());
-          break;
-
-        case FieldNumber::PRESSRCU:
-          set_pressrcu(rhs.get_pressrcu());
-          break;
-
-        case FieldNumber::TEMPRCU:
-          set_temprcu(rhs.get_temprcu());
-          break;
-
-        case FieldNumber::NOS:
-          set_nos(rhs.get_nos());
-          break;
-
-        case FieldNumber::RELAY:
-          set_relay(rhs.get_relay());
-          break;
-
-        case FieldNumber::PADBOX:
-          set_padbox(rhs.get_padbox());
-          break;
-
-        case FieldNumber::LR:
-          set_lr(rhs.get_lr());
-          break;
-
-        case FieldNumber::TEMPSOB:
-          set_tempsob(rhs.get_tempsob());
-          break;
-
-        case FieldNumber::IRTEMP:
-          set_irtemp(rhs.get_irtemp());
-          break;
-
-        case FieldNumber::MEVSTATE:
-          set_mevstate(rhs.get_mevstate());
           break;
 
         default:
@@ -5801,52 +5761,12 @@ class TelemetryMessage final: public ::EmbeddedProto::MessageInterface
           set_pressdmb(rhs.get_pressdmb());
           break;
 
-        case FieldNumber::PRESSPBB:
-          set_presspbb(rhs.get_presspbb());
-          break;
-
-        case FieldNumber::TEMPPBB:
-          set_temppbb(rhs.get_temppbb());
+        case FieldNumber::VANES:
+          set_vanes(rhs.get_vanes());
           break;
 
         case FieldNumber::GPIO:
           set_gpio(rhs.get_gpio());
-          break;
-
-        case FieldNumber::PRESSRCU:
-          set_pressrcu(rhs.get_pressrcu());
-          break;
-
-        case FieldNumber::TEMPRCU:
-          set_temprcu(rhs.get_temprcu());
-          break;
-
-        case FieldNumber::NOS:
-          set_nos(rhs.get_nos());
-          break;
-
-        case FieldNumber::RELAY:
-          set_relay(rhs.get_relay());
-          break;
-
-        case FieldNumber::PADBOX:
-          set_padbox(rhs.get_padbox());
-          break;
-
-        case FieldNumber::LR:
-          set_lr(rhs.get_lr());
-          break;
-
-        case FieldNumber::TEMPSOB:
-          set_tempsob(rhs.get_tempsob());
-          break;
-
-        case FieldNumber::IRTEMP:
-          set_irtemp(rhs.get_irtemp());
-          break;
-
-        case FieldNumber::MEVSTATE:
-          set_mevstate(rhs.get_mevstate());
           break;
 
         default:
@@ -5869,18 +5789,8 @@ class TelemetryMessage final: public ::EmbeddedProto::MessageInterface
       BAT = 7,
       FLASHINFO = 8,
       PRESSDMB = 9,
-      PRESSPBB = 10,
-      TEMPPBB = 11,
-      GPIO = 12,
-      PRESSRCU = 13,
-      TEMPRCU = 14,
-      NOS = 15,
-      RELAY = 16,
-      PADBOX = 17,
-      LR = 18,
-      TEMPSOB = 19,
-      IRTEMP = 20,
-      MEVSTATE = 21
+      VANES = 10,
+      GPIO = 12
     };
 
     TelemetryMessage& operator=(const TelemetryMessage& rhs)
@@ -5920,52 +5830,12 @@ class TelemetryMessage final: public ::EmbeddedProto::MessageInterface
           set_pressdmb(rhs.get_pressdmb());
           break;
 
-        case FieldNumber::PRESSPBB:
-          set_presspbb(rhs.get_presspbb());
-          break;
-
-        case FieldNumber::TEMPPBB:
-          set_temppbb(rhs.get_temppbb());
+        case FieldNumber::VANES:
+          set_vanes(rhs.get_vanes());
           break;
 
         case FieldNumber::GPIO:
           set_gpio(rhs.get_gpio());
-          break;
-
-        case FieldNumber::PRESSRCU:
-          set_pressrcu(rhs.get_pressrcu());
-          break;
-
-        case FieldNumber::TEMPRCU:
-          set_temprcu(rhs.get_temprcu());
-          break;
-
-        case FieldNumber::NOS:
-          set_nos(rhs.get_nos());
-          break;
-
-        case FieldNumber::RELAY:
-          set_relay(rhs.get_relay());
-          break;
-
-        case FieldNumber::PADBOX:
-          set_padbox(rhs.get_padbox());
-          break;
-
-        case FieldNumber::LR:
-          set_lr(rhs.get_lr());
-          break;
-
-        case FieldNumber::TEMPSOB:
-          set_tempsob(rhs.get_tempsob());
-          break;
-
-        case FieldNumber::IRTEMP:
-          set_irtemp(rhs.get_irtemp());
-          break;
-
-        case FieldNumber::MEVSTATE:
-          set_mevstate(rhs.get_mevstate());
           break;
 
         default:
@@ -6012,52 +5882,12 @@ class TelemetryMessage final: public ::EmbeddedProto::MessageInterface
           set_pressdmb(rhs.get_pressdmb());
           break;
 
-        case FieldNumber::PRESSPBB:
-          set_presspbb(rhs.get_presspbb());
-          break;
-
-        case FieldNumber::TEMPPBB:
-          set_temppbb(rhs.get_temppbb());
+        case FieldNumber::VANES:
+          set_vanes(rhs.get_vanes());
           break;
 
         case FieldNumber::GPIO:
           set_gpio(rhs.get_gpio());
-          break;
-
-        case FieldNumber::PRESSRCU:
-          set_pressrcu(rhs.get_pressrcu());
-          break;
-
-        case FieldNumber::TEMPRCU:
-          set_temprcu(rhs.get_temprcu());
-          break;
-
-        case FieldNumber::NOS:
-          set_nos(rhs.get_nos());
-          break;
-
-        case FieldNumber::RELAY:
-          set_relay(rhs.get_relay());
-          break;
-
-        case FieldNumber::PADBOX:
-          set_padbox(rhs.get_padbox());
-          break;
-
-        case FieldNumber::LR:
-          set_lr(rhs.get_lr());
-          break;
-
-        case FieldNumber::TEMPSOB:
-          set_tempsob(rhs.get_tempsob());
-          break;
-
-        case FieldNumber::IRTEMP:
-          set_irtemp(rhs.get_irtemp());
-          break;
-
-        case FieldNumber::MEVSTATE:
-          set_mevstate(rhs.get_mevstate());
           break;
 
         default:
@@ -6331,85 +6161,45 @@ class TelemetryMessage final: public ::EmbeddedProto::MessageInterface
     inline const DMBPressure& get_pressdmb() const { return message_.pressdmb_; }
     inline const DMBPressure& pressdmb() const { return message_.pressdmb_; }
 
-    static constexpr char const* PRESSPBB_NAME = "presspbb";
-    inline bool has_presspbb() const
+    static constexpr char const* VANES_NAME = "vanes";
+    inline bool has_vanes() const
     {
-      return FieldNumber::PRESSPBB == which_message_;
+      return FieldNumber::VANES == which_message_;
     }
-    inline void clear_presspbb()
+    inline void clear_vanes()
     {
-      if(FieldNumber::PRESSPBB == which_message_)
+      if(FieldNumber::VANES == which_message_)
       {
         which_message_ = FieldNumber::NOT_SET;
-        message_.presspbb_.~PBBPressure();
+        message_.vanes_.~VanePosition();
       }
     }
-    inline void set_presspbb(const PBBPressure& value)
+    inline void set_vanes(const VanePosition& value)
     {
-      if(FieldNumber::PRESSPBB != which_message_)
+      if(FieldNumber::VANES != which_message_)
       {
-        init_message(FieldNumber::PRESSPBB);
+        init_message(FieldNumber::VANES);
       }
-      message_.presspbb_ = value;
+      message_.vanes_ = value;
     }
-    inline void set_presspbb(const PBBPressure&& value)
+    inline void set_vanes(const VanePosition&& value)
     {
-      if(FieldNumber::PRESSPBB != which_message_)
+      if(FieldNumber::VANES != which_message_)
       {
-        init_message(FieldNumber::PRESSPBB);
+        init_message(FieldNumber::VANES);
       }
-      message_.presspbb_ = value;
+      message_.vanes_ = value;
     }
-    inline PBBPressure& mutable_presspbb()
+    inline VanePosition& mutable_vanes()
     {
-      if(FieldNumber::PRESSPBB != which_message_)
+      if(FieldNumber::VANES != which_message_)
       {
-        init_message(FieldNumber::PRESSPBB);
+        init_message(FieldNumber::VANES);
       }
-      return message_.presspbb_;
+      return message_.vanes_;
     }
-    inline const PBBPressure& get_presspbb() const { return message_.presspbb_; }
-    inline const PBBPressure& presspbb() const { return message_.presspbb_; }
-
-    static constexpr char const* TEMPPBB_NAME = "temppbb";
-    inline bool has_temppbb() const
-    {
-      return FieldNumber::TEMPPBB == which_message_;
-    }
-    inline void clear_temppbb()
-    {
-      if(FieldNumber::TEMPPBB == which_message_)
-      {
-        which_message_ = FieldNumber::NOT_SET;
-        message_.temppbb_.~PBBTemp();
-      }
-    }
-    inline void set_temppbb(const PBBTemp& value)
-    {
-      if(FieldNumber::TEMPPBB != which_message_)
-      {
-        init_message(FieldNumber::TEMPPBB);
-      }
-      message_.temppbb_ = value;
-    }
-    inline void set_temppbb(const PBBTemp&& value)
-    {
-      if(FieldNumber::TEMPPBB != which_message_)
-      {
-        init_message(FieldNumber::TEMPPBB);
-      }
-      message_.temppbb_ = value;
-    }
-    inline PBBTemp& mutable_temppbb()
-    {
-      if(FieldNumber::TEMPPBB != which_message_)
-      {
-        init_message(FieldNumber::TEMPPBB);
-      }
-      return message_.temppbb_;
-    }
-    inline const PBBTemp& get_temppbb() const { return message_.temppbb_; }
-    inline const PBBTemp& temppbb() const { return message_.temppbb_; }
+    inline const VanePosition& get_vanes() const { return message_.vanes_; }
+    inline const VanePosition& vanes() const { return message_.vanes_; }
 
     static constexpr char const* GPIO_NAME = "gpio";
     inline bool has_gpio() const
@@ -6450,366 +6240,6 @@ class TelemetryMessage final: public ::EmbeddedProto::MessageInterface
     }
     inline const CombustionControlStatus& get_gpio() const { return message_.gpio_; }
     inline const CombustionControlStatus& gpio() const { return message_.gpio_; }
-
-    static constexpr char const* PRESSRCU_NAME = "pressrcu";
-    inline bool has_pressrcu() const
-    {
-      return FieldNumber::PRESSRCU == which_message_;
-    }
-    inline void clear_pressrcu()
-    {
-      if(FieldNumber::PRESSRCU == which_message_)
-      {
-        which_message_ = FieldNumber::NOT_SET;
-        message_.pressrcu_.~RCUPressure();
-      }
-    }
-    inline void set_pressrcu(const RCUPressure& value)
-    {
-      if(FieldNumber::PRESSRCU != which_message_)
-      {
-        init_message(FieldNumber::PRESSRCU);
-      }
-      message_.pressrcu_ = value;
-    }
-    inline void set_pressrcu(const RCUPressure&& value)
-    {
-      if(FieldNumber::PRESSRCU != which_message_)
-      {
-        init_message(FieldNumber::PRESSRCU);
-      }
-      message_.pressrcu_ = value;
-    }
-    inline RCUPressure& mutable_pressrcu()
-    {
-      if(FieldNumber::PRESSRCU != which_message_)
-      {
-        init_message(FieldNumber::PRESSRCU);
-      }
-      return message_.pressrcu_;
-    }
-    inline const RCUPressure& get_pressrcu() const { return message_.pressrcu_; }
-    inline const RCUPressure& pressrcu() const { return message_.pressrcu_; }
-
-    static constexpr char const* TEMPRCU_NAME = "temprcu";
-    inline bool has_temprcu() const
-    {
-      return FieldNumber::TEMPRCU == which_message_;
-    }
-    inline void clear_temprcu()
-    {
-      if(FieldNumber::TEMPRCU == which_message_)
-      {
-        which_message_ = FieldNumber::NOT_SET;
-        message_.temprcu_.~RCUTemp();
-      }
-    }
-    inline void set_temprcu(const RCUTemp& value)
-    {
-      if(FieldNumber::TEMPRCU != which_message_)
-      {
-        init_message(FieldNumber::TEMPRCU);
-      }
-      message_.temprcu_ = value;
-    }
-    inline void set_temprcu(const RCUTemp&& value)
-    {
-      if(FieldNumber::TEMPRCU != which_message_)
-      {
-        init_message(FieldNumber::TEMPRCU);
-      }
-      message_.temprcu_ = value;
-    }
-    inline RCUTemp& mutable_temprcu()
-    {
-      if(FieldNumber::TEMPRCU != which_message_)
-      {
-        init_message(FieldNumber::TEMPRCU);
-      }
-      return message_.temprcu_;
-    }
-    inline const RCUTemp& get_temprcu() const { return message_.temprcu_; }
-    inline const RCUTemp& temprcu() const { return message_.temprcu_; }
-
-    static constexpr char const* NOS_NAME = "nos";
-    inline bool has_nos() const
-    {
-      return FieldNumber::NOS == which_message_;
-    }
-    inline void clear_nos()
-    {
-      if(FieldNumber::NOS == which_message_)
-      {
-        which_message_ = FieldNumber::NOT_SET;
-        message_.nos_.~NOSLoadCell();
-      }
-    }
-    inline void set_nos(const NOSLoadCell& value)
-    {
-      if(FieldNumber::NOS != which_message_)
-      {
-        init_message(FieldNumber::NOS);
-      }
-      message_.nos_ = value;
-    }
-    inline void set_nos(const NOSLoadCell&& value)
-    {
-      if(FieldNumber::NOS != which_message_)
-      {
-        init_message(FieldNumber::NOS);
-      }
-      message_.nos_ = value;
-    }
-    inline NOSLoadCell& mutable_nos()
-    {
-      if(FieldNumber::NOS != which_message_)
-      {
-        init_message(FieldNumber::NOS);
-      }
-      return message_.nos_;
-    }
-    inline const NOSLoadCell& get_nos() const { return message_.nos_; }
-    inline const NOSLoadCell& nos() const { return message_.nos_; }
-
-    static constexpr char const* RELAY_NAME = "relay";
-    inline bool has_relay() const
-    {
-      return FieldNumber::RELAY == which_message_;
-    }
-    inline void clear_relay()
-    {
-      if(FieldNumber::RELAY == which_message_)
-      {
-        which_message_ = FieldNumber::NOT_SET;
-        message_.relay_.~RelayStatus();
-      }
-    }
-    inline void set_relay(const RelayStatus& value)
-    {
-      if(FieldNumber::RELAY != which_message_)
-      {
-        init_message(FieldNumber::RELAY);
-      }
-      message_.relay_ = value;
-    }
-    inline void set_relay(const RelayStatus&& value)
-    {
-      if(FieldNumber::RELAY != which_message_)
-      {
-        init_message(FieldNumber::RELAY);
-      }
-      message_.relay_ = value;
-    }
-    inline RelayStatus& mutable_relay()
-    {
-      if(FieldNumber::RELAY != which_message_)
-      {
-        init_message(FieldNumber::RELAY);
-      }
-      return message_.relay_;
-    }
-    inline const RelayStatus& get_relay() const { return message_.relay_; }
-    inline const RelayStatus& relay() const { return message_.relay_; }
-
-    static constexpr char const* PADBOX_NAME = "padbox";
-    inline bool has_padbox() const
-    {
-      return FieldNumber::PADBOX == which_message_;
-    }
-    inline void clear_padbox()
-    {
-      if(FieldNumber::PADBOX == which_message_)
-      {
-        which_message_ = FieldNumber::NOT_SET;
-        message_.padbox_.~PadBoxStatus();
-      }
-    }
-    inline void set_padbox(const PadBoxStatus& value)
-    {
-      if(FieldNumber::PADBOX != which_message_)
-      {
-        init_message(FieldNumber::PADBOX);
-      }
-      message_.padbox_ = value;
-    }
-    inline void set_padbox(const PadBoxStatus&& value)
-    {
-      if(FieldNumber::PADBOX != which_message_)
-      {
-        init_message(FieldNumber::PADBOX);
-      }
-      message_.padbox_ = value;
-    }
-    inline PadBoxStatus& mutable_padbox()
-    {
-      if(FieldNumber::PADBOX != which_message_)
-      {
-        init_message(FieldNumber::PADBOX);
-      }
-      return message_.padbox_;
-    }
-    inline const PadBoxStatus& get_padbox() const { return message_.padbox_; }
-    inline const PadBoxStatus& padbox() const { return message_.padbox_; }
-
-    static constexpr char const* LR_NAME = "lr";
-    inline bool has_lr() const
-    {
-      return FieldNumber::LR == which_message_;
-    }
-    inline void clear_lr()
-    {
-      if(FieldNumber::LR == which_message_)
-      {
-        which_message_ = FieldNumber::NOT_SET;
-        message_.lr_.~LRLoadCell();
-      }
-    }
-    inline void set_lr(const LRLoadCell& value)
-    {
-      if(FieldNumber::LR != which_message_)
-      {
-        init_message(FieldNumber::LR);
-      }
-      message_.lr_ = value;
-    }
-    inline void set_lr(const LRLoadCell&& value)
-    {
-      if(FieldNumber::LR != which_message_)
-      {
-        init_message(FieldNumber::LR);
-      }
-      message_.lr_ = value;
-    }
-    inline LRLoadCell& mutable_lr()
-    {
-      if(FieldNumber::LR != which_message_)
-      {
-        init_message(FieldNumber::LR);
-      }
-      return message_.lr_;
-    }
-    inline const LRLoadCell& get_lr() const { return message_.lr_; }
-    inline const LRLoadCell& lr() const { return message_.lr_; }
-
-    static constexpr char const* TEMPSOB_NAME = "tempsob";
-    inline bool has_tempsob() const
-    {
-      return FieldNumber::TEMPSOB == which_message_;
-    }
-    inline void clear_tempsob()
-    {
-      if(FieldNumber::TEMPSOB == which_message_)
-      {
-        which_message_ = FieldNumber::NOT_SET;
-        message_.tempsob_.~SOBTemp();
-      }
-    }
-    inline void set_tempsob(const SOBTemp& value)
-    {
-      if(FieldNumber::TEMPSOB != which_message_)
-      {
-        init_message(FieldNumber::TEMPSOB);
-      }
-      message_.tempsob_ = value;
-    }
-    inline void set_tempsob(const SOBTemp&& value)
-    {
-      if(FieldNumber::TEMPSOB != which_message_)
-      {
-        init_message(FieldNumber::TEMPSOB);
-      }
-      message_.tempsob_ = value;
-    }
-    inline SOBTemp& mutable_tempsob()
-    {
-      if(FieldNumber::TEMPSOB != which_message_)
-      {
-        init_message(FieldNumber::TEMPSOB);
-      }
-      return message_.tempsob_;
-    }
-    inline const SOBTemp& get_tempsob() const { return message_.tempsob_; }
-    inline const SOBTemp& tempsob() const { return message_.tempsob_; }
-
-    static constexpr char const* IRTEMP_NAME = "irtemp";
-    inline bool has_irtemp() const
-    {
-      return FieldNumber::IRTEMP == which_message_;
-    }
-    inline void clear_irtemp()
-    {
-      if(FieldNumber::IRTEMP == which_message_)
-      {
-        which_message_ = FieldNumber::NOT_SET;
-        message_.irtemp_.~IRTemperature();
-      }
-    }
-    inline void set_irtemp(const IRTemperature& value)
-    {
-      if(FieldNumber::IRTEMP != which_message_)
-      {
-        init_message(FieldNumber::IRTEMP);
-      }
-      message_.irtemp_ = value;
-    }
-    inline void set_irtemp(const IRTemperature&& value)
-    {
-      if(FieldNumber::IRTEMP != which_message_)
-      {
-        init_message(FieldNumber::IRTEMP);
-      }
-      message_.irtemp_ = value;
-    }
-    inline IRTemperature& mutable_irtemp()
-    {
-      if(FieldNumber::IRTEMP != which_message_)
-      {
-        init_message(FieldNumber::IRTEMP);
-      }
-      return message_.irtemp_;
-    }
-    inline const IRTemperature& get_irtemp() const { return message_.irtemp_; }
-    inline const IRTemperature& irtemp() const { return message_.irtemp_; }
-
-    static constexpr char const* MEVSTATE_NAME = "mevstate";
-    inline bool has_mevstate() const
-    {
-      return FieldNumber::MEVSTATE == which_message_;
-    }
-    inline void clear_mevstate()
-    {
-      if(FieldNumber::MEVSTATE == which_message_)
-      {
-        which_message_ = FieldNumber::NOT_SET;
-        message_.mevstate_.~MEVState();
-      }
-    }
-    inline void set_mevstate(const MEVState& value)
-    {
-      if(FieldNumber::MEVSTATE != which_message_)
-      {
-        init_message(FieldNumber::MEVSTATE);
-      }
-      message_.mevstate_ = value;
-    }
-    inline void set_mevstate(const MEVState&& value)
-    {
-      if(FieldNumber::MEVSTATE != which_message_)
-      {
-        init_message(FieldNumber::MEVSTATE);
-      }
-      message_.mevstate_ = value;
-    }
-    inline MEVState& mutable_mevstate()
-    {
-      if(FieldNumber::MEVSTATE != which_message_)
-      {
-        init_message(FieldNumber::MEVSTATE);
-      }
-      return message_.mevstate_;
-    }
-    inline const MEVState& get_mevstate() const { return message_.mevstate_; }
-    inline const MEVState& mevstate() const { return message_.mevstate_; }
 
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
@@ -6875,17 +6305,10 @@ class TelemetryMessage final: public ::EmbeddedProto::MessageInterface
           }
           break;
 
-        case FieldNumber::PRESSPBB:
-          if(has_presspbb() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+        case FieldNumber::VANES:
+          if(has_vanes() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
           {
-            return_value = message_.presspbb_.serialize_with_id(static_cast<uint32_t>(FieldNumber::PRESSPBB), buffer, true);
-          }
-          break;
-
-        case FieldNumber::TEMPPBB:
-          if(has_temppbb() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
-          {
-            return_value = message_.temppbb_.serialize_with_id(static_cast<uint32_t>(FieldNumber::TEMPPBB), buffer, true);
+            return_value = message_.vanes_.serialize_with_id(static_cast<uint32_t>(FieldNumber::VANES), buffer, true);
           }
           break;
 
@@ -6893,69 +6316,6 @@ class TelemetryMessage final: public ::EmbeddedProto::MessageInterface
           if(has_gpio() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
           {
             return_value = message_.gpio_.serialize_with_id(static_cast<uint32_t>(FieldNumber::GPIO), buffer, true);
-          }
-          break;
-
-        case FieldNumber::PRESSRCU:
-          if(has_pressrcu() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
-          {
-            return_value = message_.pressrcu_.serialize_with_id(static_cast<uint32_t>(FieldNumber::PRESSRCU), buffer, true);
-          }
-          break;
-
-        case FieldNumber::TEMPRCU:
-          if(has_temprcu() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
-          {
-            return_value = message_.temprcu_.serialize_with_id(static_cast<uint32_t>(FieldNumber::TEMPRCU), buffer, true);
-          }
-          break;
-
-        case FieldNumber::NOS:
-          if(has_nos() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
-          {
-            return_value = message_.nos_.serialize_with_id(static_cast<uint32_t>(FieldNumber::NOS), buffer, true);
-          }
-          break;
-
-        case FieldNumber::RELAY:
-          if(has_relay() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
-          {
-            return_value = message_.relay_.serialize_with_id(static_cast<uint32_t>(FieldNumber::RELAY), buffer, true);
-          }
-          break;
-
-        case FieldNumber::PADBOX:
-          if(has_padbox() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
-          {
-            return_value = message_.padbox_.serialize_with_id(static_cast<uint32_t>(FieldNumber::PADBOX), buffer, true);
-          }
-          break;
-
-        case FieldNumber::LR:
-          if(has_lr() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
-          {
-            return_value = message_.lr_.serialize_with_id(static_cast<uint32_t>(FieldNumber::LR), buffer, true);
-          }
-          break;
-
-        case FieldNumber::TEMPSOB:
-          if(has_tempsob() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
-          {
-            return_value = message_.tempsob_.serialize_with_id(static_cast<uint32_t>(FieldNumber::TEMPSOB), buffer, true);
-          }
-          break;
-
-        case FieldNumber::IRTEMP:
-          if(has_irtemp() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
-          {
-            return_value = message_.irtemp_.serialize_with_id(static_cast<uint32_t>(FieldNumber::IRTEMP), buffer, true);
-          }
-          break;
-
-        case FieldNumber::MEVSTATE:
-          if(has_mevstate() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
-          {
-            return_value = message_.mevstate_.serialize_with_id(static_cast<uint32_t>(FieldNumber::MEVSTATE), buffer, true);
           }
           break;
 
@@ -6997,18 +6357,8 @@ class TelemetryMessage final: public ::EmbeddedProto::MessageInterface
           case FieldNumber::BAT:
           case FieldNumber::FLASHINFO:
           case FieldNumber::PRESSDMB:
-          case FieldNumber::PRESSPBB:
-          case FieldNumber::TEMPPBB:
+          case FieldNumber::VANES:
           case FieldNumber::GPIO:
-          case FieldNumber::PRESSRCU:
-          case FieldNumber::TEMPRCU:
-          case FieldNumber::NOS:
-          case FieldNumber::RELAY:
-          case FieldNumber::PADBOX:
-          case FieldNumber::LR:
-          case FieldNumber::TEMPSOB:
-          case FieldNumber::IRTEMP:
-          case FieldNumber::MEVSTATE:
             return_value = deserialize_message(id_tag, buffer, wire_type);
             break;
 
@@ -7080,41 +6430,11 @@ class TelemetryMessage final: public ::EmbeddedProto::MessageInterface
         case FieldNumber::PRESSDMB:
           name = PRESSDMB_NAME;
           break;
-        case FieldNumber::PRESSPBB:
-          name = PRESSPBB_NAME;
-          break;
-        case FieldNumber::TEMPPBB:
-          name = TEMPPBB_NAME;
+        case FieldNumber::VANES:
+          name = VANES_NAME;
           break;
         case FieldNumber::GPIO:
           name = GPIO_NAME;
-          break;
-        case FieldNumber::PRESSRCU:
-          name = PRESSRCU_NAME;
-          break;
-        case FieldNumber::TEMPRCU:
-          name = TEMPRCU_NAME;
-          break;
-        case FieldNumber::NOS:
-          name = NOS_NAME;
-          break;
-        case FieldNumber::RELAY:
-          name = RELAY_NAME;
-          break;
-        case FieldNumber::PADBOX:
-          name = PADBOX_NAME;
-          break;
-        case FieldNumber::LR:
-          name = LR_NAME;
-          break;
-        case FieldNumber::TEMPSOB:
-          name = TEMPSOB_NAME;
-          break;
-        case FieldNumber::IRTEMP:
-          name = IRTEMP_NAME;
-          break;
-        case FieldNumber::MEVSTATE:
-          name = MEVSTATE_NAME;
           break;
         default:
           name = "Invalid FieldNumber";
@@ -7219,18 +6539,8 @@ class TelemetryMessage final: public ::EmbeddedProto::MessageInterface
         Battery bat_;
         Flash flashInfo_;
         DMBPressure pressdmb_;
-        PBBPressure presspbb_;
-        PBBTemp temppbb_;
+        VanePosition vanes_;
         CombustionControlStatus gpio_;
-        RCUPressure pressrcu_;
-        RCUTemp temprcu_;
-        NOSLoadCell nos_;
-        RelayStatus relay_;
-        PadBoxStatus padbox_;
-        LRLoadCell lr_;
-        SOBTemp tempsob_;
-        IRTemperature irtemp_;
-        MEVState mevstate_;
       };
       message message_;
 
@@ -7269,52 +6579,12 @@ class TelemetryMessage final: public ::EmbeddedProto::MessageInterface
             new(&message_.pressdmb_) DMBPressure;
             break;
 
-          case FieldNumber::PRESSPBB:
-            new(&message_.presspbb_) PBBPressure;
-            break;
-
-          case FieldNumber::TEMPPBB:
-            new(&message_.temppbb_) PBBTemp;
+          case FieldNumber::VANES:
+            new(&message_.vanes_) VanePosition;
             break;
 
           case FieldNumber::GPIO:
             new(&message_.gpio_) CombustionControlStatus;
-            break;
-
-          case FieldNumber::PRESSRCU:
-            new(&message_.pressrcu_) RCUPressure;
-            break;
-
-          case FieldNumber::TEMPRCU:
-            new(&message_.temprcu_) RCUTemp;
-            break;
-
-          case FieldNumber::NOS:
-            new(&message_.nos_) NOSLoadCell;
-            break;
-
-          case FieldNumber::RELAY:
-            new(&message_.relay_) RelayStatus;
-            break;
-
-          case FieldNumber::PADBOX:
-            new(&message_.padbox_) PadBoxStatus;
-            break;
-
-          case FieldNumber::LR:
-            new(&message_.lr_) LRLoadCell;
-            break;
-
-          case FieldNumber::TEMPSOB:
-            new(&message_.tempsob_) SOBTemp;
-            break;
-
-          case FieldNumber::IRTEMP:
-            new(&message_.irtemp_) IRTemperature;
-            break;
-
-          case FieldNumber::MEVSTATE:
-            new(&message_.mevstate_) MEVState;
             break;
 
           default:
@@ -7346,41 +6616,11 @@ class TelemetryMessage final: public ::EmbeddedProto::MessageInterface
           case FieldNumber::PRESSDMB:
             ::EmbeddedProto::destroy_at(&message_.pressdmb_);
             break;
-          case FieldNumber::PRESSPBB:
-            ::EmbeddedProto::destroy_at(&message_.presspbb_);
-            break;
-          case FieldNumber::TEMPPBB:
-            ::EmbeddedProto::destroy_at(&message_.temppbb_);
+          case FieldNumber::VANES:
+            ::EmbeddedProto::destroy_at(&message_.vanes_);
             break;
           case FieldNumber::GPIO:
             ::EmbeddedProto::destroy_at(&message_.gpio_);
-            break;
-          case FieldNumber::PRESSRCU:
-            ::EmbeddedProto::destroy_at(&message_.pressrcu_);
-            break;
-          case FieldNumber::TEMPRCU:
-            ::EmbeddedProto::destroy_at(&message_.temprcu_);
-            break;
-          case FieldNumber::NOS:
-            ::EmbeddedProto::destroy_at(&message_.nos_);
-            break;
-          case FieldNumber::RELAY:
-            ::EmbeddedProto::destroy_at(&message_.relay_);
-            break;
-          case FieldNumber::PADBOX:
-            ::EmbeddedProto::destroy_at(&message_.padbox_);
-            break;
-          case FieldNumber::LR:
-            ::EmbeddedProto::destroy_at(&message_.lr_);
-            break;
-          case FieldNumber::TEMPSOB:
-            ::EmbeddedProto::destroy_at(&message_.tempsob_);
-            break;
-          case FieldNumber::IRTEMP:
-            ::EmbeddedProto::destroy_at(&message_.irtemp_);
-            break;
-          case FieldNumber::MEVSTATE:
-            ::EmbeddedProto::destroy_at(&message_.mevstate_);
             break;
           default:
             break;
@@ -7419,41 +6659,11 @@ class TelemetryMessage final: public ::EmbeddedProto::MessageInterface
           case FieldNumber::PRESSDMB:
             return_value = message_.pressdmb_.deserialize_check_type(buffer, wire_type);
             break;
-          case FieldNumber::PRESSPBB:
-            return_value = message_.presspbb_.deserialize_check_type(buffer, wire_type);
-            break;
-          case FieldNumber::TEMPPBB:
-            return_value = message_.temppbb_.deserialize_check_type(buffer, wire_type);
+          case FieldNumber::VANES:
+            return_value = message_.vanes_.deserialize_check_type(buffer, wire_type);
             break;
           case FieldNumber::GPIO:
             return_value = message_.gpio_.deserialize_check_type(buffer, wire_type);
-            break;
-          case FieldNumber::PRESSRCU:
-            return_value = message_.pressrcu_.deserialize_check_type(buffer, wire_type);
-            break;
-          case FieldNumber::TEMPRCU:
-            return_value = message_.temprcu_.deserialize_check_type(buffer, wire_type);
-            break;
-          case FieldNumber::NOS:
-            return_value = message_.nos_.deserialize_check_type(buffer, wire_type);
-            break;
-          case FieldNumber::RELAY:
-            return_value = message_.relay_.deserialize_check_type(buffer, wire_type);
-            break;
-          case FieldNumber::PADBOX:
-            return_value = message_.padbox_.deserialize_check_type(buffer, wire_type);
-            break;
-          case FieldNumber::LR:
-            return_value = message_.lr_.deserialize_check_type(buffer, wire_type);
-            break;
-          case FieldNumber::TEMPSOB:
-            return_value = message_.tempsob_.deserialize_check_type(buffer, wire_type);
-            break;
-          case FieldNumber::IRTEMP:
-            return_value = message_.irtemp_.deserialize_check_type(buffer, wire_type);
-            break;
-          case FieldNumber::MEVSTATE:
-            return_value = message_.mevstate_.deserialize_check_type(buffer, wire_type);
             break;
           default:
             break;
@@ -7491,41 +6701,11 @@ class TelemetryMessage final: public ::EmbeddedProto::MessageInterface
           case FieldNumber::PRESSDMB:
             left_chars = message_.pressdmb_.to_string(left_chars, indent_level, PRESSDMB_NAME, first_field);
             break;
-          case FieldNumber::PRESSPBB:
-            left_chars = message_.presspbb_.to_string(left_chars, indent_level, PRESSPBB_NAME, first_field);
-            break;
-          case FieldNumber::TEMPPBB:
-            left_chars = message_.temppbb_.to_string(left_chars, indent_level, TEMPPBB_NAME, first_field);
+          case FieldNumber::VANES:
+            left_chars = message_.vanes_.to_string(left_chars, indent_level, VANES_NAME, first_field);
             break;
           case FieldNumber::GPIO:
             left_chars = message_.gpio_.to_string(left_chars, indent_level, GPIO_NAME, first_field);
-            break;
-          case FieldNumber::PRESSRCU:
-            left_chars = message_.pressrcu_.to_string(left_chars, indent_level, PRESSRCU_NAME, first_field);
-            break;
-          case FieldNumber::TEMPRCU:
-            left_chars = message_.temprcu_.to_string(left_chars, indent_level, TEMPRCU_NAME, first_field);
-            break;
-          case FieldNumber::NOS:
-            left_chars = message_.nos_.to_string(left_chars, indent_level, NOS_NAME, first_field);
-            break;
-          case FieldNumber::RELAY:
-            left_chars = message_.relay_.to_string(left_chars, indent_level, RELAY_NAME, first_field);
-            break;
-          case FieldNumber::PADBOX:
-            left_chars = message_.padbox_.to_string(left_chars, indent_level, PADBOX_NAME, first_field);
-            break;
-          case FieldNumber::LR:
-            left_chars = message_.lr_.to_string(left_chars, indent_level, LR_NAME, first_field);
-            break;
-          case FieldNumber::TEMPSOB:
-            left_chars = message_.tempsob_.to_string(left_chars, indent_level, TEMPSOB_NAME, first_field);
-            break;
-          case FieldNumber::IRTEMP:
-            left_chars = message_.irtemp_.to_string(left_chars, indent_level, IRTEMP_NAME, first_field);
-            break;
-          case FieldNumber::MEVSTATE:
-            left_chars = message_.mevstate_.to_string(left_chars, indent_level, MEVSTATE_NAME, first_field);
             break;
           default:
             break;

@@ -26,18 +26,9 @@ import "CoreProto.proto";
         Battery bat = 7;
         Flash flashInfo = 8;
         DMBPressure pressdmb = 9;
-        PBBPressure presspbb = 10;
-        PBBTemp temppbb = 11;
+        VanePosition vanes = 10;
+        
         CombustionControlStatus gpio = 12;
-        RCUPressure pressrcu = 13;
-        RCUTemp temprcu = 14;
-        NOSLoadCell nos = 15;
-        RelayStatus relay = 16;
-        PadBoxStatus padbox = 17;
-        LRLoadCell lr = 18;
-        SOBTemp tempsob = 19;
-        IRTemperature irtemp = 20;
-        MEVState mevstate = 21;
     }
 }
 
