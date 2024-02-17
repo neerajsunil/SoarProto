@@ -254,9 +254,9 @@ class VanePosition(_message.Message):
     VANE_3_FIELD_NUMBER: _ClassVar[int]
     VANE_4_FIELD_NUMBER: _ClassVar[int]
     VANE_PROFILE_FIELD_NUMBER: _ClassVar[int]
-    vane_1: int
-    vane_2: int
-    vane_3: int
-    vane_4: int
+    vane_1: float
+    vane_2: float
+    vane_3: float
+    vane_4: float
     vane_profile: int
-    def __init__(self, vane_profile: _Optional[int] = ..., vane_1: _Optional[int] = ..., vane_2: _Optional[int] = ..., vane_3: _Optional[int] = ..., vane_4: _Optional[int] = ...) -> None: ...
+    def __init__(self, vane_profile: _Optional[int] = ..., vane_1: _Optional[float] = ..., vane_2: _Optional[float] = ..., vane_3: _Optional[float] = ..., vane_4: _Optional[float] = ...) -> None: ...

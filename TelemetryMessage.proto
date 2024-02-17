@@ -27,7 +27,7 @@ import "CoreProto.proto";
         Flash flashInfo = 8;
         DMBPressure pressdmb = 9;
         VanePosition vanes = 10;
-        
+
         CombustionControlStatus gpio = 12;
     }
 }
@@ -177,11 +177,11 @@ message IRTemperature {
 
 message VanePosition {
     // Vane profile number (0 = no profile, 1 = profile 1, 2 = profile 2, etc.)
-    int32 vane_profile = 1; 
+    uint32 vane_profile = 1; 
 
     // Vane position in degrees
-    int32 vane_1 = 2;
-    int32 vane_2 = 3;
-    int32 vane_3 = 4;
-    int32 vane_4 = 5;
+    float vane_1 = 2;
+    float vane_2 = 3;
+    float vane_3 = 4;
+    float vane_4 = 5;
 }

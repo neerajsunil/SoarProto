@@ -1005,6 +1005,7 @@ class TVCCommand final: public ::EmbeddedProto::MessageInterface
     TVCCommand(const TVCCommand& rhs )
     {
       set_command_enum(rhs.get_command_enum());
+      set_opt_vane_profile(rhs.get_opt_vane_profile());
       set_vane_1(rhs.get_vane_1());
       set_vane_2(rhs.get_vane_2());
       set_vane_3(rhs.get_vane_3());
@@ -1014,6 +1015,7 @@ class TVCCommand final: public ::EmbeddedProto::MessageInterface
     TVCCommand(const TVCCommand&& rhs ) noexcept
     {
       set_command_enum(rhs.get_command_enum());
+      set_opt_vane_profile(rhs.get_opt_vane_profile());
       set_vane_1(rhs.get_vane_1());
       set_vane_2(rhs.get_vane_2());
       set_vane_3(rhs.get_vane_3());
@@ -1035,15 +1037,17 @@ class TVCCommand final: public ::EmbeddedProto::MessageInterface
     {
       NOT_SET = 0,
       COMMAND_ENUM = 1,
-      VANE_1 = 2,
-      VANE_2 = 3,
-      VANE_3 = 4,
-      VANE_4 = 5
+      OPT_VANE_PROFILE = 2,
+      VANE_1 = 3,
+      VANE_2 = 4,
+      VANE_3 = 5,
+      VANE_4 = 6
     };
 
     TVCCommand& operator=(const TVCCommand& rhs)
     {
       set_command_enum(rhs.get_command_enum());
+      set_opt_vane_profile(rhs.get_opt_vane_profile());
       set_vane_1(rhs.get_vane_1());
       set_vane_2(rhs.get_vane_2());
       set_vane_3(rhs.get_vane_3());
@@ -1054,6 +1058,7 @@ class TVCCommand final: public ::EmbeddedProto::MessageInterface
     TVCCommand& operator=(const TVCCommand&& rhs) noexcept
     {
       set_command_enum(rhs.get_command_enum());
+      set_opt_vane_profile(rhs.get_opt_vane_profile());
       set_vane_1(rhs.get_vane_1());
       set_vane_2(rhs.get_vane_2());
       set_vane_3(rhs.get_vane_3());
@@ -1068,37 +1073,45 @@ class TVCCommand final: public ::EmbeddedProto::MessageInterface
     inline const Command& get_command_enum() const { return command_enum_.get(); }
     inline Command command_enum() const { return command_enum_.get(); }
 
+    static constexpr char const* OPT_VANE_PROFILE_NAME = "opt_vane_profile";
+    inline void clear_opt_vane_profile() { opt_vane_profile_.clear(); }
+    inline void set_opt_vane_profile(const uint32_t& value) { opt_vane_profile_ = value; }
+    inline void set_opt_vane_profile(const uint32_t&& value) { opt_vane_profile_ = value; }
+    inline uint32_t& mutable_opt_vane_profile() { return opt_vane_profile_.get(); }
+    inline const uint32_t& get_opt_vane_profile() const { return opt_vane_profile_.get(); }
+    inline uint32_t opt_vane_profile() const { return opt_vane_profile_.get(); }
+
     static constexpr char const* VANE_1_NAME = "vane_1";
     inline void clear_vane_1() { vane_1_.clear(); }
-    inline void set_vane_1(const int32_t& value) { vane_1_ = value; }
-    inline void set_vane_1(const int32_t&& value) { vane_1_ = value; }
-    inline int32_t& mutable_vane_1() { return vane_1_.get(); }
-    inline const int32_t& get_vane_1() const { return vane_1_.get(); }
-    inline int32_t vane_1() const { return vane_1_.get(); }
+    inline void set_vane_1(const float& value) { vane_1_ = value; }
+    inline void set_vane_1(const float&& value) { vane_1_ = value; }
+    inline float& mutable_vane_1() { return vane_1_.get(); }
+    inline const float& get_vane_1() const { return vane_1_.get(); }
+    inline float vane_1() const { return vane_1_.get(); }
 
     static constexpr char const* VANE_2_NAME = "vane_2";
     inline void clear_vane_2() { vane_2_.clear(); }
-    inline void set_vane_2(const int32_t& value) { vane_2_ = value; }
-    inline void set_vane_2(const int32_t&& value) { vane_2_ = value; }
-    inline int32_t& mutable_vane_2() { return vane_2_.get(); }
-    inline const int32_t& get_vane_2() const { return vane_2_.get(); }
-    inline int32_t vane_2() const { return vane_2_.get(); }
+    inline void set_vane_2(const float& value) { vane_2_ = value; }
+    inline void set_vane_2(const float&& value) { vane_2_ = value; }
+    inline float& mutable_vane_2() { return vane_2_.get(); }
+    inline const float& get_vane_2() const { return vane_2_.get(); }
+    inline float vane_2() const { return vane_2_.get(); }
 
     static constexpr char const* VANE_3_NAME = "vane_3";
     inline void clear_vane_3() { vane_3_.clear(); }
-    inline void set_vane_3(const int32_t& value) { vane_3_ = value; }
-    inline void set_vane_3(const int32_t&& value) { vane_3_ = value; }
-    inline int32_t& mutable_vane_3() { return vane_3_.get(); }
-    inline const int32_t& get_vane_3() const { return vane_3_.get(); }
-    inline int32_t vane_3() const { return vane_3_.get(); }
+    inline void set_vane_3(const float& value) { vane_3_ = value; }
+    inline void set_vane_3(const float&& value) { vane_3_ = value; }
+    inline float& mutable_vane_3() { return vane_3_.get(); }
+    inline const float& get_vane_3() const { return vane_3_.get(); }
+    inline float vane_3() const { return vane_3_.get(); }
 
     static constexpr char const* VANE_4_NAME = "vane_4";
     inline void clear_vane_4() { vane_4_.clear(); }
-    inline void set_vane_4(const int32_t& value) { vane_4_ = value; }
-    inline void set_vane_4(const int32_t&& value) { vane_4_ = value; }
-    inline int32_t& mutable_vane_4() { return vane_4_.get(); }
-    inline const int32_t& get_vane_4() const { return vane_4_.get(); }
-    inline int32_t vane_4() const { return vane_4_.get(); }
+    inline void set_vane_4(const float& value) { vane_4_ = value; }
+    inline void set_vane_4(const float&& value) { vane_4_ = value; }
+    inline float& mutable_vane_4() { return vane_4_.get(); }
+    inline const float& get_vane_4() const { return vane_4_.get(); }
+    inline float vane_4() const { return vane_4_.get(); }
 
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
@@ -1110,22 +1123,27 @@ class TVCCommand final: public ::EmbeddedProto::MessageInterface
         return_value = command_enum_.serialize_with_id(static_cast<uint32_t>(FieldNumber::COMMAND_ENUM), buffer, false);
       }
 
-      if((0 != vane_1_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      if((0U != opt_vane_profile_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = opt_vane_profile_.serialize_with_id(static_cast<uint32_t>(FieldNumber::OPT_VANE_PROFILE), buffer, false);
+      }
+
+      if((0.0 != vane_1_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
         return_value = vane_1_.serialize_with_id(static_cast<uint32_t>(FieldNumber::VANE_1), buffer, false);
       }
 
-      if((0 != vane_2_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      if((0.0 != vane_2_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
         return_value = vane_2_.serialize_with_id(static_cast<uint32_t>(FieldNumber::VANE_2), buffer, false);
       }
 
-      if((0 != vane_3_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      if((0.0 != vane_3_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
         return_value = vane_3_.serialize_with_id(static_cast<uint32_t>(FieldNumber::VANE_3), buffer, false);
       }
 
-      if((0 != vane_4_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      if((0.0 != vane_4_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
         return_value = vane_4_.serialize_with_id(static_cast<uint32_t>(FieldNumber::VANE_4), buffer, false);
       }
@@ -1148,6 +1166,10 @@ class TVCCommand final: public ::EmbeddedProto::MessageInterface
         {
           case FieldNumber::COMMAND_ENUM:
             return_value = command_enum_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case FieldNumber::OPT_VANE_PROFILE:
+            return_value = opt_vane_profile_.deserialize_check_type(buffer, wire_type);
             break;
 
           case FieldNumber::VANE_1:
@@ -1196,6 +1218,7 @@ class TVCCommand final: public ::EmbeddedProto::MessageInterface
     void clear() override
     {
       clear_command_enum();
+      clear_opt_vane_profile();
       clear_vane_1();
       clear_vane_2();
       clear_vane_3();
@@ -1210,6 +1233,9 @@ class TVCCommand final: public ::EmbeddedProto::MessageInterface
       {
         case FieldNumber::COMMAND_ENUM:
           name = COMMAND_ENUM_NAME;
+          break;
+        case FieldNumber::OPT_VANE_PROFILE:
+          name = OPT_VANE_PROFILE_NAME;
           break;
         case FieldNumber::VANE_1:
           name = VANE_1_NAME;
@@ -1284,6 +1310,7 @@ class TVCCommand final: public ::EmbeddedProto::MessageInterface
       }
 
       left_chars = command_enum_.to_string(left_chars, indent_level + 2, COMMAND_ENUM_NAME, true);
+      left_chars = opt_vane_profile_.to_string(left_chars, indent_level + 2, OPT_VANE_PROFILE_NAME, false);
       left_chars = vane_1_.to_string(left_chars, indent_level + 2, VANE_1_NAME, false);
       left_chars = vane_2_.to_string(left_chars, indent_level + 2, VANE_2_NAME, false);
       left_chars = vane_3_.to_string(left_chars, indent_level + 2, VANE_3_NAME, false);
@@ -1313,10 +1340,11 @@ class TVCCommand final: public ::EmbeddedProto::MessageInterface
 
 
       EmbeddedProto::enumeration<Command> command_enum_ = static_cast<Command>(0);
-      EmbeddedProto::int32 vane_1_ = 0;
-      EmbeddedProto::int32 vane_2_ = 0;
-      EmbeddedProto::int32 vane_3_ = 0;
-      EmbeddedProto::int32 vane_4_ = 0;
+      EmbeddedProto::uint32 opt_vane_profile_ = 0U;
+      EmbeddedProto::floatfixed vane_1_ = 0.0;
+      EmbeddedProto::floatfixed vane_2_ = 0.0;
+      EmbeddedProto::floatfixed vane_3_ = 0.0;
+      EmbeddedProto::floatfixed vane_4_ = 0.0;
 
 };
 

@@ -5069,70 +5069,70 @@ class VanePosition final: public ::EmbeddedProto::MessageInterface
 
     static constexpr char const* VANE_PROFILE_NAME = "vane_profile";
     inline void clear_vane_profile() { vane_profile_.clear(); }
-    inline void set_vane_profile(const int32_t& value) { vane_profile_ = value; }
-    inline void set_vane_profile(const int32_t&& value) { vane_profile_ = value; }
-    inline int32_t& mutable_vane_profile() { return vane_profile_.get(); }
-    inline const int32_t& get_vane_profile() const { return vane_profile_.get(); }
-    inline int32_t vane_profile() const { return vane_profile_.get(); }
+    inline void set_vane_profile(const uint32_t& value) { vane_profile_ = value; }
+    inline void set_vane_profile(const uint32_t&& value) { vane_profile_ = value; }
+    inline uint32_t& mutable_vane_profile() { return vane_profile_.get(); }
+    inline const uint32_t& get_vane_profile() const { return vane_profile_.get(); }
+    inline uint32_t vane_profile() const { return vane_profile_.get(); }
 
     static constexpr char const* VANE_1_NAME = "vane_1";
     inline void clear_vane_1() { vane_1_.clear(); }
-    inline void set_vane_1(const int32_t& value) { vane_1_ = value; }
-    inline void set_vane_1(const int32_t&& value) { vane_1_ = value; }
-    inline int32_t& mutable_vane_1() { return vane_1_.get(); }
-    inline const int32_t& get_vane_1() const { return vane_1_.get(); }
-    inline int32_t vane_1() const { return vane_1_.get(); }
+    inline void set_vane_1(const float& value) { vane_1_ = value; }
+    inline void set_vane_1(const float&& value) { vane_1_ = value; }
+    inline float& mutable_vane_1() { return vane_1_.get(); }
+    inline const float& get_vane_1() const { return vane_1_.get(); }
+    inline float vane_1() const { return vane_1_.get(); }
 
     static constexpr char const* VANE_2_NAME = "vane_2";
     inline void clear_vane_2() { vane_2_.clear(); }
-    inline void set_vane_2(const int32_t& value) { vane_2_ = value; }
-    inline void set_vane_2(const int32_t&& value) { vane_2_ = value; }
-    inline int32_t& mutable_vane_2() { return vane_2_.get(); }
-    inline const int32_t& get_vane_2() const { return vane_2_.get(); }
-    inline int32_t vane_2() const { return vane_2_.get(); }
+    inline void set_vane_2(const float& value) { vane_2_ = value; }
+    inline void set_vane_2(const float&& value) { vane_2_ = value; }
+    inline float& mutable_vane_2() { return vane_2_.get(); }
+    inline const float& get_vane_2() const { return vane_2_.get(); }
+    inline float vane_2() const { return vane_2_.get(); }
 
     static constexpr char const* VANE_3_NAME = "vane_3";
     inline void clear_vane_3() { vane_3_.clear(); }
-    inline void set_vane_3(const int32_t& value) { vane_3_ = value; }
-    inline void set_vane_3(const int32_t&& value) { vane_3_ = value; }
-    inline int32_t& mutable_vane_3() { return vane_3_.get(); }
-    inline const int32_t& get_vane_3() const { return vane_3_.get(); }
-    inline int32_t vane_3() const { return vane_3_.get(); }
+    inline void set_vane_3(const float& value) { vane_3_ = value; }
+    inline void set_vane_3(const float&& value) { vane_3_ = value; }
+    inline float& mutable_vane_3() { return vane_3_.get(); }
+    inline const float& get_vane_3() const { return vane_3_.get(); }
+    inline float vane_3() const { return vane_3_.get(); }
 
     static constexpr char const* VANE_4_NAME = "vane_4";
     inline void clear_vane_4() { vane_4_.clear(); }
-    inline void set_vane_4(const int32_t& value) { vane_4_ = value; }
-    inline void set_vane_4(const int32_t&& value) { vane_4_ = value; }
-    inline int32_t& mutable_vane_4() { return vane_4_.get(); }
-    inline const int32_t& get_vane_4() const { return vane_4_.get(); }
-    inline int32_t vane_4() const { return vane_4_.get(); }
+    inline void set_vane_4(const float& value) { vane_4_ = value; }
+    inline void set_vane_4(const float&& value) { vane_4_ = value; }
+    inline float& mutable_vane_4() { return vane_4_.get(); }
+    inline const float& get_vane_4() const { return vane_4_.get(); }
+    inline float vane_4() const { return vane_4_.get(); }
 
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
     {
       ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
 
-      if((0 != vane_profile_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      if((0U != vane_profile_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
         return_value = vane_profile_.serialize_with_id(static_cast<uint32_t>(FieldNumber::VANE_PROFILE), buffer, false);
       }
 
-      if((0 != vane_1_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      if((0.0 != vane_1_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
         return_value = vane_1_.serialize_with_id(static_cast<uint32_t>(FieldNumber::VANE_1), buffer, false);
       }
 
-      if((0 != vane_2_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      if((0.0 != vane_2_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
         return_value = vane_2_.serialize_with_id(static_cast<uint32_t>(FieldNumber::VANE_2), buffer, false);
       }
 
-      if((0 != vane_3_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      if((0.0 != vane_3_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
         return_value = vane_3_.serialize_with_id(static_cast<uint32_t>(FieldNumber::VANE_3), buffer, false);
       }
 
-      if((0 != vane_4_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      if((0.0 != vane_4_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
         return_value = vane_4_.serialize_with_id(static_cast<uint32_t>(FieldNumber::VANE_4), buffer, false);
       }
@@ -5319,11 +5319,11 @@ class VanePosition final: public ::EmbeddedProto::MessageInterface
   private:
 
 
-      EmbeddedProto::int32 vane_profile_ = 0;
-      EmbeddedProto::int32 vane_1_ = 0;
-      EmbeddedProto::int32 vane_2_ = 0;
-      EmbeddedProto::int32 vane_3_ = 0;
-      EmbeddedProto::int32 vane_4_ = 0;
+      EmbeddedProto::uint32 vane_profile_ = 0U;
+      EmbeddedProto::floatfixed vane_1_ = 0.0;
+      EmbeddedProto::floatfixed vane_2_ = 0.0;
+      EmbeddedProto::floatfixed vane_3_ = 0.0;
+      EmbeddedProto::floatfixed vane_4_ = 0.0;
 
 };
 
