@@ -49,6 +49,10 @@ constexpr uint16_t PROTOCOL_MINIMUM_MESSAGE_LENGTH = PROTOCOL_OVERHEAD_BYTES + 1
 constexpr uint8_t PROTOCOL_MAX_NUM_ERRORS_UNTIL_RESET = 200;        // Number of consecutive UART errors before a system reset is triggered
 constexpr uint16_t PROTOCOL_UART_RX_ERROR_RETRY_DELAY_MS = 1;     // Delay between UART error retries
 
+// Useful Typedefs
+typedef EmbeddedProto::ReadBufferFixedSize<PROTOCOL_RX_BUFFER_SZ_BYTES> ProtocolReadBuffer;
+typedef EmbeddedProto::WriteBufferFixedSize<DEFAULT_PROTOCOL_WRITE_BUFFER_SIZE> ProtocolWriteBuffer;
+
 /* Class ------------------------------------------------------------------*/
 class ProtocolTask : public Task, public UARTReceiverBase
 {
