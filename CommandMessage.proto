@@ -52,12 +52,13 @@ message TVCCommand {
 
     Command command_enum = 1;
     uint32 opt_vane_profile = 2; //for vane profile (0 = none, 1 = profile 1, 2 = profile 2, etc.)
+    uint32 opt_profile_step_delay = 3; // default 1000, delay between each step in profile
     
     // Vane angle, if command_enum is TVC_MANUAL_VANE
-    float vane_1 = 3;
-    float vane_2 = 4;
-    float vane_3 = 5;
-    float vane_4 = 6;
+    float vane_1 = 4;
+    float vane_2 = 5;
+    float vane_3 = 6;
+    float vane_4 = 7;
 }
 
 message DMBCommand {

@@ -132,10 +132,11 @@ class SOBCommand(_message.Message):
     def __init__(self, command_enum: _Optional[_Union[SOBCommand.Command, str]] = ..., command_param: _Optional[int] = ...) -> None: ...
 
 class TVCCommand(_message.Message):
-    __slots__ = ["command_enum", "opt_vane_profile", "vane_1", "vane_2", "vane_3", "vane_4"]
+    __slots__ = ["command_enum", "opt_profile_step_delay", "opt_vane_profile", "vane_1", "vane_2", "vane_3", "vane_4"]
     class Command(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
         __slots__ = []
     COMMAND_ENUM_FIELD_NUMBER: _ClassVar[int]
+    OPT_PROFILE_STEP_DELAY_FIELD_NUMBER: _ClassVar[int]
     OPT_VANE_PROFILE_FIELD_NUMBER: _ClassVar[int]
     TVC_FIRST_INVALID: TVCCommand.Command
     TVC_MANUAL_2VANE: TVCCommand.Command
@@ -147,9 +148,10 @@ class TVCCommand(_message.Message):
     VANE_3_FIELD_NUMBER: _ClassVar[int]
     VANE_4_FIELD_NUMBER: _ClassVar[int]
     command_enum: TVCCommand.Command
+    opt_profile_step_delay: int
     opt_vane_profile: int
     vane_1: float
     vane_2: float
     vane_3: float
     vane_4: float
-    def __init__(self, command_enum: _Optional[_Union[TVCCommand.Command, str]] = ..., opt_vane_profile: _Optional[int] = ..., vane_1: _Optional[float] = ..., vane_2: _Optional[float] = ..., vane_3: _Optional[float] = ..., vane_4: _Optional[float] = ...) -> None: ...
+    def __init__(self, command_enum: _Optional[_Union[TVCCommand.Command, str]] = ..., opt_vane_profile: _Optional[int] = ..., opt_profile_step_delay: _Optional[int] = ..., vane_1: _Optional[float] = ..., vane_2: _Optional[float] = ..., vane_3: _Optional[float] = ..., vane_4: _Optional[float] = ...) -> None: ...

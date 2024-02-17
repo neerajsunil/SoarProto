@@ -1006,6 +1006,7 @@ class TVCCommand final: public ::EmbeddedProto::MessageInterface
     {
       set_command_enum(rhs.get_command_enum());
       set_opt_vane_profile(rhs.get_opt_vane_profile());
+      set_opt_profile_step_delay(rhs.get_opt_profile_step_delay());
       set_vane_1(rhs.get_vane_1());
       set_vane_2(rhs.get_vane_2());
       set_vane_3(rhs.get_vane_3());
@@ -1016,6 +1017,7 @@ class TVCCommand final: public ::EmbeddedProto::MessageInterface
     {
       set_command_enum(rhs.get_command_enum());
       set_opt_vane_profile(rhs.get_opt_vane_profile());
+      set_opt_profile_step_delay(rhs.get_opt_profile_step_delay());
       set_vane_1(rhs.get_vane_1());
       set_vane_2(rhs.get_vane_2());
       set_vane_3(rhs.get_vane_3());
@@ -1038,16 +1040,18 @@ class TVCCommand final: public ::EmbeddedProto::MessageInterface
       NOT_SET = 0,
       COMMAND_ENUM = 1,
       OPT_VANE_PROFILE = 2,
-      VANE_1 = 3,
-      VANE_2 = 4,
-      VANE_3 = 5,
-      VANE_4 = 6
+      OPT_PROFILE_STEP_DELAY = 3,
+      VANE_1 = 4,
+      VANE_2 = 5,
+      VANE_3 = 6,
+      VANE_4 = 7
     };
 
     TVCCommand& operator=(const TVCCommand& rhs)
     {
       set_command_enum(rhs.get_command_enum());
       set_opt_vane_profile(rhs.get_opt_vane_profile());
+      set_opt_profile_step_delay(rhs.get_opt_profile_step_delay());
       set_vane_1(rhs.get_vane_1());
       set_vane_2(rhs.get_vane_2());
       set_vane_3(rhs.get_vane_3());
@@ -1059,6 +1063,7 @@ class TVCCommand final: public ::EmbeddedProto::MessageInterface
     {
       set_command_enum(rhs.get_command_enum());
       set_opt_vane_profile(rhs.get_opt_vane_profile());
+      set_opt_profile_step_delay(rhs.get_opt_profile_step_delay());
       set_vane_1(rhs.get_vane_1());
       set_vane_2(rhs.get_vane_2());
       set_vane_3(rhs.get_vane_3());
@@ -1080,6 +1085,14 @@ class TVCCommand final: public ::EmbeddedProto::MessageInterface
     inline uint32_t& mutable_opt_vane_profile() { return opt_vane_profile_.get(); }
     inline const uint32_t& get_opt_vane_profile() const { return opt_vane_profile_.get(); }
     inline uint32_t opt_vane_profile() const { return opt_vane_profile_.get(); }
+
+    static constexpr char const* OPT_PROFILE_STEP_DELAY_NAME = "opt_profile_step_delay";
+    inline void clear_opt_profile_step_delay() { opt_profile_step_delay_.clear(); }
+    inline void set_opt_profile_step_delay(const uint32_t& value) { opt_profile_step_delay_ = value; }
+    inline void set_opt_profile_step_delay(const uint32_t&& value) { opt_profile_step_delay_ = value; }
+    inline uint32_t& mutable_opt_profile_step_delay() { return opt_profile_step_delay_.get(); }
+    inline const uint32_t& get_opt_profile_step_delay() const { return opt_profile_step_delay_.get(); }
+    inline uint32_t opt_profile_step_delay() const { return opt_profile_step_delay_.get(); }
 
     static constexpr char const* VANE_1_NAME = "vane_1";
     inline void clear_vane_1() { vane_1_.clear(); }
@@ -1128,6 +1141,11 @@ class TVCCommand final: public ::EmbeddedProto::MessageInterface
         return_value = opt_vane_profile_.serialize_with_id(static_cast<uint32_t>(FieldNumber::OPT_VANE_PROFILE), buffer, false);
       }
 
+      if((0U != opt_profile_step_delay_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = opt_profile_step_delay_.serialize_with_id(static_cast<uint32_t>(FieldNumber::OPT_PROFILE_STEP_DELAY), buffer, false);
+      }
+
       if((0.0 != vane_1_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
         return_value = vane_1_.serialize_with_id(static_cast<uint32_t>(FieldNumber::VANE_1), buffer, false);
@@ -1170,6 +1188,10 @@ class TVCCommand final: public ::EmbeddedProto::MessageInterface
 
           case FieldNumber::OPT_VANE_PROFILE:
             return_value = opt_vane_profile_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case FieldNumber::OPT_PROFILE_STEP_DELAY:
+            return_value = opt_profile_step_delay_.deserialize_check_type(buffer, wire_type);
             break;
 
           case FieldNumber::VANE_1:
@@ -1219,6 +1241,7 @@ class TVCCommand final: public ::EmbeddedProto::MessageInterface
     {
       clear_command_enum();
       clear_opt_vane_profile();
+      clear_opt_profile_step_delay();
       clear_vane_1();
       clear_vane_2();
       clear_vane_3();
@@ -1236,6 +1259,9 @@ class TVCCommand final: public ::EmbeddedProto::MessageInterface
           break;
         case FieldNumber::OPT_VANE_PROFILE:
           name = OPT_VANE_PROFILE_NAME;
+          break;
+        case FieldNumber::OPT_PROFILE_STEP_DELAY:
+          name = OPT_PROFILE_STEP_DELAY_NAME;
           break;
         case FieldNumber::VANE_1:
           name = VANE_1_NAME;
@@ -1311,6 +1337,7 @@ class TVCCommand final: public ::EmbeddedProto::MessageInterface
 
       left_chars = command_enum_.to_string(left_chars, indent_level + 2, COMMAND_ENUM_NAME, true);
       left_chars = opt_vane_profile_.to_string(left_chars, indent_level + 2, OPT_VANE_PROFILE_NAME, false);
+      left_chars = opt_profile_step_delay_.to_string(left_chars, indent_level + 2, OPT_PROFILE_STEP_DELAY_NAME, false);
       left_chars = vane_1_.to_string(left_chars, indent_level + 2, VANE_1_NAME, false);
       left_chars = vane_2_.to_string(left_chars, indent_level + 2, VANE_2_NAME, false);
       left_chars = vane_3_.to_string(left_chars, indent_level + 2, VANE_3_NAME, false);
@@ -1341,6 +1368,7 @@ class TVCCommand final: public ::EmbeddedProto::MessageInterface
 
       EmbeddedProto::enumeration<Command> command_enum_ = static_cast<Command>(0);
       EmbeddedProto::uint32 opt_vane_profile_ = 0U;
+      EmbeddedProto::uint32 opt_profile_step_delay_ = 0U;
       EmbeddedProto::floatfixed vane_1_ = 0.0;
       EmbeddedProto::floatfixed vane_2_ = 0.0;
       EmbeddedProto::floatfixed vane_3_ = 0.0;
