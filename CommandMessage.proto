@@ -44,9 +44,10 @@ message TVCCommand {
         TVC_FIRST_INVALID = 0;
 
         TVC_VANE_PROFILE = 1; // Run preset vane profile
-        TVC_MANUAL_VANE = 2; // Set vane angle manually
+        TVC_MANUAL_2VANE = 2; // Set 2 vane angles manually (based on vane1 and vane2)
+        TVC_MANUAL_4VANE = 3; // Set all 4 vane angles manually
 
-        TVC_VANE_REQUEST_POS = 3; // Request current vane position
+        TVC_VANE_REQUEST_POS = 4; // Request current vane position
     }
 
     Command command_enum = 1;

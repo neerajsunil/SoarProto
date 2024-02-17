@@ -1026,8 +1026,9 @@ class TVCCommand final: public ::EmbeddedProto::MessageInterface
     {
       TVC_FIRST_INVALID = 0,
       TVC_VANE_PROFILE = 1,
-      TVC_MANUAL_VANE = 2,
-      TVC_VANE_REQUEST_POS = 3
+      TVC_MANUAL_2VANE = 2,
+      TVC_MANUAL_4VANE = 3,
+      TVC_VANE_REQUEST_POS = 4
     };
 
     enum class FieldNumber : uint32_t
