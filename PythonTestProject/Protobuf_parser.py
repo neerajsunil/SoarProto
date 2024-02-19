@@ -2,18 +2,36 @@
 # BRIEF: This file contains the protobuf parser class for converting protobuf messages to JSON
 #         and pushing telemetry messages to PocketBase
 
-import os, sys
 
 import json
-from supabase import create_client, Client
-from google.protobuf.json_format import MessageToJson
-import ControlMessage_pb2 as ProtoCtrl
-import CommandMessage_pb2 as ProtoCmd
-import TelemetryMessage_pb2 as ProtoTele
+import time
+import serial
+import datetime
+import threading
 import CoreProto_pb2 as Core
+import CommandMessage_pb2 as ProtoCmd
+import ControlMessage_pb2 as ProtoCtrl
+import TelemetryMessage_pb2 as ProtoTele
+
+from Configuration import *
+from LoadCell import LoadCell
+from TestStand import TestStand
+from DataCapture import data_capture
+from supabase import create_client, Client
+from LabJackTVC import LabJack, DigitalOutput
+from DataCaptureStream import data_capture_stream
+from google.protobuf.json_format import MessageToJson
+from VaneControlDBG import VaneThreadHandler, VaneControlDebug
 
 
 class ProtobufParser:
+    # FIXME: This is a temporary solution to the labjack and test_stand objects
+    labjack = None
+    test_stand = None
+    ignitionOut = None
+    # Attempt to initialize serial
+    SER = None
+
     @staticmethod
     def flatten_json(json_data, parent_key='', separator='_'):
         """
@@ -93,8 +111,15 @@ class ProtobufParser:
         # Push the JSON data to supabase using the correct schema
         data, count = client.table(table_name).insert(flattened_data).execute()
 
-# Example code
-import time, datetime
+def setup_serial(com_port : str):
+    # Setup serial port
+    if SER is None:
+        try:
+            SER = serial.Serial(port=com_port, baudrate=115200, bytesize=8, parity=serial.PARITY_NONE, timeout=None, stopbits=serial.STOPBITS_ONE)
+        except Exception as e:
+            print(f"Error: Could not connect to serial port {com_port}. Please check the port, servo-command comms will be disabled. {e}")
+
+    return SER
 
 def generate_gps_serial():
     # Create a new GPS message
@@ -173,12 +198,161 @@ def generate_imu_message():
     serialized_message = telemetry_message.SerializeToString()
     return serialized_message
 
+def ignite_pulse(do: DigitalOutput, duration: float):
+    print(f"FIO3 pulsing for {duration*1000}ms")
+    do = DigitalOutput(labjack, "FIO3")
+    do.write(1)
+    time.sleep(duration)
+    do.write(0)
+
+# Start data capture in Stream mode
+def option_data_capture_stream():
+    data_capture_stream_thread = threading.Thread(target=data_capture_stream, args=(labjack, test_stand, test_stand.get_rate()))
+    data_capture_stream_thread.start()
+
+# Start data capture in Command-Response mode
+def option_data_capture_cmd():
+
+    data_capture_cmd_thread = threading.Thread(target=data_capture, args=(test_stand, test_stand.get_rate()))
+    data_capture_cmd_thread.start()
+
+# Stop data capture
+def option_data_capture_stop():
+    return
+
+# Start ignition
+def option_ignition_on():
+    ignite_pulse(ignitionOut, 0.7)
+
+# Stop ignition
+def option_ignition_off():
+    ignitionOut.write(0)
+
+# Ignite stream
+def option_ignite_stream():
+    # Ignite, Stream (100ms), Replay on Z force > X
+    reading_queue = None
+    vth = None
+    if SER is not None:
+        vane_control_debug = VaneControlDebug(SER)
+        vth = VaneThreadHandler(vane_control_debug, VANE_PROFILE_DIFFERENTIAL_Z_FORCE, REPLAY_VANE_PROFILE, True)
+        reading_queue = vth.get_input_queue()
+    
+    # If the queue is None then pause here and notify of the failure
+    if reading_queue is None and SER is not None:
+        print("Error: Could not start the vane control thread. Please check the serial port.")
+        input("Press Enter to continue...")
+        return
+
+    # Ignite
+    ignitionOut.write(1)
+
+    # Start the data capture in Stream mode
+    data_capture_stream_thread = threading.Thread(target=data_capture_stream, args=(labjack, test_stand, test_stand.get_rate(), reading_queue))
+    data_capture_stream_thread.start()
+    
+    # Cleanup
+    ignitionOut.write(0)
+    vth.stop()
+
+# Ignite command
+def option_ignite_command():
+    # Ignite, Command-Response (100ms), Replay on Z force > X or timeout
+    reading_queue = None
+    vth = None
+    if SER is not None:
+        vane_control_debug = VaneControlDebug(SER)
+        vth = VaneThreadHandler(vane_control_debug, VANE_PROFILE_DIFFERENTIAL_Z_FORCE, REPLAY_VANE_PROFILE, True)
+        reading_queue = vth.get_input_queue()
+    
+    # If the queue is None then pause here and notify of the failure
+    if reading_queue is None and vth is None:
+        print("Error: Could not start the vane control thread. Please check the serial port.")
+        input("Press Enter to continue...")
+        return
+        
+    # Ignite
+    ignitionOut.write(1)
+
+    # Start the data capture in C-R mode
+    data_capture_cmd_thread = threading.Thread(target=data_capture, args=(test_stand, test_stand.get_rate(), reading_queue))
+    data_capture_cmd_thread.start()
+
+    # Cleanup
+    ignitionOut.write(0)
+    vth.stop()
+
+# Ignite replay stream
+def option_ignite_replay_stream():
+    # Ignite, Replay, Stream
+    ignitionOut.write(1)
+
+    # Start the data capture in Stream mode
+    data_capture_stream_thread = threading.Thread(target=data_capture_stream, args=(labjack, test_stand, test_stand.get_rate()))
+    data_capture_stream_thread.start()
+
+    # Cleanup
+    ignitionOut.write(0)
+
+# Function to handle new commands
+def handle_new_command(payload):
+    new_cmd = payload['new']['cmd']
+    if new_cmd == 'data_capture_stream':
+        option_data_capture_stream()
+    elif new_cmd == 'data_capture_cmd':
+        option_data_capture_cmd()
+    elif new_cmd == 'data_capture_stop':
+        option_data_capture_stop()
+    elif new_cmd == 'ignition_on':
+        option_ignition_on()
+    elif new_cmd == 'ignition_off':
+        option_ignition_off()
+    elif new_cmd == 'ignite_stream':
+        option_ignite_stream()
+    elif new_cmd == 'ignite_command':
+        option_ignite_command()
+    elif new_cmd == 'ignite_replay_stream':
+        option_ignite_replay_stream()
+    else:
+        print(f'Invalid command: {new_cmd}')
+
+# Subscribe to real-time changes in the 'commands' table
+def listen_for_commands():
+    print("Listening for commands...")
+    supabase.realtime.from_('commands').on('INSERT', handle_new_command).subscribe()
 
 if __name__ == "__main__":
+    # Set up the LabJack
+    try:
+        labjack = LabJack()
+    except Exception as e:
+        print("\033[91mError: Could not connect to LabJack. Please check the connection.\033[0m")
+        input("Press Enter to exit...")
+        exit(1)
+
+    # Initialize the load cells
+    lc_x = LoadCell(labjack, ANALOG_CHANNELS["LOAD_CELL_X"])
+    lc_y = LoadCell(labjack, ANALOG_CHANNELS["LOAD_CELL_Y"])
+    lc_z = LoadCell(labjack, ANALOG_CHANNELS["LOAD_CELL_Z"])
+    lc_t = LoadCell(labjack, ANALOG_CHANNELS["LOAD_CELL_T"])
+    lclist = [lc_x, lc_y, lc_z, lc_t]
+
+    # Initialize the Test Stand
+    test_stand = TestStand(lc_x, lc_y, lc_z, lc_t)
+
+    # Initialize the digital output
+    ignitionOut = DigitalOutput(labjack, "FIO3")
+
+    SER = setup_serial(COM_PORT)
+
     # Connect supabase
     url: str = ""
     key: str = ""
     supabase: Client = create_client(url, key)
+
+    #start listening for commands
+    command_listener_thread = threading.Thread(target=listen_for_commands)
+    command_listener_thread.start()
 
     # Generate a GPS message
     serialized_message = generate_gps_serial()
