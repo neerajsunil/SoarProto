@@ -5,13 +5,37 @@
 import os, sys
 
 import json
+from supabase import create_client, Client
 from google.protobuf.json_format import MessageToJson
 import ControlMessage_pb2 as ProtoCtrl
 import CommandMessage_pb2 as ProtoCmd
 import TelemetryMessage_pb2 as ProtoTele
 import CoreProto_pb2 as Core
 
+
 class ProtobufParser:
+    @staticmethod
+    def flatten_json(json_data, parent_key='', separator='_'):
+        """
+            Flattens nested JSON object.
+
+            Parameters:
+                json_data (dict): The nested JSON object.
+                parent_key (str): The parent key in case of recursion (default is '').
+                separator (str): The separator to use between keys (default is '_').
+
+            Returns:
+                dict: The flattened JSON object.
+        """
+        items = {}
+        for key in json_data:
+            new_key = parent_key + separator + key if parent_key else key
+            if isinstance(json_data[key], dict):
+                items.update(ProtobufParser.flatten_json(json_data[key], new_key, separator=separator))
+            else:
+                items[new_key] = json_data[key]
+        return items
+
     @staticmethod
     def parse_protobuf_to_json(protobuf_message):
         # Convert the protobuf message to a JSON string
@@ -50,17 +74,24 @@ class ProtobufParser:
 
     # TODO: Add method to push JSON to DB
     @staticmethod
-    def push_tele_json_to_database(client, json_data):
+    def push_tele_json_to_database(client: Client, json_data):
         '''
         Push a telemetry JSON message to DataBase
 
         Note: The third key in the JSON data is assumed to be the table name
         '''
+    
         # Extract the table name from the JSON data
         table_name = list(json_data.keys())[2]
+        
+        # Flatten data to fix to table columns
+        flattened_data = ProtobufParser.flatten_json(json_data[table_name])
 
-        # Push the JSON data to PocketBase using the correct schema
-        client.collection(table_name).create(json.loads(json_data))
+        # print("Pushing to table: " + table_name + " data: ")
+        # print(flattened_data)
+        
+        # Push the JSON data to supabase using the correct schema
+        data, count = client.table(table_name).insert(flattened_data).execute()
 
 # Example code
 import time, datetime
@@ -118,14 +149,19 @@ def generate_tvc_message():
     return serialized_message
 
 if __name__ == "__main__":
+    # Connect supabase
+    url: str = ""
+    key: str = ""
+    supabase: Client = create_client(url, key)
+
     # Generate a GPS message
-    serialized_message = generate_gps_serial()
+    # serialized_message = generate_gps_serial()
 
     # Parse the serialized message to JSON
-    parsed = ProtobufParser.parse_serial_to_json(serialized_message, Core.MessageID.MSG_TELEMETRY)
+    # parsed = ProtobufParser.parse_serial_to_json(serialized_message, Core.MessageID.MSG_TELEMETRY)
 
     # Output
-    print(parsed)
+    # parsedJson = json.loads(parsed)
 
     # Generate a TVC message
     serialized_message = generate_tvc_message()
@@ -133,6 +169,8 @@ if __name__ == "__main__":
     # Parse the serialized message to JSON
     parsed = ProtobufParser.parse_serial_to_json(serialized_message, Core.MessageID.MSG_TELEMETRY)
 
+    # Push to database
+    ProtobufParser.push_tele_json_to_database(supabase, json.loads(parsed))
     # Output
-    print(parsed)
+    # print(parsed)
 
