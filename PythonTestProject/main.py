@@ -50,7 +50,12 @@ def populate_command_msg(command):
     msg.source_sequence_num = sequence_number
     sequence_number = sequence_number + 1
 
-    dmb_command = ProtoParse.STRING_TO_RSC_PROTO_COMMAND.get(command)
+    # dmb_command = ProtoCmd.TVCCommand()
+    # dmb_command.command_enum = ProtoCmd.TVCCommand.TVC_
+    # dmb_command.opt_vane_profile = 0
+    # dmb_command.opt_profile_step_delay = 1000 # ms
+    # dmb_command.vane_1 = 0.5 # Then do so
+
 
     if dmb_command != None:
         if command not in ProtoParse.ALLOWED_COMMANDS_FROM_STATE[current_state]:
@@ -100,31 +105,6 @@ def on_mqtt_message(client, userdata, message):
 
     #return True
 
-def send_ack_message(msg):
-    ack_msg = ProtoCmd.ControlMessage()
-    ack_msg.source = Core.NODE_RCU
-    ack_msg.target = msg.source
-    ack_msg.message_id = Core.MSG_CONTROL
-    ack_msg.source_sequence_number = 0
-    ack_msg.ack.acking_msg_id = msg.message_id
-    ack_msg.ack.acking_msg_source = Core.NODE_RCU
-    ack_msg.ack.acking_sequence_num = msg.source_sequence_number
-
-# telemetry message
-def process_telemetry_message(data):
-
-    received_message = ProtoTele.TelemetryMessage()
-    try:
-        received_message.ParseFromString(data)
-    except message.DecodeError: 
-        #print("cannot decode telemetry message")
-        return
-
-    if received_message.target == Core.NODE_RCU:
-        message_type = received_message.WhichOneof('message')
-        #print(message_type)
-        ProtoParse.TELE_FUNCTION_DICTIONARY[message_type](received_message)
-
 # control message
 def process_control_message(data):
     received_message = ProtoCtr.ControlMessage()
@@ -166,10 +146,8 @@ def on_serial_message(message):
     msgId, data = Codec.Decode(message[:-1], len(message) - 1)
 
     #Process essage according to ID
-    if msgId == Core.MessageID.MSG_TELEMETRY:
-        process_telemetry_message(data)
-    elif msgId == Core.MessageID.MSG_CONTROL:
-        process_control_message(data)
+    if msgId == Core.MSG_TELEMETRY or msgId == Core.MSG_CONTROL:
+        ProtoParse.ProtobufParser.parse_serial_to_json(data, msgId)
     else:
         ProtoParse.client.publish("TELE_PI_ERROR", json.dumps({"error": "Received invalid MessageID"}))
 
