@@ -88,7 +88,7 @@ class ProtobufParser:
         flattened_data = ProtobufParser.flatten_json(json_data[table_name])
 
         # print("Pushing to table: " + table_name + " data: ")
-        # print(flattened_data)
+        print(flattened_data)
         
         # Push the JSON data to supabase using the correct schema
         data, count = client.table(table_name).insert(flattened_data).execute()
@@ -148,6 +148,32 @@ def generate_tvc_message():
     serialized_message = telemetry_message.SerializeToString()
     return serialized_message
 
+def generate_imu_message():
+    imu = ProtoTele.IMU()
+
+    imu.accelx = 1000
+    imu.accely = 1000
+    imu.accelz = 1000
+
+    imu.gyrox = 100
+    imu.gyroy = 100
+    imu.gyroz = 100
+
+    imu.magx = 100
+    imu.magy = 100
+    imu.magz = 100
+
+    # Wrap in TelemetryMessage
+    telemetry_message = ProtoTele.TelemetryMessage()
+    telemetry_message.imu.CopyFrom(imu)
+    telemetry_message.source = Core.NODE_DMB
+    telemetry_message.target = Core.NODE_RCU
+
+    # Serialize the message
+    serialized_message = telemetry_message.SerializeToString()
+    return serialized_message
+
+
 if __name__ == "__main__":
     # Connect supabase
     url: str = ""
@@ -155,10 +181,13 @@ if __name__ == "__main__":
     supabase: Client = create_client(url, key)
 
     # Generate a GPS message
-    # serialized_message = generate_gps_serial()
+    serialized_message = generate_gps_serial()
 
     # Parse the serialized message to JSON
-    # parsed = ProtobufParser.parse_serial_to_json(serialized_message, Core.MessageID.MSG_TELEMETRY)
+    parsed = ProtobufParser.parse_serial_to_json(serialized_message, Core.MessageID.MSG_TELEMETRY)
+
+    # Push to database
+    ProtobufParser.push_tele_json_to_database(supabase, json.loads(parsed))
 
     # Output
     # parsedJson = json.loads(parsed)
@@ -171,6 +200,18 @@ if __name__ == "__main__":
 
     # Push to database
     ProtobufParser.push_tele_json_to_database(supabase, json.loads(parsed))
+    # Output
+    # print(parsed)
+
+    # Generate an IMU message
+    serialized_message = generate_imu_message()
+
+    # Parse the serialized message to JSON
+    parsed = ProtobufParser.parse_serial_to_json(serialized_message, Core.MessageID.MSG_TELEMETRY)
+
+    # Push to database
+    ProtobufParser.push_tele_json_to_database(supabase, json.loads(parsed))
+
     # Output
     # print(parsed)
 
