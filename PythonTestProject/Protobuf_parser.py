@@ -1,273 +1,108 @@
-#Telemetry_parser.py
+# FILE: ProtobufParser.py
+# BRIEF: This file contains the protobuf parser class for converting protobuf messages to JSON
+#         and pushing telemetry messages to PocketBase
 
-import time
+import os, sys
+
 import json
-import paho.mqtt.client as mqtt
-import ControlMessage_pb2 as Proto
+from google.protobuf.json_format import MessageToJson
+import ControlMessage_pb2 as ProtoCtrl
 import CommandMessage_pb2 as ProtoCmd
 import TelemetryMessage_pb2 as ProtoTele
 import CoreProto_pb2 as Core
-import Publisher_nodered as pbnd
 
-client = mqtt.Client()
+class ProtobufParser:
+    @staticmethod
+    def parse_protobuf_to_json(protobuf_message):
+        # Convert the protobuf message to a JSON string
+        json_string = MessageToJson(protobuf_message, preserving_proto_field_name=True)
+        return json_string
 
-PROTO_STATE_TO_STRING = {
-Core.RS_ABORT : 'RS_ABORT',
-Core.RS_ARM : 'RS_ARM',
-Core.RS_BURN : 'RS_BURN',
-Core.RS_COAST : 'RS_COAST',
-Core.RS_DESCENT : 'RS_DESCENT',
-Core.RS_FILL : 'RS_FILL',
-Core.RS_IGNITION : 'RS_IGNITION',
-Core.RS_LAUNCH : 'RS_LAUNCH',
-Core.RS_NONE : 'RS_NONE',
-Core.RS_PRELAUNCH : 'RS_PRELAUNCH',
-Core.RS_RECOVERY : 'RS_RECOVERY'
-}
+    @staticmethod
+    def parse_serial_to_json(serialized_message, msg_id):
+        '''
+        Parse a serialized message to a JSON string
 
-STRING_TO_RSC_PROTO_COMMAND = {
-	"RSC_ANY_TO_ABORT": ProtoCmd.DMBCommand.RSC_ANY_TO_ABORT,
-	"RSC_ARM_CONFIRM_1": ProtoCmd.DMBCommand.RSC_ARM_CONFIRM_1,
-	"RSC_ARM_CONFIRM_2": ProtoCmd.DMBCommand.RSC_ARM_CONFIRM_2,
-	"RSC_BURN_TO_COAST": ProtoCmd.DMBCommand.RSC_BURN_TO_COAST,
-	"RSC_CLOSE_DRAIN": ProtoCmd.DMBCommand.RSC_CLOSE_DRAIN,
-	"RSC_CLOSE_VENT": ProtoCmd.DMBCommand.RSC_CLOSE_VENT,
-	"RSC_COAST_TO_DESCENT": ProtoCmd.DMBCommand.RSC_COAST_TO_DESCENT,
-	"RSC_DESCENT_TO_RECOVERY": ProtoCmd.DMBCommand.RSC_DESCENT_TO_RECOVERY,
-	"RSC_FIRST_INVALID": ProtoCmd.DMBCommand.RSC_FIRST_INVALID,
-	"RSC_GOTO_ARM": ProtoCmd.DMBCommand.RSC_GOTO_ARM,
-	"RSC_GOTO_FILL": ProtoCmd.DMBCommand.RSC_GOTO_FILL,
-	"RSC_GOTO_IGNITION": ProtoCmd.DMBCommand.RSC_GOTO_IGNITION,
-	"RSC_GOTO_PRELAUNCH": ProtoCmd.DMBCommand.RSC_GOTO_PRELAUNCH,
-	"RSC_IGNITION_TO_LAUNCH": ProtoCmd.DMBCommand.RSC_IGNITION_TO_LAUNCH,
-	"RSC_LAUNCH_TO_BURN": ProtoCmd.DMBCommand.RSC_LAUNCH_TO_BURN,
-	"RSC_MEV_CLOSE": ProtoCmd.DMBCommand.RSC_MEV_CLOSE,
-	"RSC_OPEN_DRAIN": ProtoCmd.DMBCommand.RSC_OPEN_DRAIN,
-	"RSC_OPEN_VENT": ProtoCmd.DMBCommand.RSC_OPEN_VENT,
-	"RSC_POWER_TRANSITION_EXTERNAL": ProtoCmd.DMBCommand.RSC_POWER_TRANSITION_EXTERNAL,
-	"RSC_POWER_TRANSITION_ONBOARD": ProtoCmd.DMBCommand.RSC_POWER_TRANSITION_ONBOARD,
-	"RSC_NONE" : ProtoCmd.DMBCommand.RSC_NONE
-}
+        Args:
+            serialized_message: The serialized message
+            msg_id: The message ID
+        Throws:
+            ValueError: If the message ID is invalid
+        '''
 
-STRING_TO_SOB_PROTO_COMMAND = {
-	"SOB_NONE": ProtoCmd.SOBCommand.SOB_NONE,
-	"SOB_SLOW_SAMPLE_IR": ProtoCmd.SOBCommand.SOB_SLOW_SAMPLE_IR,
-	"SOB_FAST_SAMPLE_IR": ProtoCmd.SOBCommand.SOB_FAST_SAMPLE_IR,
-	"SOB_TARE_LOAD_CELL": ProtoCmd.SOBCommand.SOB_TARE_LOAD_CELL,
-    "SOB_CALIBRATE_LOAD_CELL": ProtoCmd.SOBCommand.SOB_CALIBRATE_LOAD_CELL,
-    "SOB_LAST": ProtoCmd.SOBCommand.SOB_LAST,
-}
+        # Create message object based on message ID
+        message = None
+        if msg_id == Core.MessageID.MSG_COMMAND:
+            message = ProtoCmd.CommandMessage()
+        elif msg_id == Core.MessageID.MSG_TELEMETRY:
+            message = ProtoTele.TelemetryMessage()
+        elif msg_id == Core.MessageID.MSG_CONTROL:
+            message = ProtoCtrl.ControlMessage()
+        else:
+            raise ValueError(f'Invalid message ID: {msg_id}')
+        
+        # Parse the serialized message
+        message.ParseFromString(serialized_message)
+        
+        # Convert the message to JSON and print it
+        json_string = ProtobufParser.parse_protobuf_to_json(message)
+        return json_string
 
-ALLOWED_COMMANDS_FROM_STATE = {
-    'RS_ABORT': ["RSC_ANY_TO_ABORT", "RSC_GOTO_PRELAUNCH"],
-    'RS_ARM': ["RSC_ANY_TO_ABORT", "RSC_POWER_TRANSITION_ONBOARD", "RSC_POWER_TRANSITION_EXTERNAL", "RSC_GOTO_FILL", "RSC_GOTO_IGNITION", "RSC_OPEN_VENT", "RSC_CLOSE_VENT", "RSC_OPEN_DRAIN", "RSC_CLOSE_DRAIN", "RSC_MEV_CLOSE"],
-    'RS_BURN': ["RSC_ANY_TO_ABORT", "RSC_BURN_TO_COAST"],
-    'RS_COAST': ["RSC_ANY_TO_ABORT", "RSC_COAST_TO_DESCENT"],
-    'RS_DESCENT': ["RSC_ANY_TO_ABORT", "RSC_DESCENT_TO_RECOVERY"],
-    'RS_FILL': ["RSC_ANY_TO_ABORT", "RSC_ARM_CONFIRM_1", "RSC_ARM_CONFIRM_2", "RSC_GOTO_ARM", "RSC_GOTO_PRELAUNCH", "RSC_OPEN_VENT", "RSC_CLOSE_VENT", "RSC_OPEN_DRAIN", "RSC_CLOSE_DRAIN", "RSC_MEV_CLOSE"],
-    'RS_IGNITION': ["RSC_ANY_TO_ABORT", "RSC_IGNITION_TO_LAUNCH", "RSC_GOTO_ARM"],
-    'RS_LAUNCH': ["RSC_ANY_TO_ABORT", "RSC_LAUNCH_TO_BURN"],
-    'RS_NONE': ["RSC_ANY_TO_ABORT"],
-    'RS_PRELAUNCH': ["RSC_ANY_TO_ABORT", "RSC_GOTO_FILL", "RSC_OPEN_VENT", "RSC_CLOSE_VENT", "RSC_OPEN_DRAIN", "RSC_CLOSE_DRAIN", "RSC_MEV_CLOSE"],
-    'RS_RECOVERY': ["RSC_ANY_TO_ABORT", "RSC_OPEN_VENT", "RSC_CLOSE_VENT", "RSC_OPEN_DRAIN", "RSC_CLOSE_DRAIN", "RSC_MEV_CLOSE"]
-}
+    # TODO: Add method to push JSON to DB
+    @staticmethod
+    def push_tele_json_to_database(client, json_data):
+        '''
+        Push a telemetry JSON message to DataBase
 
-def coord_parse_json_send(msg):
-    dmb_jsonStr_gps = json.dumps(pbnd.tele_dmb_obj.tele_gps(msg.coord.latitude.minutes, msg.coord.latitude.degrees,
-                                                            msg.coord.longitude.minutes, msg.coord.longitude.degrees,
-                                                            msg.coord.antenna_alt.altitude, msg.coord.antenna_alt.unit,
-                                                            msg.coord.geoidAltitude.altitude, msg.coord.geoidAltitude.unit,
-                                                            msg.coord.total_alt.altitude, msg.coord.total_alt.unit,
-                                                            msg.coord.time))
-    client.publish("TELE_DMB_GPS", dmb_jsonStr_gps)
+        Note: The third key in the JSON data is assumed to be the table name
+        '''
+        # Extract the table name from the JSON data
+        table_name = list(json_data.keys())[2]
 
-def baro_parse_json_send(msg):
-    dmb_jsonStr_baro = json.dumps(pbnd.tele_dmb_obj.tele_baro(msg.baro.baro_pressure, msg.baro.baro_temp))
-    #print(msg.baro.baro_pressure)
-    #print(msg.baro.baro_temp)
-    client.publish("TELE_DMB_BARO", dmb_jsonStr_baro)
+        # Push the JSON data to PocketBase using the correct schema
+        client.collection(table_name).create(json.loads(json_data))
 
-def imu_parse_json_send(msg):
-    accel = [msg.imu.accelx, msg.imu.accely, msg.imu.accelz]
-    gyro = [msg.imu.gyrox, msg.imu.gyroy, msg.imu.gyroz]
-    magn = [msg.imu.magx, msg.imu.magy, msg.imu.magz]
-    dmb_jsonStr_imu = json.dumps(pbnd.tele_dmb_obj.tele_imu(accel, gyro, magn))
-    client.publish("TELE_DMB_IMU", dmb_jsonStr_imu)
+# Example code
+import time, datetime
 
-def bat_parse_json_send(msg):
-    dmb_jsonStr_battery = json.dumps(pbnd.tele_dmb_obj.tele_battery(msg.bat.p_source, msg.bat.volt))
-    client.publish("TELE_DMB_BATTERY", dmb_jsonStr_battery)
+def generate_gps_serial():
+    # Create a new GPS message
+    gps_message = ProtoTele.GPS()
 
-def flash_parse_json_send(msg):
-    dmb_jsonStr_flash = json.dumps(pbnd.tele_dmb_obj.tele_flash(msg.flash.sector_address, msg.flash.logging_rate))
-    client.publish("TELE_DMB_FLASH", dmb_jsonStr_flash)
+    # Latitude for Calgary
+    gps_message.latitude.degrees = 51
+    gps_message.latitude.minutes = int((0.0447 * 60))
 
-def pressdmb_parse_json_send(msg):
-    dmb_jsonStr_pressure = json.dumps(pbnd.tele_pbb_obj.tele_pressure(msg.pressdmb.upper_pv_pressure))
-    client.publish("TELE_DMB_PRESSURE", dmb_jsonStr_pressure)
+    # Longitude for Calgary
+    gps_message.longitude.degrees = -114
+    gps_message.longitude.minutes = int((0.0719 * 60))
 
-def presspbb_parse_json_send(msg):
-    pbb_jsonStr_pressure = json.dumps(pbnd.tele_pbb_obj.tele_pressure(msg.presspbb.ib_pressure, msg.presspbb.lower_pv_pressure))
-    client.publish("TELE_PBB_PRESSURE", pbb_jsonStr_pressure)
+    gps_message.antenna_alt.altitude = 123
+    gps_message.antenna_alt.unit = 1
+    gps_message.geoidAltitude.altitude = 123
+    gps_message.geoidAltitude.unit = 1
+    gps_message.total_alt.altitude = 123
+    gps_message.total_alt.unit = 1
 
-def temppbb_parse_json_send(msg):
-    pbb_jsonStr_temperature = json.dumps(pbnd.tele_pbb_obj.tele_pressure(msg.temppbb.ib_temperature, msg.temppbb.pv_temperature))
-    client.publish("TELE_PBB_TEMP", pbb_jsonStr_temperature)
+    # Set the time to 2024-01-01T00:00:00Z
+    gps_message.time = int(time.mktime(datetime.datetime(2024, 1, 1).timetuple()))
 
-def gpio_parse_json_send(msg):
-    pbb_jsonStr_gpio_status = json.dumps(pbnd.tele_pbb_obj.tele_gpio_status(msg.gpio.main_engine_valve_open, msg.gpio.vent_open, msg.gpio.drain_open))
-    client.publish("TELE_PBB_GPIO", pbb_jsonStr_gpio_status)
+    # Wrap in TelemetryMessage
+    telemetry_message = ProtoTele.TelemetryMessage()
+    telemetry_message.coord.CopyFrom(gps_message)
+    telemetry_message.source = Core.NODE_DMB
+    telemetry_message.target = Core.NODE_RCU
 
-def pressrcu_parse_json_send(msg):
-    rcu_jsonStr_pressure = json.dumps(pbnd.tele_rcu_obj.tele_pressure(msg.pressrcu.pt1_pressure, msg.pressrcu.pt2_pressure, msg.pressrcu.pt3_pressure, msg.pressrcu.pt4_pressure))
-    client.publish("TELE_RCU_PRESSURE", rcu_jsonStr_pressure)
+    # Serialize the message
+    serialized_message = telemetry_message.SerializeToString()
+    return serialized_message
 
-def temprcu_parse_json_send(msg):
-    rcu_jsonStr_temp = json.dumps(pbnd.tele_rcu_obj.tele_temp(msg.temprcu.tc1_temp, msg.temprcu.tc2_temp))
-    client.publish("TELE_RCU_TEMP", rcu_jsonStr_temp)
+if __name__ == "__main__":
+    # Generate a GPS message
+    serialized_message = generate_gps_serial()
 
-def nos_parse_json_send(msg):
-    rcu_jsonStr_nos_load_cell = json.dumps(pbnd.tele_rcu_obj.tele_nos_load_cell(msg.nos.nos1_mass, msg.nos.nos2_mass))
-    client.publish("TELE_RCU_NOS", rcu_jsonStr_nos_load_cell)
+    # Parse the serialized message to JSON
+    parsed = ProtobufParser.parse_serial_to_json(serialized_message, Core.MessageID.MSG_TELEMETRY)
 
-def relay_parse_json_send(msg):
-    rcu_jsonStr_relay_status = json.dumps(pbnd.tele_rcu_obj.tele_relay_status(msg.relay.ac1_open, msg.relay.ac2_open, 
-                                                                              msg.relay.pbv1_open, msg.relay.pbv2_open, msg.relay.pbv3_open,
-                                                                              msg.relay.sol1_open, msg.relay.sol2_open, msg.relay.sol3_open, msg.relay.sol4_open, msg.relay.sol5_open, msg.relay.sol6_open, msg.relay.sol7_open, msg.relay.sol8a_open, msg.relay.sol8b_open))
-    client.publish("TELE_RCU_RELAY", rcu_jsonStr_relay_status)
-
-def padbox_parse_json_send(msg):
-    rcu_jsonStr_padbox_status = json.dumps(pbnd.tele_rcu_obj.tele_padbox_status(msg.padbox.cont1, msg.padbox.cont2))
-    client.publish("TELE_RCU_PADBOX", rcu_jsonStr_padbox_status)
-
-def lr_parse_json_send(msg):
-    sob_jsonStr_lr_load_cell = json.dumps(pbnd.tele_sob_obj.tele_lr_load_cell(msg.lr.rocket_mass))
-    client.publish("TELE_SOB_LOAD_CELL", sob_jsonStr_lr_load_cell)
-
-def tempsob_parse_json_send(msg):
-    sob_jsonStr_temp = json.dumps(pbnd.tele_sob_obj.tele_temp(msg.tempsob.tc1_temp, msg.tempsob.tc2_temp))
-    client.publish("TELE_SOB_TEMP", sob_jsonStr_temp)
-
-def irtemp_parse_json_send(msg):
-    sob_jsonStr_irtemp = json.dumps(pbnd.tele_sob_obj.tele_temp(msg.irtemp.ambient_temp, msg.irtemp.object_temp))
-    client.publish("TELE_SOB_IRTEMP", sob_jsonStr_irtemp)
-
-TELE_FUNCTION_DICTIONARY = {
-	"coord": coord_parse_json_send,
-	"baro": baro_parse_json_send,
-	"imu": imu_parse_json_send,
-	"bat": bat_parse_json_send,
-	"flash": flash_parse_json_send,
-	"pressdmb": pressdmb_parse_json_send,
-    "presspbb": presspbb_parse_json_send,
-	"temppbb": temppbb_parse_json_send,
-	"gpio": gpio_parse_json_send,
-	"pressrcu": pressrcu_parse_json_send,
-	"temprcu": temprcu_parse_json_send,
-	"nos": nos_parse_json_send,
-	"relay": relay_parse_json_send,
-	"padbox": padbox_parse_json_send,
-	"lr": lr_parse_json_send,
-	"tempsob": tempsob_parse_json_send,
-    "irtemp": irtemp_parse_json_send
-}
-
-'''
-
-def print_hi(name):
-    print(f'Hi, {name}')
-
-def example_protobuf_encode_decode():
-    """
-    Example of how to use Protobuf
-    """
-
-    # You can either generate a wrapped message like this...
-    msg = Proto.ControlMessage()
-    msg.source = Core.NODE_RCU
-    msg.target = Core.NODE_DMB
-    msg.ack.acking_msg_id = Core.MSG_INVALID
-    msg.ack.acking_msg_source = Core.NODE_DMB
-    print(msg)
-
-    # Or like this
-    controlMsg = Proto.AckNack()
-    controlMsg.acking_msg_source = Core.NODE_DMB
-    controlMsg.acking_msg_id = Core.MSG_INVALID
-    msg2 = Proto.ControlMessage()
-    msg2.source = Core.NODE_RCU
-    msg2.target = Core.NODE_DMB
-    msg2.nack.CopyFrom(controlMsg)
-
-    # Serialize
-    print('\n\t>> Example of a serializing a ACK message')
-    msgOut = msg.SerializeToString()
-    print(f'{msgOut}')
-
-    # Deserialize
-    print('\n\t>> Example of a deserializing a ACK message, and reading the message field')
-    msgParsed = Proto.ControlMessage()
-    msgParsed.ParseFromString(msgOut)
-
-    if(msgParsed.HasField("ack")):
-        print("I got a ACK")
-    elif(msgParsed.HasField("nack")):
-        print("I got a NACK")
-
-    # Serialize
-    print('\n\t>> Example of a serializing a NACK message')
-    msgOut = msg2.SerializeToString()
-    print(f'{msgOut}')
-
-    # Deserialize
-    print('\n\t>> Example of a deserializing a NACK message, and reading the message field')
-    msgParsed.ParseFromString(msg2.SerializeToString())
-
-    if(msgParsed.HasField("ack")):
-        print("I got a ACK")
-    elif(msgParsed.HasField("nack")):
-        print("I got a NACK")
-
-def example_codec_encode_decode():
-    """
-    Example of how to use the codec
-    """
-    from Codec import Codec
-
-    # Imagine we've serialized some protobuf data
-    msg = Proto.ControlMessage()
-    msg.source = Core.NODE_RCU
-    msg.target = Core.NODE_DMB
-    msg.ack.acking_msg_id = Core.NODE_DMB
-    msg.ack.acking_msg_source = Core.NODE_DMB
-    buf = msg.SerializeToString()
-
-    encBuf = Codec.Encode(buf, len(buf), Core.MessageID.MSG_CONTROL)
-    print('\n\t>> Example of codec encoded protobuf data')
-    print(f'Original Message Size: {len(buf)}')
-    print(f'Expected Encoded Size: {Codec.GetEncodedSize(len(buf))}')
-    print(f'Encoded Message Size: {len(encBuf)}')
-    print(bytes(encBuf))
-
-def example_send_state_change_to_serial():
-    """
-    Example of how to send a state change to the serial port
-    """
-
-    # Imagine we've serialized some protobuf data
-    msg = ProtoCmd.CommandMessage()
-    msg.source = Core.NODE_RCU
-    msg.target = Core.NODE_DMB
-    msg.dmb_command.command_enum = ProtoCmd.DMBCommand.Command.RSC_GOTO_PRELAUNCH
-    buf = msg.SerializeToString()
-
-    encBuf = Codec.Encode(buf, len(buf), Core.MessageID.MSG_CONTROL)
-    print('\n\t>> Example of codec encoded state change command')
-    print(f'Original Message Size: {len(buf)}')
-    print(f'Encoded Message Size: {len(encBuf)}')
-    print(bytes(encBuf))
-
-    # Send the data to the serial port
-    ser.write(encBuf)
-
-'''
+    # Output
+    print(parsed)
