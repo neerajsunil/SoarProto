@@ -97,6 +97,26 @@ def generate_gps_serial():
     serialized_message = telemetry_message.SerializeToString()
     return serialized_message
 
+def generate_tvc_message():
+    # Create a new GPS message
+    vanes = ProtoTele.VanePosition()
+
+    vanes.vane_profile = 0
+    vanes.vane_1 = 0.5
+    vanes.vane_2 = 0.5
+    vanes.vane_3 = 0.5
+    vanes.vane_4 = 0.5
+
+    # Wrap in TelemetryMessage
+    telemetry_message = ProtoTele.TelemetryMessage()
+    telemetry_message.vanes.CopyFrom(vanes)
+    telemetry_message.source = Core.NODE_DMB
+    telemetry_message.target = Core.NODE_RCU
+
+    # Serialize the message
+    serialized_message = telemetry_message.SerializeToString()
+    return serialized_message
+
 if __name__ == "__main__":
     # Generate a GPS message
     serialized_message = generate_gps_serial()
@@ -106,3 +126,13 @@ if __name__ == "__main__":
 
     # Output
     print(parsed)
+
+    # Generate a TVC message
+    serialized_message = generate_tvc_message()
+
+    # Parse the serialized message to JSON
+    parsed = ProtobufParser.parse_serial_to_json(serialized_message, Core.MessageID.MSG_TELEMETRY)
+
+    # Output
+    print(parsed)
+
