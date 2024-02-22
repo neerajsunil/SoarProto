@@ -2,11 +2,10 @@
 # BRIEF: This file contains the protobuf parser class for converting protobuf messages to JSON
 #         and pushing telemetry messages to PocketBase
 
-import os
+
 import json
 import time
-# import serial
-import supabase
+import serial
 import datetime
 import threading
 import CoreProto_pb2 as Core
@@ -14,16 +13,15 @@ import CommandMessage_pb2 as ProtoCmd
 import ControlMessage_pb2 as ProtoCtrl
 import TelemetryMessage_pb2 as ProtoTele
 
-
-from realtime.connection import Socket
-# from Configuration import *
-# from LoadCell import LoadCell
-# from TestStand import TestStand
-# from DataCapture import data_capture
-# from LabJackTVC import LabJack, DigitalOutput
-# from DataCaptureStream import data_capture_stream
+from Configuration import *
+from LoadCell import LoadCell
+from TestStand import TestStand
+from DataCapture import data_capture
+from supabase import create_client, Client
+from LabJackTVC import LabJack, DigitalOutput
+from DataCaptureStream import data_capture_stream
 from google.protobuf.json_format import MessageToJson
-# from VaneControlDBG import VaneThreadHandler, VaneControlDebug
+from VaneControlDBG import VaneThreadHandler, VaneControlDebug
 
 
 class ProtobufParser:
@@ -94,7 +92,7 @@ class ProtobufParser:
 
     # TODO: Add method to push JSON to DB
     @staticmethod
-    def push_tele_json_to_database(client, json_data):
+    def push_tele_json_to_database(client: Client, json_data):
         '''
         Push a telemetry JSON message to DataBase
 
@@ -113,6 +111,15 @@ class ProtobufParser:
         # Push the JSON data to supabase using the correct schema
         data, count = client.table(table_name).insert(flattened_data).execute()
 
+def setup_serial(com_port : str):
+    # Setup serial port
+    if SER is None:
+        try:
+            SER = serial.Serial(port=com_port, baudrate=115200, bytesize=8, parity=serial.PARITY_NONE, timeout=None, stopbits=serial.STOPBITS_ONE)
+        except Exception as e:
+            print(f"Error: Could not connect to serial port {com_port}. Please check the port, servo-command comms will be disabled. {e}")
+
+    return SER
 
 def generate_gps_serial():
     # Create a new GPS message
@@ -191,7 +198,6 @@ def generate_imu_message():
     serialized_message = telemetry_message.SerializeToString()
     return serialized_message
 
-"""
 def ignite_pulse(do: DigitalOutput, duration: float):
     print(f"FIO3 pulsing for {duration*1000}ms")
     do = DigitalOutput(labjack, "FIO3")
@@ -288,66 +294,35 @@ def option_ignite_replay_stream():
     # Cleanup
     ignitionOut.write(0)
 
-def setup_serial(com_port : str):
-    # Setup serial port
-    if SER is None:
-        try:
-            SER = serial.Serial(port=com_port, baudrate=115200, bytesize=8, parity=serial.PARITY_NONE, timeout=None, stopbits=serial.STOPBITS_ONE)
-        except Exception as e:
-            print(f"Error: Could not connect to serial port {com_port}. Please check the port, servo-command comms will be disabled. {e}")
-
-    return SER
-"""
 # Function to handle new commands
 def handle_new_command(payload):
-    print("New command received")
-    print(payload)
-
-    try:
-        new_cmd = payload['record']['cmd']
-        if new_cmd == 'data_capture_stream':
-            # option_data_capture_stream()
-            print("Data capture stream")
-        elif new_cmd == 'data_capture_cmd':
-            # option_data_capture_cmd()
-            print("Data capture cmd")
-        elif new_cmd == 'data_capture_stop':
-            # option_data_capture_stop()
-            print("Data capture stop")
-        elif new_cmd == 'ignition_on':
-            # option_ignition_on()
-            print("Ignition on")
-        elif new_cmd == 'ignition_off':
-            # option_ignition_off()
-            print("Ignition off")
-        elif new_cmd == 'ignite_stream':
-            # option_ignite_stream()
-            print("Ignite stream")
-        elif new_cmd == 'ignite_command':
-            # option_ignite_command()
-            print("Ignite command")
-        elif new_cmd == 'ignite_replay_stream':
-            # option_ignite_replay_stream()
-            print("Ignite replay stream")
-        else:
-            print(f'Invalid command: {new_cmd}')
-    except Exception as e:
-        print(f"Error: Could not parse command. {e}")
+    new_cmd = payload['new']['cmd']
+    if new_cmd == 'data_capture_stream':
+        option_data_capture_stream()
+    elif new_cmd == 'data_capture_cmd':
+        option_data_capture_cmd()
+    elif new_cmd == 'data_capture_stop':
+        option_data_capture_stop()
+    elif new_cmd == 'ignition_on':
+        option_ignition_on()
+    elif new_cmd == 'ignition_off':
+        option_ignition_off()
+    elif new_cmd == 'ignite_stream':
+        option_ignite_stream()
+    elif new_cmd == 'ignite_command':
+        option_ignite_command()
+    elif new_cmd == 'ignite_replay_stream':
+        option_ignite_replay_stream()
+    else:
+        print(f'Invalid command: {new_cmd}')
 
 # Subscribe to real-time changes in the 'commands' table
-def listen_for_commands(client, key):
-    #start listening for commands
-    s = Socket(client.realtime_url + f"/websocket?apikey={key}&vsn=1.0.0")
-    s.connect()
-
-    channel = s.set_channel("realtime:*")
-    channel.join().on("INSERT", handle_new_command)
-    s.listen()
+def listen_for_commands():
+    print("Listening for commands...")
+    supabase.realtime.from_('commands').on('INSERT', handle_new_command).subscribe()
 
 if __name__ == "__main__":
     # Set up the LabJack
-
-    """
     try:
         labjack = LabJack()
     except Exception as e:
@@ -369,14 +344,15 @@ if __name__ == "__main__":
     ignitionOut = DigitalOutput(labjack, "FIO3")
 
     SER = setup_serial(COM_PORT)
-    """
 
     # Connect supabase
-    url: str = "http://127.0.0.1:54321"
-    key: str = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImV4cCI6MTk4MzgxMjk5Nn0.EGIM96RAZx35lJzdJsyH-qQwv8Hdp7fsn3W0YpN81IU"
+    url: str = ""
+    key: str = ""
+    supabase: Client = create_client(url, key)
 
-
-    client = supabase.create_client(url, key)
+    #start listening for commands
+    command_listener_thread = threading.Thread(target=listen_for_commands)
+    command_listener_thread.start()
 
     # Generate a GPS message
     serialized_message = generate_gps_serial()
@@ -385,7 +361,7 @@ if __name__ == "__main__":
     parsed = ProtobufParser.parse_serial_to_json(serialized_message, Core.MessageID.MSG_TELEMETRY)
 
     # Push to database
-    ProtobufParser.push_tele_json_to_database(client, json.loads(parsed))
+    ProtobufParser.push_tele_json_to_database(supabase, json.loads(parsed))
 
     # Output
     # parsedJson = json.loads(parsed)
@@ -397,7 +373,7 @@ if __name__ == "__main__":
     parsed = ProtobufParser.parse_serial_to_json(serialized_message, Core.MessageID.MSG_TELEMETRY)
 
     # Push to database
-    ProtobufParser.push_tele_json_to_database(client, json.loads(parsed))
+    ProtobufParser.push_tele_json_to_database(supabase, json.loads(parsed))
     # Output
     # print(parsed)
 
@@ -408,10 +384,8 @@ if __name__ == "__main__":
     parsed = ProtobufParser.parse_serial_to_json(serialized_message, Core.MessageID.MSG_TELEMETRY)
 
     # Push to database
-    ProtobufParser.push_tele_json_to_database(client, json.loads(parsed))
+    ProtobufParser.push_tele_json_to_database(supabase, json.loads(parsed))
 
     # Output
     # print(parsed)
-
-    listen_for_commands(client, key)
 
