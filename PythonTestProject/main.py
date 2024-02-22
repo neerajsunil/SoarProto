@@ -14,7 +14,7 @@
 #       get rid of telemetry_pb2 files?
 
 
-
+import keyboard
 import ControlMessage_pb2 as ProtoCtr
 import CommandMessage_pb2 as ProtoCmd
 import TelemetryMessage_pb2 as ProtoTele
@@ -23,6 +23,8 @@ import paho.mqtt.client as mqtt
 import Protobuf_parser as ProtoParse
 import Publisher_nodered as pbnd
 import google.protobuf.message as message
+import multiprocessing
+import supabase
 
 import serial       # You'll need to run `pip install pyserial`
 from Codec import Codec
@@ -30,9 +32,11 @@ import time
 import json
 
 # Constants
-EXAMPLE_COM_PORT = '/dev/ttyS0'
+EXAMPLE_COM_PORT = 'COM3'
 MQTT_BROKER = '127.0.0.1'
 PASSPHRASE = '1'
+SUPABASE_URL = "http://10.0.0.214:54321"
+SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImV4cCI6MTk4MzgxMjk5Nn0.EGIM96RAZx35lJzdJsyH-qQwv8Hdp7fsn3W0YpN81IU"
 
 # Setup serial port
 SER = serial.Serial(port=EXAMPLE_COM_PORT, baudrate=38400, bytesize=8, parity=serial.PARITY_NONE, timeout=None, stopbits=serial.STOPBITS_ONE)
@@ -40,6 +44,8 @@ SER = serial.Serial(port=EXAMPLE_COM_PORT, baudrate=38400, bytesize=8, parity=se
 # Globals
 sequence_number = 1
 current_state = "RS_ABORT"
+
+serial_db_queue = multiprocessing.Queue()
 
 def populate_command_msg(command):
     global sequence_number
@@ -138,6 +144,7 @@ def process_control_message(data):
 #def process_command_message(msg):
 
 def on_serial_message(message):
+
     if len(message) < 5:
         ProtoParse.client.publish("TELE_PI_ERROR", json.dumps({"error": "Received ivalid message, length less than 5"}))
         return
@@ -147,20 +154,53 @@ def on_serial_message(message):
 
     #Process essage according to ID
     if msgId == Core.MSG_TELEMETRY or msgId == Core.MSG_CONTROL:
-        ProtoParse.ProtobufParser.parse_serial_to_json(data, msgId)
+        out = ProtoParse.ProtobufParser.parse_serial_to_json(data, msgId)
+        serial_db_queue.put(out)
+
     else:
         ProtoParse.client.publish("TELE_PI_ERROR", json.dumps({"error": "Received invalid MessageID"}))
 
-if __name__ == '__main__':
-    ProtoParse.client.connect(MQTT_BROKER)
+def add_msg_to_db():
+    client = supabase.create_client(SUPABASE_URL, SUPABASE_KEY)
+    
+    while True:
+        data = serial_db_queue.get()
+        if data == None:
+            return
+        try:
+            ProtoParse.ProtobufParser.push_tele_json_to_database(client, data)
+        except:
 
-    ProtoParse.client.loop_start()
-    ProtoParse.client.subscribe("RCU/Commands")
-    ProtoParse.client.on_message=on_mqtt_message
+            pass
+    
+
+if __name__ == '__main__':
+    # ProtoParse.client.connect(MQTT_BROKER)
+
+    # ProtoParse.client.loop_start()
+    # ProtoParse.client.subscribe("RCU/Commands")
+    # ProtoParse.client.on_message=on_mqtt_message
+
+    db_thread = multiprocessing.Process(target=add_msg_to_db)
+    db_thread.start()
+    
 
     while True:
 
         # codec encodes the end of a message through a 0x00
         serial_message = SER.read_until(expected = b'\x00', size = None)
-        on_serial_message(serial_message)
+        try:
+            on_serial_message(serial_message)
+        except:
+            pass
+
+        # Check if the user has pressed 'q' to stop the capture
+        try: # May fail on MacOS or Linux due to permissions
+            if keyboard.is_pressed('q'):  # if key 'q' is pressed 
+                print('Quit command received. Stopping capture.')
+                serial_db_queue.put(None)
+                db_thread.join()
+                break  # finish the loop
+        except:
+            pass
         
